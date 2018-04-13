@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Mygento Team
+ * @package Mygento_Base
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Mygento\Base\Model\LogManager">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="file" xsi:type="object">Mygento\Base\Model\Logger\HandlerFactory</item>
+                <item name="db" xsi:type="object">Mygento\Base\Model\Logger\DatabaseFactory</item>
+            </argument>
+        </arguments>
+    </type>
+    
+    <preference for="Mygento\Base\Api\Data\EventSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
+    <preference for="Mygento\Base\Api\Data\EventInterface" type="Mygento\Base\Model\Event" />
+    <preference for="Mygento\Base\Api\EventRepositoryInterface" type="Mygento\Base\Model\EventRepository" />
+</config>
