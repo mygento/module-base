@@ -1,24 +1,24 @@
 <?php
+
 /**
- * @author Mygento
+ * @author Mygento Team
+ * @copyright 2014-2018 Mygento (https://www.mygento.ru)
  * @package Mygento_Base
  */
+
 namespace Mygento\Base\Api\Data;
 
 interface EventSearchResultsInterface extends \Magento\Framework\Api\SearchResultsInterface
 {
     /**
-     * Get events list.
-     *
-     * @return \Mygento\Base\Api\Data\EventInterface $event[]
+     * Get list of event
+     * @return \Mygento\Base\Api\Data\EventInterface[]
      */
     public function getItems();
 
     /**
-     * Set events list.
-     *
+     * Set list of event
      * @param \Mygento\Base\Api\Data\EventInterface[] $items
-     * @return $this
      */
     public function setItems(array $items);
 }

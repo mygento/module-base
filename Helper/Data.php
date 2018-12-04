@@ -1,8 +1,11 @@
 <?php
+
 /**
- * @author Mygento
+ * @author Mygento Team
+ * @copyright 2014-2018 Mygento (https://www.mygento.ru)
  * @package Mygento_Base
  */
+
 namespace Mygento\Base\Helper;
 
 /**
@@ -22,6 +25,11 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper implements \Psr\
     /** @var \Magento\Framework\Encryption\Encryptor */
     private $encryptor;
 
+    /**
+     * @param \Mygento\Base\Model\LogManager $logManager
+     * @param \Magento\Framework\Encryption\Encryptor $encryptor
+     * @param \Magento\Framework\App\Helper\Context $context
+     */
     public function __construct(
         \Mygento\Base\Model\LogManager $logManager,
         \Magento\Framework\Encryption\Encryptor $encryptor,
@@ -146,6 +154,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper implements \Psr\
     }
 
     /**
+     * Info
      *
      * @param string $message
      * @param array $context
@@ -156,10 +165,13 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper implements \Psr\
     }
 
     /**
+     * Logs with an arbitrary level.
      *
+     * @param mixed $level
      * @param string $message
      * @param array $context
-     * @param mixed $level
+     *
+     * @return void
      */
     public function log($level, $message, array $context = [])
     {
@@ -167,6 +179,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper implements \Psr\
     }
 
     /**
+     * Notice
      *
      * @param string $message
      * @param array $context

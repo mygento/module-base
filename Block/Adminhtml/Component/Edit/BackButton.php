@@ -1,6 +1,8 @@
 <?php
+
 /**
- * @author Mygento
+ * @author Mygento Team
+ * @copyright 2014-2018 Mygento (https://www.mygento.ru)
  * @package Mygento_Base
  */
 
@@ -11,6 +13,8 @@ use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 class BackButton extends GenericButton implements ButtonProviderInterface
 {
     /**
+     * Get Button Data
+     *
      * @return array
      */
     public function getButtonData()
@@ -22,6 +26,7 @@ class BackButton extends GenericButton implements ButtonProviderInterface
             'sort_order' => 10
         ];
     }
+
     /**
      * Get URL for back (reset) button
      *

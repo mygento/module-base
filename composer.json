@@ -23,14 +23,10 @@
     "mygento"
   ],
   "require": {
-    "php": "~7.1.3||~7.2.0",
-    "magento/framework": "101.*",
-    "magento/module-config": "101.*",
-    "magento/module-store": "100.*",
-    "magento/module-sales": "101.*"
+    "magento/framework": "102.*"
   },
   "require-dev": {
-    "mygento/coding-standard": "2.*"  
+    "mygento/coding-standard": "^2.13.0"
   },
   "autoload": {
     "files": [

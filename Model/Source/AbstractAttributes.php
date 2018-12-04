@@ -1,6 +1,8 @@
 <?php
+
 /**
- * @author Mygento
+ * @author Mygento Team
+ * @copyright 2014-2018 Mygento (https://www.mygento.ru)
  * @package Mygento_Base
  */
 
@@ -44,6 +46,10 @@ abstract class AbstractAttributes implements \Magento\Framework\Option\ArrayInte
      */
     private $attrColFactory;
 
+    /**
+     * @param \Magento\Eav\Model\Entity\Type $entityType
+     * @param \Magento\Catalog\Model\ResourceModel\Product\Attribute\CollectionFactory $attrColFactory
+     */
     public function __construct(
         \Magento\Eav\Model\Entity\Type $entityType,
         \Magento\Catalog\Model\ResourceModel\Product\Attribute\CollectionFactory $attrColFactory
@@ -111,11 +117,20 @@ abstract class AbstractAttributes implements \Magento\Framework\Option\ArrayInte
         return $this->options;
     }
 
+    /**
+     * Additional Filter
+     *
+     * @param mixed $collection
+     * @return mixed $collection
+     */
     protected function additionalFilter($collection)
     {
         return $collection;
     }
 
+    /**
+     * To option array
+     */
     public function toOptionArray()
     {
         return $this->getAllOptions();

@@ -1,0 +1,45 @@
+Mygento:
+  Base:
+    Event:
+      columns:
+        id:
+          type: bigint
+          pk: true
+          identity: true
+          unsigned: true
+          nullable: false
+          comment: 'Event ID'
+        instance:
+          type: varchar
+          nullable: false
+          comment: 'Server'
+        channel:
+          type: varchar
+          nullable: false
+          comment: 'Channel'
+        level:
+          type: int
+          unsigned: true
+          nullable: false
+          comment: 'level'
+        message:
+          type: text
+          nullable: false
+          comment: 'log datetime'
+        logged_at:
+          type: datetime
+          nullable: false
+          comment: 'message'
+        context:
+          type: text
+          comment: 'context'
+        extra:
+          type: text
+          comment: 'extra'
+      indexes:
+        IX_EVENT_INST:
+          columns: ['instance']
+        IX_EVENT_CHAN:
+          columns: ['channel']
+        IX_EVENT_LVL:
+          columns: ['level']

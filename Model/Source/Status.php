@@ -1,8 +1,11 @@
 <?php
+
 /**
- * @author Mygento
+ * @author Mygento Team
+ * @copyright 2014-2018 Mygento (https://www.mygento.ru)
  * @package Mygento_Base
  */
+
 namespace Mygento\Base\Model\Source;
 
 class Status implements \Magento\Framework\Option\ArrayInterface

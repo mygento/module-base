@@ -1,7 +1,8 @@
 <?php
-/**
- * @author Mygento
 
+/**
+ * @author Mygento Team
+ * @copyright 2014-2018 Mygento (https://www.mygento.ru)
  * @package Mygento_Base
  */
 
@@ -147,7 +148,7 @@ class File extends \Magento\Framework\App\Config\Value
             $file['name'] = $this->requestData->getName($this->getPath());
         } elseif (!empty($value['tmp_name'])) {
             $file['tmp_name'] = $value['tmp_name'];
-            $file['name'] = isset($value['value']) ? $value['value'] : $value['name'];
+            $file['name'] = $value['value'] ?? $value['name'];
         }
 
         return $file;

@@ -14,8 +14,30 @@
             </argument>
         </arguments>
     </type>
-    
-    <preference for="Mygento\Base\Api\Data\EventSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
-    <preference for="Mygento\Base\Api\Data\EventInterface" type="Mygento\Base\Model\Event" />
-    <preference for="Mygento\Base\Api\EventRepositoryInterface" type="Mygento\Base\Model\EventRepository" />
+    <!-- generated -->
+    <preference for="Mygento\Base\Api\EventRepositoryInterface" type="Mygento\Base\Model\EventRepository"/>
+    <preference for="Mygento\Base\Api\Data\EventInterface" type="Mygento\Base\Model\Event"/>
+    <preference for="Mygento\Base\Api\Data\EventSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+    <type name="Magento\Framework\Model\Entity\RepositoryFactory">
+        <arguments>
+            <argument name="entities" xsi:type="array">
+                <item name="Mygento\Base\Api\Data\EventInterface" xsi:type="string">Mygento\Base\Api\EventRepositoryInterface</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="base_event_listing_data_source" xsi:type="string">Mygento\Base\Model\ResourceModel\Event\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Mygento\Base\Model\ResourceModel\Event\Grid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">mygento_base_event</argument>
+            <argument name="eventPrefix" xsi:type="string">base_event_grid_collection</argument>
+            <argument name="eventObject" xsi:type="string">event_grid_collection</argument>
+            <argument name="resourceModel" xsi:type="string">Mygento\Base\Model\ResourceModel\Event</argument>
+        </arguments>
+    </type>
 </config>

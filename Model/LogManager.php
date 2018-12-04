@@ -1,8 +1,11 @@
 <?php
+
 /**
- * @author Mygento
+ * @author Mygento Team
+ * @copyright 2014-2018 Mygento (https://www.mygento.ru)
  * @package Mygento_Base
  */
+
 namespace Mygento\Base\Model;
 
 class LogManager
@@ -13,6 +16,10 @@ class LogManager
     /** @var array */
     private $handlers;
 
+    /**
+     * @param \Mygento\Base\Model\Logger\LoggerFactory $loggerFactory
+     * @param array $handlers
+     */
     public function __construct(
         \Mygento\Base\Model\Logger\LoggerFactory $loggerFactory,
         $handlers = []
@@ -57,6 +64,7 @@ class LogManager
     }
 
     /**
+     * Get Handlers
      *
      * @return array
      */

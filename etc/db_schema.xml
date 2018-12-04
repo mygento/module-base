@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="mygento_base_event" resource="default" engine="innodb" comment="comment">
+        <column xsi:type="bigint" name="id" nullable="false" identity="true" unsigned="true" padding="10" comment="Event ID"/>
+        <column xsi:type="varchar" name="instance" nullable="false" length="255" comment="Server"/>
+        <column xsi:type="varchar" name="channel" nullable="false" length="255" comment="Channel"/>
+        <column xsi:type="int" name="level" nullable="false" identity="false" unsigned="true" padding="10" comment="level"/>
+        <column xsi:type="text" name="message" nullable="false" comment="log datetime"/>
+        <column xsi:type="datetime" name="logged_at" nullable="false" comment="message"/>
+        <column xsi:type="text" name="context" nullable="false" comment="context"/>
+        <column xsi:type="text" name="extra" nullable="false" comment="extra"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <index referenceId="IX_EVENT_INST" indexType="btree">
+            <column name="instance"/>
+        </index>
+        <index referenceId="IX_EVENT_CHAN" indexType="btree">
+            <column name="channel"/>
+        </index>
+        <index referenceId="IX_EVENT_LVL" indexType="btree">
+            <column name="level"/>
+        </index>
+    </table>
+</schema>

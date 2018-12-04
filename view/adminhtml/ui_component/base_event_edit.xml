@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">base_event_edit.base_event_edit_data_source</item>
+        </item>
+        <item name="label" xsi:type="string" translate="true">General Information</item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+    </argument>
+    <settings>
+        <buttons>
+            <button name="save_and_continue" class="Mygento\Base\Block\Adminhtml\Component\Edit\SaveAndContinueButton"/>
+            <button name="save" class="Mygento\Base\Block\Adminhtml\Component\Edit\SaveButton"/>
+            <button name="reset" class="Mygento\Base\Block\Adminhtml\Component\Edit\ResetButton"/>
+            <button name="delete" class="Mygento\Base\Block\Adminhtml\Component\Edit\DeleteButton"/>
+            <button name="back" class="Mygento\Base\Block\Adminhtml\Component\Edit\BackButton"/>
+        </buttons>
+        <namespace>base_event_edit</namespace>
+        <dataScope>data</dataScope>
+        <deps>
+            <dep>base_event_edit.base_event_edit_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="base_event_edit_data_source">
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+        <settings>
+            <submitUrl path="base/event/save"/>
+        </settings>
+        <dataProvider name="base_event_edit_data_source" class="Mygento\Base\Model\Event\DataProvider">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <fieldset name="general">
+        <settings>
+            <label></label>
+        </settings>
+        <field name="id" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:string="string">event</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Id</label>
+                <dataScope>id</dataScope>
+            </settings>
+        </field>
+        <field name="instance" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:string="string">event</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Instance</label>
+                <dataScope>instance</dataScope>
+            </settings>
+        </field>
+        <field name="channel" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:string="string">event</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Channel</label>
+                <dataScope>channel</dataScope>
+            </settings>
+        </field>
+        <field name="level" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:string="string">event</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Level</label>
+                <dataScope>level</dataScope>
+            </settings>
+        </field>
+        <field name="message" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:string="string">event</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Message</label>
+                <dataScope>message</dataScope>
+            </settings>
+        </field>
+        <field name="logged_at" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:string="string">event</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>date</dataType>
+                <label translate="true">Logged At</label>
+                <dataScope>logged_at</dataScope>
+            </settings>
+        </field>
+        <field name="context" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:string="string">event</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Context</label>
+                <dataScope>context</dataScope>
+            </settings>
+        </field>
+        <field name="extra" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:string="string">event</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Extra</label>
+                <dataScope>extra</dataScope>
+            </settings>
+        </field>
+    </fieldset>
+</form>

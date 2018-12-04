@@ -1,8 +1,11 @@
 <?php
+
 /**
- * @author Mygento
+ * @author Mygento Team
+ * @copyright 2014-2018 Mygento (https://www.mygento.ru)
  * @package Mygento_Base
  */
+
 namespace Mygento\Base\Model\Source;
 
 class LogTarget implements \Magento\Framework\Data\OptionSourceInterface
@@ -10,6 +13,9 @@ class LogTarget implements \Magento\Framework\Data\OptionSourceInterface
     /** @var \Mygento\Base\Model\LogManager */
     private $logManager;
 
+    /**
+     * @param \Mygento\Base\Model\LogManager $logManager
+     */
     public function __construct(\Mygento\Base\Model\LogManager $logManager)
     {
         $this->logManager = $logManager;

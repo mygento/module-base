@@ -1,7 +1,8 @@
 <?php
-/**
- * @author Mygento
 
+/**
+ * @author Mygento Team
+ * @copyright 2014-2018 Mygento (https://www.mygento.ru)
  * @package Mygento_Base
  */
 
@@ -105,7 +106,7 @@ class Extensions extends \Magento\Config\Block\System\Config\Form\Fieldset
             $email = 'connect@mygento.ru';
         }
 
-        $ticketUrl = "mailto:support@mygento.ru";
+        $ticketUrl = 'mailto:support@mygento.ru';
         $url = __(
             'Purchased extensions support is available through '
             . '<a href="%1" target="_blank">ticket tracking system</a>',
@@ -182,7 +183,7 @@ class Extensions extends \Magento\Config\Block\System\Config\Form\Fieldset
 
     /**
      * Read info about extension from composer json file
-     * @param $moduleCode
+     * @param string $moduleCode
      * @throws \Magento\Framework\Exception\FileSystemException
      * @return mixed
      */
@@ -199,11 +200,11 @@ class Extensions extends \Magento\Config\Block\System\Config\Form\Fieldset
     }
 
     /**
-     * @param $fieldset
-     * @param $moduleCode
+     * @param AbstractElement $fieldset
+     * @param string $moduleCode
      * @return string
      */
-    private function getFieldHtml($fieldset, $moduleCode)
+    private function getFieldHtml(AbstractElement $fieldset, $moduleCode)
     {
         $module = $this->getModuleInfo($moduleCode);
         if (!is_array($module) ||
