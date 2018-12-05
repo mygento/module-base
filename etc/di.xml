@@ -14,6 +14,12 @@
             </argument>
         </arguments>
     </type>
+
+    <type name="Magento\Sales\Model\Order\Payment\Transaction">
+        <plugin name="mygento_base_transaction_receipt" type="Mygento\Base\Plugin\Transaction"/>
+    </type>
+    <preference for="Magento\Sales\Model\Order\Payment\Transaction" type="Mygento\Base\Model\Payment\Transaction" />
+
     <!-- generated -->
     <preference for="Mygento\Base\Api\EventRepositoryInterface" type="Mygento\Base\Model\EventRepository"/>
     <preference for="Mygento\Base\Api\Data\EventInterface" type="Mygento\Base\Model\Event"/>

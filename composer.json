@@ -23,7 +23,8 @@
     "mygento"
   ],
   "require": {
-    "magento/framework": "102.*"
+    "magento/framework": "102.*",
+    "magento/module-sales": "102.*"
   },
   "require-dev": {
     "mygento/coding-standard": "^2.13.0"
