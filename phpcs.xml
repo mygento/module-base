@@ -3,4 +3,5 @@
     <rule ref="./vendor/mygento/coding-standard/Mygento-Mage2"/>
     <rule ref="./vendor/magento-ecg/coding-standard/EcgM2"/>
     <!--     <rule ref="./vendor/magento/marketplace-eqp"/> -->
+    <exclude-pattern>*/Test/*</exclude-pattern>
 </ruleset>
