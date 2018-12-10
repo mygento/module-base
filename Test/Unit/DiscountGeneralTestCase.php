@@ -10,12 +10,6 @@ namespace Mygento\Base\Test\Unit;
 
 use PHPUnit\Framework\TestCase;
 
-/**
- *
- * @category Mygento
- * @package Mygento_KKM
- * @copyright 2018 NKS LLC. (https://www.mygento.ru)
- */
 class DiscountGeneralTestCase extends TestCase
 {
     //consts for getRecalculated() method

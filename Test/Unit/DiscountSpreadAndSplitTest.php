@@ -8,13 +8,6 @@
 
 namespace Mygento\Base\Test\Unit;
 
-/**
- *
- *
- * @category Mygento
- * @package Mygento_KKM
- * @copyright 2018 NKS LLC. (https://www.mygento.ru)
- */
 class DiscountSpreadAndSplitTest extends DiscountGeneralTestCase
 {
     protected function setUp()
