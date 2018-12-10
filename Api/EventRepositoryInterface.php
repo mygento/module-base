@@ -11,7 +11,7 @@ namespace Mygento\Base\Api;
 interface EventRepositoryInterface
 {
     /**
-     * Save event
+     * Save Event
      * @param \Mygento\Base\Api\Data\EventInterface $entity
      * @throws \Magento\Framework\Exception\LocalizedException
      * @return \Mygento\Base\Api\Data\EventInterface
@@ -19,7 +19,7 @@ interface EventRepositoryInterface
     public function save(Data\EventInterface $entity);
 
     /**
-     * Retrieve event
+     * Retrieve Event
      * @param int $entityId
      * @throws \Magento\Framework\Exception\LocalizedException
      * @return \Mygento\Base\Api\Data\EventInterface
@@ -27,7 +27,7 @@ interface EventRepositoryInterface
     public function getById($entityId);
 
     /**
-     * Retrieve event entities matching the specified criteria
+     * Retrieve Event entities matching the specified criteria
      * @param \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
      * @throws \Magento\Framework\Exception\LocalizedException
      * @return \Mygento\Base\Api\Data\EventSearchResultsInterface
@@ -35,7 +35,7 @@ interface EventRepositoryInterface
     public function getList(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria);
 
     /**
-     * Delete event
+     * Delete Event
      * @param \Mygento\Base\Api\Data\EventInterface $entity
      * @throws \Magento\Framework\Exception\LocalizedException
      * @return bool true on success
@@ -43,7 +43,7 @@ interface EventRepositoryInterface
     public function delete(Data\EventInterface $entity);
 
     /**
-     * Delete event
+     * Delete Event
      * @param int $entityId
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @throws \Magento\Framework\Exception\LocalizedException

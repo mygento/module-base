@@ -11,13 +11,13 @@ namespace Mygento\Base\Api\Data;
 interface EventSearchResultsInterface extends \Magento\Framework\Api\SearchResultsInterface
 {
     /**
-     * Get list of event
+     * Get list of Event
      * @return \Mygento\Base\Api\Data\EventInterface[]
      */
     public function getItems();
 
     /**
-     * Set list of event
+     * Set list of Event
      * @param \Mygento\Base\Api\Data\EventInterface[] $items
      */
     public function setItems(array $items);

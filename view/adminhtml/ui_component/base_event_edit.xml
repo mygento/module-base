@@ -44,96 +44,104 @@
         <field name="id" formElement="input">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="source" xsi:string="string">event</item>
+                    <item name="source" xsi:type="string">event</item>
                 </item>
             </argument>
             <settings>
                 <dataType>text</dataType>
                 <label translate="true">Id</label>
+                <visible>false</visible>
                 <dataScope>id</dataScope>
             </settings>
         </field>
         <field name="instance" formElement="input">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="source" xsi:string="string">event</item>
+                    <item name="source" xsi:type="string">event</item>
                 </item>
             </argument>
             <settings>
                 <dataType>text</dataType>
                 <label translate="true">Instance</label>
+                <visible>true</visible>
                 <dataScope>instance</dataScope>
             </settings>
         </field>
         <field name="channel" formElement="input">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="source" xsi:string="string">event</item>
+                    <item name="source" xsi:type="string">event</item>
                 </item>
             </argument>
             <settings>
                 <dataType>text</dataType>
                 <label translate="true">Channel</label>
+                <visible>true</visible>
                 <dataScope>channel</dataScope>
             </settings>
         </field>
         <field name="level" formElement="input">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="source" xsi:string="string">event</item>
+                    <item name="source" xsi:type="string">event</item>
                 </item>
             </argument>
             <settings>
                 <dataType>text</dataType>
                 <label translate="true">Level</label>
+                <visible>true</visible>
                 <dataScope>level</dataScope>
             </settings>
         </field>
         <field name="message" formElement="input">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="source" xsi:string="string">event</item>
+                    <item name="source" xsi:type="string">event</item>
                 </item>
             </argument>
             <settings>
                 <dataType>text</dataType>
                 <label translate="true">Message</label>
+                <visible>true</visible>
                 <dataScope>message</dataScope>
             </settings>
         </field>
         <field name="logged_at" formElement="input">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="source" xsi:string="string">event</item>
+                    <item name="source" xsi:type="string">event</item>
                 </item>
             </argument>
             <settings>
                 <dataType>date</dataType>
                 <label translate="true">Logged At</label>
+                <visible>true</visible>
                 <dataScope>logged_at</dataScope>
             </settings>
         </field>
         <field name="context" formElement="input">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="source" xsi:string="string">event</item>
+                    <item name="source" xsi:type="string">event</item>
                 </item>
             </argument>
             <settings>
                 <dataType>text</dataType>
                 <label translate="true">Context</label>
+                <visible>true</visible>
                 <dataScope>context</dataScope>
             </settings>
         </field>
         <field name="extra" formElement="input">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="source" xsi:string="string">event</item>
+                    <item name="source" xsi:type="string">event</item>
                 </item>
             </argument>
             <settings>
                 <dataType>text</dataType>
                 <label translate="true">Extra</label>
+                <visible>true</visible>
                 <dataScope>extra</dataScope>
             </settings>
         </field>

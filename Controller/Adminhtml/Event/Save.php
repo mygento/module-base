@@ -32,7 +32,7 @@ class Save extends \Mygento\Base\Controller\Adminhtml\Event
     }
 
     /**
-     * Save Event Action
+     * Save Event action
      *
      * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
@@ -56,7 +56,7 @@ class Save extends \Mygento\Base\Controller\Adminhtml\Event
                 if (!$entity->getId() && $entityId) {
                     $this
                         ->messageManager
-                        ->addErrorMessage(__('This Event no longer exists.'));
+                        ->addErrorMessage(__('This Event no longer exists'));
                     return $resultRedirect->setPath('*/*/');
                 }
             }

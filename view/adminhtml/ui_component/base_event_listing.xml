@@ -25,7 +25,7 @@
             </storageConfig>
             <updateUrl path="mui/index/render"/>
         </settings>
-        <aclResource>Mygento_Base:event</aclResource>
+        <aclResource>Mygento_Base::event</aclResource>
         <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider" name="base_event_listing_data_source">
             <settings>
                 <requestFieldName>id</requestFieldName>
@@ -104,11 +104,6 @@
                 <indexField>id</indexField>
             </settings>
         </selectionsColumn>
-        <actionsColumn name="actions" class="Mygento\Base\Ui\Component\Listing\EventActions">
-            <settings>
-                <indexField>id</indexField>
-            </settings>
-        </actionsColumn>
         <column name="id">
             <settings>
                 <filter>textRange</filter>
@@ -197,5 +192,10 @@
                 <sorting>asc</sorting>
             </settings>
         </column>
+        <actionsColumn name="actions" class="Mygento\Base\Ui\Component\Listing\EventActions">
+            <settings>
+                <indexField>id</indexField>
+            </settings>
+        </actionsColumn>
     </columns>
 </listing>
