@@ -27,15 +27,11 @@ class Thumbnail extends \Magento\Ui\Component\Listing\Columns\Column
     /** @var \Mygento\Base\Helper\Image */
     private $imageHelper;
 
-    /** @var \Magento\Store\Model\StoreManagerInterface */
-    private $storeManager;
-
     /** @var \Magento\Framework\UrlInterface */
     private $urlBuilder;
 
     /**
      * @param \Mygento\Base\Helper\Image $imageHelper
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Framework\UrlInterface $urlBuilder
      * @param \Magento\Framework\View\Element\UiComponent\ContextInterface $context
      * @param \Magento\Framework\View\Element\UiComponentFactory $uiComponentFactory
@@ -44,7 +40,6 @@ class Thumbnail extends \Magento\Ui\Component\Listing\Columns\Column
      */
     public function __construct(
         \Mygento\Base\Helper\Image $imageHelper,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Framework\UrlInterface $urlBuilder,
         \Magento\Framework\View\Element\UiComponent\ContextInterface $context,
         \Magento\Framework\View\Element\UiComponentFactory $uiComponentFactory,
@@ -53,11 +48,11 @@ class Thumbnail extends \Magento\Ui\Component\Listing\Columns\Column
     ) {
         parent::__construct($context, $uiComponentFactory, $components, $data);
         $this->imageHelper = $imageHelper;
-        $this->storeManager = $storeManager;
         $this->urlBuilder = $urlBuilder;
     }
 
     /**
+     * Prepare Thumbnail Data
      * @param string[] $dataSource
      * @return string[]
      */
@@ -68,9 +63,9 @@ class Thumbnail extends \Magento\Ui\Component\Listing\Columns\Column
                 $fieldName = $this->getData('name');
                 $image = $item[$fieldName];
 
-                $imageUrl = $this->storeManager->getStore()->getBaseUrl(
-                    \Magento\Framework\UrlInterface::URL_TYPE_MEDIA
-                ) . $this->baseUrl . $image;
+                $imageUrl = $this->imageHelper->getMediaUrl()
+                  . $this->baseUrl . $image;
+
                 $thumbnailUrl = $this->imageHelper->resize(
                     $image,
                     $this->baseUrl
@@ -91,6 +86,7 @@ class Thumbnail extends \Magento\Ui\Component\Listing\Columns\Column
     }
 
     /**
+     * Get image ALT text
      * @param string[] $row
      * @return string
      */

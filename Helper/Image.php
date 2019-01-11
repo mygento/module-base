@@ -8,6 +8,8 @@
 
 namespace Mygento\Base\Helper;
 
+use Magento\Framework\App\Filesystem\DirectoryList;
+
 class Image
 {
     /** @var \Magento\Store\Model\StoreManagerInterface */
@@ -61,15 +63,16 @@ class Image
     {
         $imageConfig = $this->getImageConfig();
         if (!$imageConfig) {
-            return $this->storeManager->getStore()->getBaseUrl(
-                \Magento\Framework\UrlInterface::URL_TYPE_MEDIA
-            ) . $folder . $image;
+            return $this->getMediaUrl() . $folder . $image;
         }
 
         $imageUrl = $folder . $image;
-        $thumbnailUrl = $folder . 'resized/' . $imageConfig['width'] . 'x' . $imageConfig['height'] . '/' . $image;
+        $thumbnailUrl = $folder . 'resized' . DIRECTORY_SEPARATOR
+          . $imageConfig['width'] . 'x'
+          . $imageConfig['height'] . DIRECTORY_SEPARATOR
+          . $image;
 
-        $basePath = $this->filesystem->getDirectoryRead(\Magento\Framework\App\Filesystem\DirectoryList::MEDIA);
+        $basePath = $this->filesystem->getDirectoryRead(DirectoryList::MEDIA);
         $imagePath = $basePath->getAbsolutePath($imageUrl);
         $thumbnailPath = $basePath->getAbsolutePath($thumbnailUrl);
 
@@ -82,9 +85,7 @@ class Image
         $imageResize->resize($imageConfig['width'], $imageConfig['height']);
         $imageResize->save($thumbnailPath);
 
-        return $this->storeManager->getStore()->getBaseUrl(
-            \Magento\Framework\UrlInterface::URL_TYPE_MEDIA
-        ) . $thumbnailUrl;
+        return $this->getMediaUrl() . $thumbnailUrl;
     }
 
     /**
@@ -99,5 +100,16 @@ class Image
             );
         }
         return $this->imageConfig[$this->imageType] ?? null;
+    }
+
+    /**
+     * Get Media Url
+     * @return string
+     */
+    public function getMediaUrl(): string
+    {
+        return $this->storeManager->getStore()->getBaseUrl(
+            \Magento\Framework\UrlInterface::URL_TYPE_MEDIA
+        );
     }
 }
