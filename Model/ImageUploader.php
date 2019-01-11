@@ -13,6 +13,9 @@ class ImageUploader
     /** @var \Magento\MediaStorage\Helper\File\Storage\Database */
     private $coreFileStorageDatabase;
 
+    /** @var \Magento\Framework\Filesystem */
+    private $filesystem;
+
     /** @var \Magento\Framework\Filesystem\Directory\WriteInterface */
     private $mediaDirectory;
 
@@ -26,13 +29,13 @@ class ImageUploader
     private $logger;
 
     /** @var string */
-    protected $baseTmpPath;
+    private $baseTmpPath;
 
     /** @var string */
-    protected $basePath;
+    private $basePath;
 
     /** @var string[] */
-    protected $allowedExtensions;
+    private $allowedExtensions;
 
     /**
      * @param \Magento\MediaStorage\Helper\File\Storage\Database $coreFileStorageDatabase
@@ -55,6 +58,7 @@ class ImageUploader
         $allowedExtensions
     ) {
         $this->coreFileStorageDatabase = $coreFileStorageDatabase;
+        $this->filesystem = $filesystem;
         $this->mediaDirectory = $filesystem->getDirectoryWrite(\Magento\Framework\App\Filesystem\DirectoryList::MEDIA);
         $this->uploaderFactory = $uploaderFactory;
         $this->storeManager = $storeManager;
@@ -117,6 +121,18 @@ class ImageUploader
             ->getBaseUrl(
                 \Magento\Framework\UrlInterface::URL_TYPE_MEDIA
             );
+    }
+
+    /**
+     * @param string $imageFileUrl
+     * @return string
+     */
+    public function getImageFilePath($imageFileUrl)
+    {
+        $basePath = $this->filesystem->getDirectoryRead(\Magento\Framework\App\Filesystem\DirectoryList::MEDIA);
+        $imagePath = $basePath->getAbsolutePath($imageFileUrl);
+
+        return $imagePath;
     }
 
     /**

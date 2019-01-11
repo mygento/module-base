@@ -24,12 +24,6 @@ class Thumbnail extends \Magento\Ui\Component\Listing\Columns\Column
     /** @var string */
     protected $key = 'id';
 
-    /** @var integer */
-    protected $width = 100;
-
-    /** @var integer */
-    protected $height = 100;
-
     /** @var \Mygento\Base\Helper\Image */
     private $imageHelper;
 
@@ -79,13 +73,11 @@ class Thumbnail extends \Magento\Ui\Component\Listing\Columns\Column
                 ) . $this->baseUrl . $image;
                 $thumbnailUrl = $this->imageHelper->resize(
                     $image,
-                    $this->baseUrl,
-                    $this->width,
-                    $this->height
+                    $this->baseUrl
                 );
 
                 $item[$fieldName . '_src'] = $thumbnailUrl;
-                $item[$fieldName . '_alt'] = $this->getAlt($item) ?: '';
+                $item[$fieldName . '_alt'] = $this->getAlt($item);
                 $item[$fieldName . '_link'] = $this->urlBuilder->getUrl(
                     $this->route . '/' . $this->controller . '/edit',
                     [
@@ -100,11 +92,11 @@ class Thumbnail extends \Magento\Ui\Component\Listing\Columns\Column
 
     /**
      * @param string[] $row
-     * @return null|string
+     * @return string
      */
-    protected function getAlt($row)
+    private function getAlt($row)
     {
         $altField = $this->getData('config/altField') ?: self::ALT_FIELD;
-        return isset($row[$altField]) ? $row[$altField] : null;
+        return $row[$altField] ?? '';
     }
 }
