@@ -3,13 +3,13 @@
     <acl>
         <resources>
             <resource id="Magento_Backend::admin">
-                <resource id="Mygento_Base::base" title="Base" translate="title">
-                    <resource id="Mygento_Base::base_event" title="Base Event" translate="title"/>
+                <resource id="Mygento_Base::root" title="Base" translate="title">
+                    <resource id="Mygento_Base::event" title="Base Event" translate="title"/>
                 </resource>
                 <resource id="Magento_Backend::stores">
                     <resource id="Magento_Backend::stores_settings">
                         <resource id="Magento_Config::config">
-                            <resource id="Mygento_Base::config" title="Mygento_ Base" translate="title"/>
+                            <resource id="Mygento_Base::config" title="Mygento Base" translate="title"/>
                         </resource>
                     </resource>
                 </resource>
