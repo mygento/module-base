@@ -75,10 +75,11 @@ class Image
 
         $imageResize = $this->imageFactory->create();
         $imageResize->open($imagePath);
-        $imageResize->constrainOnly($imageConfig['constrainOnly'] ?? true);
-        $imageResize->keepTransparency($imageConfig['keepTransparency'] ?? true);
-        $imageResize->keepFrame($imageConfig['keepFrame'] ?? true);
-        $imageResize->keepAspectRatio($imageConfig['keepAspectRatio'] ?? true);
+        $imageResize->constrainOnly($imageConfig['constrain'] ?? true);
+        $imageResize->keepAspectRatio($imageConfig['aspect_ratio'] ?? true);
+        $imageResize->keepFrame($imageConfig['frame'] ?? true);
+        $imageResize->keepTransparency($imageConfig['transparency'] ?? true);
+        $imageResize->backgroundColor($imageConfig['background'] ?? '[255, 255, 255]');
         $imageResize->resize($imageConfig['width'], $imageConfig['height']);
         $imageResize->save($thumbnailPath);
 
