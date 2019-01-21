@@ -12,12 +12,12 @@ class Database extends \Monolog\Handler\AbstractProcessingHandler
 {
 
     /**
-     * @var \Mygento\Base\Model\EventRepository
+     * @var \Mygento\Base\Api\EventRepositoryInterface
      */
     private $eventRepository;
 
     /**
-     * @var \Mygento\Base\Model\EventRepository
+     * @var \Mygento\Base\Api\Data\EventInterfaceFactory
      */
     private $eventFactory;
 
@@ -27,16 +27,16 @@ class Database extends \Monolog\Handler\AbstractProcessingHandler
     private $serializer;
 
     /**
-     * @param \Mygento\Base\Model\EventRepository $eventRepository
+     * @param \Mygento\Base\Api\EventRepositoryInterface $eventRepository
      * @param \Magento\Framework\Serialize\SerializerInterface $serializer
-     * @param \Mygento\Base\Model\EventFactory $eventFactory
+     * @param \Mygento\Base\Api\Data\EventInterfaceFactory $eventFactory
      * @param int|string $level
      * @param bool $bubble
      */
     public function __construct(
-        \Mygento\Base\Model\EventRepository $eventRepository,
+        \Mygento\Base\Api\EventRepositoryInterface $eventRepository,
         \Magento\Framework\Serialize\SerializerInterface $serializer,
-        \Mygento\Base\Model\EventFactory $eventFactory,
+        \Mygento\Base\Api\Data\EventInterfaceFactory $eventFactory,
         $level = \Monolog\Logger::DEBUG,
         $bubble = true
     ) {
@@ -71,7 +71,7 @@ class Database extends \Monolog\Handler\AbstractProcessingHandler
      * Serialize field
      *
      * @param mixed $field
-     * @return string|null
+     * @return string|bool|null
      */
     private function serialize($field)
     {

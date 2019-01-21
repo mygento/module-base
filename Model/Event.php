@@ -32,7 +32,7 @@ class Event extends AbstractModel implements \Mygento\Base\Api\Data\EventInterfa
     /**
      * Set id
      * @param int $id
-     * @return \Mygento\Base\Api\Data\EventInterface
+     * @return $this
      */
     public function setId($id)
     {
@@ -51,7 +51,7 @@ class Event extends AbstractModel implements \Mygento\Base\Api\Data\EventInterfa
     /**
      * Set instance
      * @param string $instance
-     * @return \Mygento\Base\Api\Data\EventInterface
+     * @return $this
      */
     public function setInstance($instance)
     {
@@ -70,7 +70,7 @@ class Event extends AbstractModel implements \Mygento\Base\Api\Data\EventInterfa
     /**
      * Set channel
      * @param string $channel
-     * @return \Mygento\Base\Api\Data\EventInterface
+     * @return $this
      */
     public function setChannel($channel)
     {
@@ -89,7 +89,7 @@ class Event extends AbstractModel implements \Mygento\Base\Api\Data\EventInterfa
     /**
      * Set level
      * @param int $level
-     * @return \Mygento\Base\Api\Data\EventInterface
+     * @return $this
      */
     public function setLevel($level)
     {
@@ -108,7 +108,7 @@ class Event extends AbstractModel implements \Mygento\Base\Api\Data\EventInterfa
     /**
      * Set message
      * @param string $message
-     * @return \Mygento\Base\Api\Data\EventInterface
+     * @return $this
      */
     public function setMessage($message)
     {
@@ -127,7 +127,7 @@ class Event extends AbstractModel implements \Mygento\Base\Api\Data\EventInterfa
     /**
      * Set logged at
      * @param string $loggedAt
-     * @return \Mygento\Base\Api\Data\EventInterface
+     * @return $this
      */
     public function setLoggedAt($loggedAt)
     {
@@ -146,7 +146,7 @@ class Event extends AbstractModel implements \Mygento\Base\Api\Data\EventInterfa
     /**
      * Set context
      * @param string $context
-     * @return \Mygento\Base\Api\Data\EventInterface
+     * @return $this
      */
     public function setContext($context)
     {
@@ -165,7 +165,7 @@ class Event extends AbstractModel implements \Mygento\Base\Api\Data\EventInterfa
     /**
      * Set extra
      * @param string $extra
-     * @return \Mygento\Base\Api\Data\EventInterface
+     * @return $this
      */
     public function setExtra($extra)
     {

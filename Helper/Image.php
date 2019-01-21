@@ -27,6 +27,9 @@ class Image
     /** @var string */
     private $module;
 
+    /** @var \Magento\Framework\View\ConfigInterface */
+    private $viewConfig;
+
     /** @var string */
     private $imageType;
 

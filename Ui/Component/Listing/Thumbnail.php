@@ -53,8 +53,8 @@ class Thumbnail extends \Magento\Ui\Component\Listing\Columns\Column
 
     /**
      * Prepare Thumbnail Data
-     * @param string[] $dataSource
-     * @return string[]
+     * @param array $dataSource
+     * @return array
      */
     public function prepareDataSource(array $dataSource)
     {

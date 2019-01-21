@@ -46,7 +46,7 @@ class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
     }
 
     /**
-     * @return array
+     * @return array|null
      */
     public function getData()
     {

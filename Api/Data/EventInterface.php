@@ -28,7 +28,7 @@ interface EventInterface
     /**
      * Set id
      * @param int $id
-     * @return \Mygento\Base\Api\Data\EventInterface
+     * @return $this
      */
     public function setId($id);
 
@@ -41,7 +41,7 @@ interface EventInterface
     /**
      * Set instance
      * @param string $instance
-     * @return \Mygento\Base\Api\Data\EventInterface
+     * @return $this
      */
     public function setInstance($instance);
 
@@ -54,7 +54,7 @@ interface EventInterface
     /**
      * Set channel
      * @param string $channel
-     * @return \Mygento\Base\Api\Data\EventInterface
+     * @return $this
      */
     public function setChannel($channel);
 
@@ -67,7 +67,7 @@ interface EventInterface
     /**
      * Set level
      * @param int $level
-     * @return \Mygento\Base\Api\Data\EventInterface
+     * @return $this
      */
     public function setLevel($level);
 
@@ -80,7 +80,7 @@ interface EventInterface
     /**
      * Set message
      * @param string $message
-     * @return \Mygento\Base\Api\Data\EventInterface
+     * @return $this
      */
     public function setMessage($message);
 
@@ -93,7 +93,7 @@ interface EventInterface
     /**
      * Set logged at
      * @param string $loggedAt
-     * @return \Mygento\Base\Api\Data\EventInterface
+     * @return $this
      */
     public function setLoggedAt($loggedAt);
 
@@ -106,7 +106,7 @@ interface EventInterface
     /**
      * Set context
      * @param string $context
-     * @return \Mygento\Base\Api\Data\EventInterface
+     * @return $this
      */
     public function setContext($context);
 
@@ -119,7 +119,7 @@ interface EventInterface
     /**
      * Set extra
      * @param string $extra
-     * @return \Mygento\Base\Api\Data\EventInterface
+     * @return $this
      */
     public function setExtra($extra);
 }

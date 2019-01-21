@@ -31,7 +31,7 @@ class Extensions extends \Magento\Config\Block\System\Config\Form\Fieldset
     private $moduleReader;
 
     /**
-     * @var DecoderInterface
+     * @var \Magento\Framework\Json\DecoderInterface
      */
     private $jsonDecoder;
 
@@ -41,9 +41,9 @@ class Extensions extends \Magento\Config\Block\System\Config\Form\Fieldset
     private $filesystem;
 
     /**
-     * @var \Magento\Store\Api\Data\StoreInterface
+     * @var \Magento\Framework\Locale\ResolverInterface
      */
-    private $store;
+    private $locale;
 
     /**
      * @var \Magento\Framework\View\Element\BlockInterface
@@ -51,30 +51,35 @@ class Extensions extends \Magento\Config\Block\System\Config\Form\Fieldset
     private $fieldRenderer;
 
     /**
+     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     */
+    private $scopeConfig;
+
+    /**
      *
+     * @param \Magento\Framework\Module\ModuleListInterface $moduleList
+     * @param \Magento\Framework\Module\Dir\Reader $moduleReader
+     * @param \Magento\Framework\Filesystem\Driver\File $filesystem
+     * @param \Magento\Framework\Locale\ResolverInterface $locale
+     * @param \Magento\Framework\Json\DecoderInterface $jsonDecoder
+     * @param \Magento\Framework\View\LayoutFactory $layoutFactory
      * @param \Magento\Backend\Block\Context $context
      * @param \Magento\Backend\Model\Auth\Session $authSession
      * @param \Magento\Framework\View\Helper\Js $jsHelper
-     * @param \Magento\Framework\Module\ModuleListInterface $moduleList
-     * @param \Magento\Framework\View\LayoutFactory $layoutFactory
-     * @param \Magento\Framework\Module\Dir\Reader $moduleReader
-     * @param \Magento\Framework\Filesystem\Driver\File $filesystem
-     * @param \Magento\Store\Api\Data\StoreInterface $store
-     * @param \Magento\Framework\Json\DecoderInterface $jsonDecoder
      * @param array $data
      *
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
+        \Magento\Framework\Module\ModuleListInterface $moduleList,
+        \Magento\Framework\Module\Dir\Reader $moduleReader,
+        \Magento\Framework\Filesystem\Driver\File $filesystem,
+        \Magento\Framework\Locale\ResolverInterface $locale,
+        \Magento\Framework\Json\DecoderInterface $jsonDecoder,
+        \Magento\Framework\View\LayoutFactory $layoutFactory,
         \Magento\Backend\Block\Context $context,
         \Magento\Backend\Model\Auth\Session $authSession,
         \Magento\Framework\View\Helper\Js $jsHelper,
-        \Magento\Framework\Module\ModuleListInterface $moduleList,
-        \Magento\Framework\View\LayoutFactory $layoutFactory,
-        \Magento\Framework\Module\Dir\Reader $moduleReader,
-        \Magento\Framework\Filesystem\Driver\File $filesystem,
-        \Magento\Store\Api\Data\StoreInterface $store,
-        \Magento\Framework\Json\DecoderInterface $jsonDecoder,
         array $data = []
     ) {
         parent::__construct($context, $authSession, $jsHelper, $data);
@@ -84,7 +89,7 @@ class Extensions extends \Magento\Config\Block\System\Config\Form\Fieldset
         $this->moduleReader = $moduleReader;
         $this->jsonDecoder = $jsonDecoder;
         $this->filesystem = $filesystem;
-        $this->store = $store;
+        $this->locale = $locale;
         $this->scopeConfig = $context->getScopeConfig();
     }
 
@@ -101,7 +106,7 @@ class Extensions extends \Magento\Config\Block\System\Config\Form\Fieldset
         $site = 'https://www.mygento.net';
         $email = 'connect@mygento.net';
 
-        if ($this->store->getLocaleCode() == 'ru_RU') {
+        if ($this->locale->getLocale() === 'ru_RU') {
             $site = 'https://www.mygento.ru';
             $email = 'connect@mygento.ru';
         }
@@ -166,7 +171,7 @@ class Extensions extends \Magento\Config\Block\System\Config\Form\Fieldset
     }
 
     /**
-     * @return \Magento\Framework\View\Element\BlockInterface
+     * Get Field Renderer
      */
     private function getFieldRenderer()
     {
@@ -200,6 +205,7 @@ class Extensions extends \Magento\Config\Block\System\Config\Form\Fieldset
     }
 
     /**
+     * Get field HTML
      * @param AbstractElement $fieldset
      * @param string $moduleCode
      * @return string

@@ -105,8 +105,7 @@ class File extends \Magento\Framework\App\Config\Value
         if (!empty($file)) {
             $uploadDir = $this->getUploadDir();
             try {
-                /** @var Uploader $uploader */
-
+                /** @var \Magento\Framework\File\Uploader $uploader */
                 $uploader = $this->uploaderFactory->create(['fileId' => $file]);
                 $uploader->setAllowedExtensions($this->getAllowedExtensions());
                 $uploader->setAllowRenameFiles(true);

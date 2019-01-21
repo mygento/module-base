@@ -18,4 +18,5 @@ parameters:
           testsuite: 'Test'
         phpcs:
             warning_severity: null
+        psalm:
         xmllint:

@@ -16,6 +16,9 @@ class LogManager
     /** @var array */
     private $handlers;
 
+    /** @var array */
+    private $loggers;
+
     /**
      * @param \Mygento\Base\Model\Logger\LoggerFactory $loggerFactory
      * @param array $handlers
@@ -26,6 +29,7 @@ class LogManager
     ) {
         $this->handlers = $handlers;
         $this->loggerFactory = $loggerFactory;
+        $this->loggers = [];
     }
 
     /**
@@ -33,7 +37,7 @@ class LogManager
      * @param string $name
      * @param string $type
      * @param int $level
-     * @return \Monolog\Logger
+     * @return \Mygento\Base\Model\Logger\Logger
      */
     public function getLogger(
         $name,
@@ -44,8 +48,9 @@ class LogManager
             return $this->loggers[$name];
         }
         if (!isset($this->handlers[$type])) {
-            //TODO throw exception
-            return null;
+            throw new \Magento\Framework\Exception\LocalizedException(
+                __('No Logger Handlers')
+            );
         }
         $logger = $this->loggerFactory->create(['name' => $name]);
         switch ($type) {

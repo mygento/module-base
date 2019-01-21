@@ -10,7 +10,14 @@ namespace Mygento\Base\Block\Adminhtml\Component\Edit;
 
 class GenericButton
 {
-    /** @var string */
+    /**
+     * @var \Magento\Backend\Block\Widget\Context
+     */
+    private $context;
+
+    /**
+     * @var string
+     */
     protected $key = 'id';
 
     /**

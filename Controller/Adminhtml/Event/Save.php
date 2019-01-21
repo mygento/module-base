@@ -12,16 +12,22 @@ use Magento\Framework\Exception\LocalizedException;
 
 class Save extends \Mygento\Base\Controller\Adminhtml\Event
 {
+    /** @var \Magento\Framework\App\Request\DataPersistorInterface */
+    private $dataPersistor;
+
+    /** @var \Mygento\Base\Api\Data\EventInterfaceFactory */
+    private $entityFactory;
+
     /**
      * @param \Magento\Framework\App\Request\DataPersistorInterface $dataPersistor
-     * @param \Mygento\Base\Model\EventFactory $entityFactory
+     * @param \Mygento\Base\Api\Data\EventInterfaceFactory $entityFactory
      * @param \Mygento\Base\Api\EventRepositoryInterface $repository
      * @param \Magento\Framework\Registry $coreRegistry
      * @param \Magento\Backend\App\Action\Context $context
      */
     public function __construct(
         \Magento\Framework\App\Request\DataPersistorInterface $dataPersistor,
-        \Mygento\Base\Model\EventFactory $entityFactory,
+        \Mygento\Base\Api\Data\EventInterfaceFactory $entityFactory,
         \Mygento\Base\Api\EventRepositoryInterface $repository,
         \Magento\Framework\Registry $coreRegistry,
         \Magento\Backend\App\Action\Context $context

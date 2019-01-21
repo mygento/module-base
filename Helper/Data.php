@@ -19,7 +19,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper implements \Psr\
     /** @var \Mygento\Base\Model\Logger\Logger */
     protected $logger;
 
-    /** @var \Mygento\Base\Model\LoggerManager */
+    /** @var \Mygento\Base\Model\LogManager */
     private $logManager;
 
     /** @var \Magento\Framework\Encryption\Encryptor */
@@ -69,13 +69,13 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper implements \Psr\
 
     /**
      *
-     * @return \Monolog\Logger
+     * @return \Mygento\Base\Model\Logger\Logger|\Monolog\Logger
      */
     public function getLogger()
     {
         if (!$this->logger) {
             $type = $this->getConfig('mygento_base/logger/target');
-            $level = $this->getConfig($this->getLoglevelPath());
+            $level = (int) $this->getConfig($this->getLoglevelPath());
             $this->logger = $this->logManager->getLogger($this->code, $type, $level);
         }
         return $this->logger;
@@ -201,7 +201,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper implements \Psr\
 
     /**
      *
-     * @param type $text
+     * @param mixed $text
+     * @deprecated
      */
     public function addLog($text)
     {

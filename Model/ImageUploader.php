@@ -116,6 +116,7 @@ class ImageUploader
     /**
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @return string
+     * @psalm-suppress UndefinedInterfaceMethod
      */
     public function getBaseUrl(): string
     {
@@ -225,7 +226,7 @@ class ImageUploader
 
     /**
      * @param string $input
-     * @param string[] $data
+     * @param array $data
      * @throws \Magento\Framework\Exception\LocalizedException
      * @return string
      */

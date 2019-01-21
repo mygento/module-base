@@ -22,7 +22,7 @@ class EventRepository implements \Mygento\Base\Api\EventRepositoryInterface
     /** @var \Mygento\Base\Model\ResourceModel\Event\CollectionFactory */
     private $collectionFactory;
 
-    /** @var \Mygento\Base\Model\EventFactory */
+    /** @var \Mygento\Base\Api\Data\EventInterfaceFactory */
     private $entityFactory;
 
     /** @var \Mygento\Base\Api\Data\EventSearchResultsInterfaceFactory */
@@ -31,13 +31,13 @@ class EventRepository implements \Mygento\Base\Api\EventRepositoryInterface
     /**
      * @param \Mygento\Base\Model\ResourceModel\Event $resource
      * @param \Mygento\Base\Model\ResourceModel\Event\CollectionFactory $collectionFactory
-     * @param \Mygento\Base\Model\EventFactory $entityFactory
+     * @param \Mygento\Base\Api\Data\EventInterfaceFactory $entityFactory
      * @param \Mygento\Base\Api\Data\EventSearchResultsInterfaceFactory $searchResultsFactory
      */
     public function __construct(
         ResourceModel\Event $resource,
         ResourceModel\Event\CollectionFactory $collectionFactory,
-        EventFactory $entityFactory,
+        \Mygento\Base\Api\Data\EventInterfaceFactory $entityFactory,
         \Mygento\Base\Api\Data\EventSearchResultsInterfaceFactory $searchResultsFactory
     ) {
         $this->resource = $resource;
@@ -49,7 +49,7 @@ class EventRepository implements \Mygento\Base\Api\EventRepositoryInterface
     /**
      * @param int $entityId
      * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @return \Mygento\Base\Model\Event
+     * @return \Mygento\Base\Api\Data\EventInterface
      */
     public function getById($entityId)
     {
@@ -66,11 +66,13 @@ class EventRepository implements \Mygento\Base\Api\EventRepositoryInterface
     /**
      * @param \Mygento\Base\Api\Data\EventInterface $entity
      * @throws \Magento\Framework\Exception\CouldNotSaveException
-     * @return \Mygento\Base\Model\Event
+     * @return \Mygento\Base\Api\Data\EventInterface
      */
+    /** @psalm-param \Mygento\Base\Api\Data\EventInterface&\Magento\Framework\Model\AbstractModel $event */
     public function save(\Mygento\Base\Api\Data\EventInterface $entity)
     {
         try {
+            /** @psalm-param \Mygento\Base\Api\Data\EventInterface&\Magento\Framework\Model\AbstractModel $event */
             $this->resource->save($entity);
         } catch (\Exception $exception) {
             throw new \Magento\Framework\Exception\CouldNotSaveException(

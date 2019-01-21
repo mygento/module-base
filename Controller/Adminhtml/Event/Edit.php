@@ -10,21 +10,21 @@ namespace Mygento\Base\Controller\Adminhtml\Event;
 
 class Edit extends \Mygento\Base\Controller\Adminhtml\Event
 {
-    /** @var \Mygento\Base\Model\EventFactory */
+    /** @var \Mygento\Base\Api\Data\EventInterfaceFactory */
     private $entityFactory;
 
     /** @var \Magento\Framework\View\Result\PageFactory */
     private $resultPageFactory;
 
     /**
-     * @param \Mygento\Base\Model\EventFactory $entityFactory
+     * @param \Mygento\Base\Api\Data\EventInterfaceFactory $entityFactory
      * @param \Magento\Framework\View\Result\PageFactory $resultPageFactory
      * @param \Mygento\Base\Api\EventRepositoryInterface $repository
      * @param \Magento\Framework\Registry $coreRegistry
      * @param \Magento\Backend\App\Action\Context $context
      */
     public function __construct(
-        \Mygento\Base\Model\EventFactory $entityFactory,
+        \Mygento\Base\Api\Data\EventInterfaceFactory $entityFactory,
         \Magento\Framework\View\Result\PageFactory $resultPageFactory,
         \Mygento\Base\Api\EventRepositoryInterface $repository,
         \Magento\Framework\Registry $coreRegistry,
