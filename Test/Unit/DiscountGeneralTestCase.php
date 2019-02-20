@@ -387,7 +387,7 @@ class DiscountGeneralTestCase extends TestCase
         $this->addItem($order, $this->getItem(920.0000, 46.0000, 0, 20.0000));
         $this->addItem($order, $this->getItem(0.0000, 0.0000, 0, 4.0000));
         $final[self::TEST_CASE_NAME_21] = $order;
-        
+
         return $final;
     }
 }

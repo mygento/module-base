@@ -23,6 +23,7 @@
     "mygento"
   ],
   "require": {
+    "ext-bcmath": "*",
     "magento/framework": "102.*",
     "magento/module-sales": "102.*"
   },
