@@ -30,7 +30,7 @@ class Database extends \Monolog\Handler\AbstractProcessingHandler
      * @param \Mygento\Base\Api\EventRepositoryInterface $eventRepository
      * @param \Magento\Framework\Serialize\SerializerInterface $serializer
      * @param \Mygento\Base\Api\Data\EventInterfaceFactory $eventFactory
-     * @param int|string $level
+     * @param int $level
      * @param bool $bubble
      */
     public function __construct(

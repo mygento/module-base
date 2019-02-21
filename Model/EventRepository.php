@@ -67,8 +67,8 @@ class EventRepository implements \Mygento\Base\Api\EventRepositoryInterface
      * @param \Mygento\Base\Api\Data\EventInterface $entity
      * @throws \Magento\Framework\Exception\CouldNotSaveException
      * @return \Mygento\Base\Api\Data\EventInterface
+     * @psalm-param \Mygento\Base\Api\Data\EventInterface&\Magento\Framework\Model\AbstractModel $event
      */
-    /** @psalm-param \Mygento\Base\Api\Data\EventInterface&\Magento\Framework\Model\AbstractModel $event */
     public function save(\Mygento\Base\Api\Data\EventInterface $entity)
     {
         try {
