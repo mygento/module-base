@@ -14,12 +14,13 @@ use Magento\Sales\Api\Data\InvoiceInterface as Invoice;
 use Magento\Sales\Api\Data\InvoiceItemInterface as InvoiceItem;
 use Magento\Sales\Api\Data\OrderInterface as Order;
 use Magento\Sales\Api\Data\OrderItemInterface as OrderItem;
+use Mygento\Base\Api\DiscountHelperInterface;
 
 /**
  * Class Discount
  * @package Mygento\Base\Helper
  */
-final class Discount
+class Discount implements DiscountHelperInterface
 {
     const VERSION         = '1.0.19';
     const NAME_UNIT_PRICE = 'disc_hlpr_price';
@@ -64,25 +65,26 @@ final class Discount
 
     /** @var boolean Размазывать ли скидку по всей позициям? */
     protected $spreadDiscOnAllUnits = false;
+    /**
+     * @var \Mygento\Base\Helper\Product\Attribute
+     */
+    private $attributeHelper;
 
     /**
+     * Discount constructor.
      * @param \Mygento\Base\Helper\Data $baseHelper
+     * @param \Mygento\Base\Helper\Product\Attribute $attributeHelper
      */
-    public function __construct(\Mygento\Base\Helper\Data $baseHelper)
-    {
-        $this->generalHelper = $baseHelper;
+    public function __construct(
+        \Mygento\Base\Helper\Data $baseHelper,
+        \Mygento\Base\Helper\Product\Attribute $attributeHelper
+    ) {
+        $this->generalHelper   = $baseHelper;
+        $this->attributeHelper = $attributeHelper;
     }
 
     /**
-     * Returns all items of the entity (order|invoice|creditmemo) with properly calculated discount
-     * and properly calculated Sum
-     * @param Order|Invoice|Creditmemo $entity
-     * @param string $taxValue
-     * @param string $taxAttributeCode Set it if info about tax is stored in product in certain
-     *     attr
-     * @param string $shippingTaxValue
-     * @throws \Exception
-     * @return null|array with calculated items and sum
+     * @inheritdoc
      */
     public function getRecalculated(
         $entity,
@@ -451,8 +453,7 @@ final class Discount
             );
         }
 
-        $this->generalHelper->debug('Final array:');
-        $this->generalHelper->debug($receipt);
+        $this->generalHelper->debug('Final array:', ['receipt' => $receipt]);
 
         return $receipt;
     }
@@ -491,13 +492,12 @@ final class Discount
             $entityItem['price'] = 1;
         }
 
-        $this->generalHelper->debug('Item calculation details:');
-        $this->generalHelper->debug(
-            "Item id: {$item->getId()}. Orig price: {$price} Item rowTotalInclTax:"
-            . " {$item->getData('row_total_incl_tax')}"
-            . " PriceInclTax of 1 piece: {$price}. Result of calc:"
-        );
-        $this->generalHelper->debug($entityItem);
+        $context = [
+            'Item id'              => $item->getId(),
+            'Item rowTotalInclTax' => $item->getData('row_total_incl_tax'),
+            'Result'               => $entityItem,
+        ];
+        $this->generalHelper->debug('Item calculation details:', $context);
 
         return $entityItem;
     }
@@ -651,6 +651,7 @@ final class Discount
     /**
      * @param string $taxAttributeCode code of product attribute containing tax value
      * @param OrderItem|InvoiceItem|CreditmemoItem $item
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @return string
      */
     protected function addTaxValue($taxAttributeCode, $item)
@@ -659,7 +660,7 @@ final class Discount
             return '';
         }
 
-        return $this->generalHelper->getAttributeValue($taxAttributeCode, $item->getProductId());
+        return $this->attributeHelper->getValue($taxAttributeCode, $item->getProductId());
     }
 
     /**
@@ -738,7 +739,7 @@ final class Discount
     }
 
     /**
-     * @param bool $isSplitItemsAllowed
+     * @inheritdoc
      */
     public function setIsSplitItemsAllowed($isSplitItemsAllowed)
     {
@@ -746,7 +747,7 @@ final class Discount
     }
 
     /**
-     * @param bool $doCalculation
+     * @inheritdoc
      */
     public function setDoCalculation($doCalculation)
     {
@@ -754,7 +755,7 @@ final class Discount
     }
 
     /**
-     * @param bool $spreadDiscOnAllUnits
+     * @inheritdoc
      */
     public function setSpreadDiscOnAllUnits($spreadDiscOnAllUnits)
     {
