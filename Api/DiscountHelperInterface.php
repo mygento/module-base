@@ -43,16 +43,19 @@ interface DiscountHelperInterface
 
     /**
      * @param bool $isSplitItemsAllowed
+     * @return $this
      */
-    public function setIsSplitItemsAllowed($isSplitItemsAllowed);
+    public function setIsSplitItemsAllowed(bool $isSplitItemsAllowed);
 
     /**
      * @param bool $doCalculation
+     * @return $this
      */
-    public function setDoCalculation($doCalculation);
+    public function setDoCalculation(bool $doCalculation);
 
     /**
      * @param bool $spreadDiscOnAllUnits
+     * @return $this
      */
-    public function setSpreadDiscOnAllUnits($spreadDiscOnAllUnits);
+    public function setSpreadDiscOnAllUnits(bool $spreadDiscOnAllUnits);
 }

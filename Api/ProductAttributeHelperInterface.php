@@ -20,14 +20,14 @@ interface ProductAttributeHelperInterface
      *
      * @return mixed attribute value
      */
-    public function getValueByConfigPathOrDefault($pathToParam, $productId);
+    public function getValueByConfigPathOrDefault(string $pathToParam, $productId);
 
     /**
      * Returns attribute value or attribute text (for dropdown attributes)
      *
      * @param string $attributeCode
-     * @param string|int|null $productId
+     * @param string|int $productId
      * @return mixed
      */
-    public function getValue($attributeCode, $productId);
+    public function getValue(string $attributeCode, $productId);
 }

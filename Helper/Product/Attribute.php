@@ -42,7 +42,7 @@ class Attribute implements ProductAttributeHelperInterface
      * @inheritdoc
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getValueByConfigPathOrDefault($pathToParam, $productId)
+    public function getValueByConfigPathOrDefault(string $pathToParam, $productId)
     {
         $attributeCode = $this->generalHelper->getConfig($pathToParam);
         if (!$attributeCode || '0' == $attributeCode || 0 === $attributeCode) {
@@ -59,7 +59,7 @@ class Attribute implements ProductAttributeHelperInterface
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @psalm-suppress UndefinedMethod
      */
-    public function getValue($attributeCode, $productId)
+    public function getValue(string $attributeCode, $productId)
     {
         $product = $this->getProduct($productId);
 

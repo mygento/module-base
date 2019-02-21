@@ -656,11 +656,13 @@ class Discount implements DiscountHelperInterface
      */
     protected function addTaxValue($taxAttributeCode, $item)
     {
-        if (!$taxAttributeCode) {
+        $id = $item->getProductId();
+
+        if (!$taxAttributeCode || $id === null) {
             return '';
         }
 
-        return $this->attributeHelper->getValue($taxAttributeCode, $item->getProductId());
+        return $this->attributeHelper->getValue($taxAttributeCode, $id);
     }
 
     /**
@@ -741,25 +743,31 @@ class Discount implements DiscountHelperInterface
     /**
      * @inheritdoc
      */
-    public function setIsSplitItemsAllowed($isSplitItemsAllowed)
+    public function setIsSplitItemsAllowed(bool $isSplitItemsAllowed)
     {
-        $this->isSplitItemsAllowed = (bool)$isSplitItemsAllowed;
+        $this->isSplitItemsAllowed = $isSplitItemsAllowed;
+
+        return $this;
     }
 
     /**
      * @inheritdoc
      */
-    public function setDoCalculation($doCalculation)
+    public function setDoCalculation(bool $doCalculation)
     {
-        $this->doCalculation = (bool)$doCalculation;
+        $this->doCalculation = $doCalculation;
+
+        return $this;
     }
 
     /**
      * @inheritdoc
      */
-    public function setSpreadDiscOnAllUnits($spreadDiscOnAllUnits)
+    public function setSpreadDiscOnAllUnits(bool $spreadDiscOnAllUnits)
     {
-        $this->spreadDiscOnAllUnits = (bool)$spreadDiscOnAllUnits;
+        $this->spreadDiscOnAllUnits = $spreadDiscOnAllUnits;
+
+        return $this;
     }
 
     /**
