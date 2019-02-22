@@ -45,7 +45,7 @@ class Attribute implements ProductAttributeHelperInterface
     public function getValueByConfigPathOrDefault(string $pathToParam, $productId)
     {
         $attributeCode = $this->generalHelper->getConfig($pathToParam);
-        if (!$attributeCode || '0' == $attributeCode || 0 === $attributeCode) {
+        if (!$attributeCode || '0' === $attributeCode || 0 === $attributeCode) {
             return $this->generalHelper->getConfig(
                 $pathToParam . self::CONFIG_PATH_DEFAULT_SUFFIX
             );

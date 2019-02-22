@@ -55,7 +55,7 @@ class Discount implements DiscountHelperInterface
      * @var boolean Does item exist with price not divisible evenly?
      * Есть ли item, цена которого не делится нацело
      */
-    protected $_wryItemUnitPriceExists = false;
+    protected $wryItemUnitPriceExists = false;
 
     /** @var boolean Возможность разделять одну товарную позицию на 2, если цена не делится нацело */
     protected $isSplitItemsAllowed = false;
@@ -153,7 +153,7 @@ class Discount implements DiscountHelperInterface
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    public function applyDiscount(): void
+    private function applyDiscount(): void
     {
         $subTotal = $this->entity->getSubtotalInclTax() ?? 0;
         $discount = $this->entity->getDiscountAmount() ?? 0;
@@ -249,7 +249,7 @@ class Discount implements DiscountHelperInterface
      * Если нет скидки - возвращает 0.00
      * @return float
      */
-    protected function getGlobalDiscount()
+    private function getGlobalDiscount()
     {
         $items         = $this->getAllItems();
         $totalItemsSum = 0;
@@ -271,7 +271,7 @@ class Discount implements DiscountHelperInterface
      * Calculates extra discounts and adds them to items $item->setData('discount_amount', ...)
      * @return int count of iterations
      */
-    protected function preFixLowDiscount()
+    private function preFixLowDiscount()
     {
         $items          = $this->getAllItems();
         $globalDiscount = $this->getGlobalDiscount();
@@ -305,7 +305,7 @@ class Discount implements DiscountHelperInterface
      * Calculates extra discounts and adds them to items rowDiscount value
      * @return int count of iterations
      */
-    protected function postFixLowDiscount()
+    private function postFixLowDiscount()
     {
         $items          = $this->getAllItems();
         $grandTotal     = $this->getGrandTotal();
@@ -363,7 +363,7 @@ class Discount implements DiscountHelperInterface
      * @param float $itemDiscount
      * @return int
      */
-    public function getDiscountIncrement($amountToSpread, $itemsCount, $itemTotal, $itemDiscount)
+    private function getDiscountIncrement($amountToSpread, $itemsCount, $itemTotal, $itemDiscount)
     {
         $sign = (int)($amountToSpread / abs($amountToSpread));
 
@@ -385,7 +385,7 @@ class Discount implements DiscountHelperInterface
      * If everything is evenly divisible - set up prices without extra recalculations
      * like applyDiscount() method does.
      */
-    public function setSimplePrices()
+    private function setSimplePrices()
     {
         $items = $this->getAllItems();
         foreach ($items as $item) {
@@ -405,7 +405,7 @@ class Discount implements DiscountHelperInterface
      * @throws \Exception
      * @return array
      */
-    public function buildFinalArray()
+    private function buildFinalArray()
     {
         $grandTotal = $this->getGrandTotal();
 
@@ -447,7 +447,7 @@ class Discount implements DiscountHelperInterface
         $itemsFinal['shipping'] = $shippingItem;
         $receipt['items']       = $itemsFinal;
 
-        if (!$this->_checkReceipt($receipt)) {
+        if (!$this->checkReceipt($receipt)) {
             $this->generalHelper->debug(
                 'WARNING: Calculation error! Sum of items is not equal to grandTotal!'
             );
@@ -467,7 +467,7 @@ class Discount implements DiscountHelperInterface
      *
      * @psalm-suppress UndefinedMethod
      */
-    protected function _buildItem($item, $price, $taxValue = '')
+    private function buildItem($item, $price, $taxValue = '')
     {
         $qty = $item->getQty() ?: $item->getQtyOrdered();
         if (!$qty) {
@@ -511,7 +511,7 @@ class Discount implements DiscountHelperInterface
      *
      * @psalm-suppress UndefinedMethod
      */
-    public function getProcessedItem($item)
+    private function getProcessedItem($item)
     {
         $final = [];
 
@@ -522,7 +522,7 @@ class Discount implements DiscountHelperInterface
             ? $item->getData(self::NAME_UNIT_PRICE)
             : $item->getData('price_incl_tax');
 
-        $entityItem = $this->_buildItem($item, $price, $taxValue);
+        $entityItem = $this->buildItem($item, $price, $taxValue);
 
         $rowDiff = $item->getData(self::NAME_ROW_DIFF);
 
@@ -577,7 +577,7 @@ class Discount implements DiscountHelperInterface
      * @param Order|Invoice|Creditmemo $entity
      * @return string
      */
-    public function getShippingName($entity)
+    private function getShippingName($entity)
     {
         /** @psalm-suppress UndefinedMethod */
         return $entity->getShippingDescription()
@@ -589,7 +589,7 @@ class Discount implements DiscountHelperInterface
      * @param array $receipt
      * @return bool True if all items price equal to grandTotal. False - if not.
      */
-    protected function _checkReceipt($receipt)
+    private function checkReceipt($receipt)
     {
         $sum = array_reduce(
             $receipt['items'],
@@ -607,16 +607,13 @@ class Discount implements DiscountHelperInterface
      * @param OrderItem|InvoiceItem|CreditmemoItem $item
      * @return bool
      */
-    public function isValidItem($item)
+    private function isValidItem($item)
     {
         return $item->getRowTotalInclTax() !== null;
     }
 
     /**
-     * Custom floor() function
-     * @param float $val
-     * @param int $precision
-     * @return float|int
+     * @inheritdoc
      */
     public function slyFloor($val, $precision = 2)
     {
@@ -631,10 +628,7 @@ class Discount implements DiscountHelperInterface
     }
 
     /**
-     * Custom ceil() function
-     * @param float $val
-     * @param int $precision
-     * @return float|int
+     * @inheritdoc
      */
     public function slyCeil($val, $precision = 2)
     {
@@ -654,7 +648,7 @@ class Discount implements DiscountHelperInterface
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @return string
      */
-    protected function addTaxValue($taxAttributeCode, $item)
+    private function addTaxValue($taxAttributeCode, $item)
     {
         $id = $item->getProductId();
 
@@ -670,7 +664,7 @@ class Discount implements DiscountHelperInterface
      * $this->spreadDiscOnAllUnits
      * @return bool
      */
-    public function checkSpread()
+    private function checkSpread()
     {
         $items = $this->getAllItems();
 
@@ -684,10 +678,10 @@ class Discount implements DiscountHelperInterface
             }
 
             /* Означает, что есть item, цена которого не делится нацело*/
-            if (!$this->_wryItemUnitPriceExists) {
+            if (!$this->wryItemUnitPriceExists) {
                 $decimals = $this->getDecimalsCountAfterDiv($rowPrice, $qty);
 
-                $this->_wryItemUnitPriceExists = $decimals > 2 ? true : false;
+                $this->wryItemUnitPriceExists = $decimals > 2 ? true : false;
             }
         }
 
@@ -699,7 +693,7 @@ class Discount implements DiscountHelperInterface
         }
 
         //ok, есть товар, который не делится нацело
-        if ($this->_wryItemUnitPriceExists) {
+        if ($this->wryItemUnitPriceExists) {
             $this->generalHelper->debug('2. Item with price which is not divisible evenly.');
 
             return true;
@@ -719,7 +713,7 @@ class Discount implements DiscountHelperInterface
      * @param int $y
      * @return int
      */
-    public function getDecimalsCountAfterDiv($x, $y)
+    private function getDecimalsCountAfterDiv($x, $y)
     {
         $divRes   = (string)round($x / $y, 20);
 
@@ -732,7 +726,7 @@ class Discount implements DiscountHelperInterface
     /**
      * @return mixed
      */
-    public function getAllItems()
+    private function getAllItems()
     {
         /** @psalm-suppress UndefinedMethod */
         return $this->entity->getAllVisibleItems()
@@ -775,7 +769,7 @@ class Discount implements DiscountHelperInterface
      * due to Gift Card and Customer Balance should be visible in tax receipt
      * @return float
      */
-    protected function getGrandTotal()
+    private function getGrandTotal()
     {
         /** @psalm-suppress UndefinedMethod */
         return round(

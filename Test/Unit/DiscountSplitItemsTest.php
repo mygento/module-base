@@ -56,7 +56,11 @@ class DiscountSplitItemsTest extends DiscountGeneralTestCase
         $discountHelper = $this->getDiscountHelperInstance();
         $discountHelper->setIsSplitItemsAllowed(true);
 
-        $split = $discountHelper->getProcessedItem($item);
+        $dHelper = new \ReflectionClass($discountHelper);
+        $getProcessedItem = $dHelper->getMethod('getProcessedItem');
+        $getProcessedItem->setAccessible(true);
+
+        $split = $getProcessedItem->invoke($discountHelper, $item);
 
         $this->assertEquals(count($split), count($expectedArray), 'Item was not splitted correctly!');
 
