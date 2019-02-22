@@ -35,7 +35,7 @@
                 <field id="target" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Log Destination</label>
                     <source_model>Mygento\Base\Model\Source\LogTarget</source_model>
-                </field>                
+                </field>
             </group>
         </section>
     </system>

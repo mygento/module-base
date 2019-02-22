@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
     <menu>
-        <add id="Mygento_Base::root" title="Base" translate="title" module="Mygento_Base" sortOrder="90" parent="Magento_Backend::stores" resource="Mygento_Base::root"/>
+        <add id="Mygento_Base::root" title="Mygento Base" translate="title" module="Mygento_Base" sortOrder="90" parent="Magento_Backend::stores" resource="Mygento_Base::root"/>
         <add id="Mygento_Base::event" title="Event" translate="title" module="Mygento_Base" sortOrder="90" parent="Mygento_Base::root" action="base/event" resource="Mygento_Base::event"/>
     </menu>
 </config>

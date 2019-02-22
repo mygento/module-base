@@ -8,9 +8,6 @@
 
 namespace Mygento\Base\Helper;
 
-/**
- * Base Data helper
- */
 class Currency extends \Magento\Framework\App\Helper\AbstractHelper
 {
     /**
@@ -82,8 +79,6 @@ class Currency extends \Magento\Framework\App\Helper\AbstractHelper
         }
 
         // Get amount in new currency
-        $amountValue = $amountValue * $rate;
-
-        return $amountValue;
+        return $amountValue * $rate;
     }
 }

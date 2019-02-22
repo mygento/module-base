@@ -140,7 +140,9 @@ class File extends \Magento\Framework\App\Config\Value
     private function getFileData()
     {
         $file = [];
+        // phpcs:disable
         //FIXME: TODO: $value is string. Check why do we treat it as array
+        // phpcs:enable
         $value = $this->getValue();
         $tmpName = $this->requestData->getTmpName($this->getPath());
         if ($tmpName) {
