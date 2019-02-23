@@ -1,6 +1,7 @@
 Mygento:
   Base:
     Event:
+      readonly: true
       columns:
         id:
           type: bigint
@@ -22,6 +23,7 @@ Mygento:
           unsigned: true
           nullable: false
           comment: 'level'
+          source: 'Mygento\Base\Model\Source\Loglevel'
         message:
           type: text
           nullable: false
