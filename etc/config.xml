@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Mygento Team
+ * @package Mygento_Base
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <mygento_base>
+            <general>
+                <loglevel>300</loglevel>
+            </general>
+            <logger>
+                <target>file</target>
+            </logger>
+        </mygento_base>
+    </default>
+</config>
