@@ -74,8 +74,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper implements \Psr\
     public function getLogger()
     {
         if (!$this->logger) {
-            $type = $this->getConfig('mygento_base/logger/target');
-            $level = (int) $this->getConfig($this->getLoglevelPath());
+            $type = $this->getGlobalConfig('mygento_base/logger/target');
+            $level = (int) $this->getGlobalConfig($this->getLoglevelPath());
             $this->logger = $this->logManager->getLogger($this->code, $type, $level);
         }
         return $this->logger;
@@ -87,6 +87,19 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper implements \Psr\
      * @return string
      */
     public function getConfig($configPath)
+    {
+        return $this->scopeConfig->getValue(
+            $configPath,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     *
+     * @param string $configPath
+     * @return string
+     */
+    public function getGlobalConfig($configPath)
     {
         return $this->scopeConfig->getValue(
             $configPath,
