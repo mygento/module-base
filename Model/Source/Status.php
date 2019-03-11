@@ -18,7 +18,6 @@ class Status implements \Magento\Framework\Option\ArrayInterface
     private $orderConfig;
 
     /**
-     *
      * @var array
      */
     private $options;
@@ -43,6 +42,7 @@ class Status implements \Magento\Framework\Option\ArrayInterface
                 $this->options[] = ['value' => $code, 'label' => $label];
             }
         }
+
         return $this->options;
     }
 }

@@ -33,7 +33,6 @@ class LogManager
     }
 
     /**
-     *
      * @param string $name
      * @param string $type
      * @param int $level
@@ -65,6 +64,7 @@ class LogManager
                 $logger->pushHandler($handler);
         }
         $this->loggers[$name] = $logger;
+
         return $this->loggers[$name];
     }
 

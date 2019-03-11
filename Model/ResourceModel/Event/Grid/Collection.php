@@ -73,6 +73,7 @@ class Collection extends ParentCollection implements SearchResultInterface
     public function setAggregations($aggregations)
     {
         $this->aggregations = $aggregations;
+
         return $this;
     }
 

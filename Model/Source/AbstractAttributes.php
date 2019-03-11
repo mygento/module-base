@@ -10,19 +10,18 @@ namespace Mygento\Base\Model\Source;
 
 abstract class AbstractAttributes implements \Magento\Framework\Option\ArrayInterface
 {
-
     /**
      * @var array
      */
     protected $options;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $showEmpty = true;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $flatOnly = true;
 
@@ -34,7 +33,7 @@ abstract class AbstractAttributes implements \Magento\Framework\Option\ArrayInte
     /**
      * @var array
      */
-    protected $filterTypesEqual    = [];
+    protected $filterTypesEqual = [];
 
     /**
      * @var \Magento\Eav\Model\Entity\Type
@@ -54,7 +53,7 @@ abstract class AbstractAttributes implements \Magento\Framework\Option\ArrayInte
         \Magento\Eav\Model\Entity\Type $entityType,
         \Magento\Catalog\Model\ResourceModel\Product\Attribute\CollectionFactory $attrColFactory
     ) {
-        $this->entityType     = $entityType;
+        $this->entityType = $entityType;
         $this->attrColFactory = $attrColFactory;
 
         $this->entityType->loadByCode(
@@ -101,7 +100,7 @@ abstract class AbstractAttributes implements \Magento\Framework\Option\ArrayInte
             if ($this->showEmpty) {
                 $this->options[] = [
                     'label' => __('No usage'),
-                    'value' => 0
+                    'value' => 0,
                 ];
             }
 
@@ -118,6 +117,14 @@ abstract class AbstractAttributes implements \Magento\Framework\Option\ArrayInte
     }
 
     /**
+     * To option array
+     */
+    public function toOptionArray()
+    {
+        return $this->getAllOptions();
+    }
+
+    /**
      * Additional Filter
      *
      * @param mixed $collection
@@ -126,13 +133,5 @@ abstract class AbstractAttributes implements \Magento\Framework\Option\ArrayInte
     protected function additionalFilter($collection)
     {
         return $collection;
-    }
-
-    /**
-     * To option array
-     */
-    public function toOptionArray()
-    {
-        return $this->getAllOptions();
     }
 }

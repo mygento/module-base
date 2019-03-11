@@ -56,7 +56,6 @@ class Extensions extends \Magento\Config\Block\System\Config\Form\Fieldset
     private $scopeConfig;
 
     /**
-     *
      * @param \Magento\Framework\Module\ModuleListInterface $moduleList
      * @param \Magento\Framework\Module\Dir\Reader $moduleReader
      * @param \Magento\Framework\Filesystem\Driver\File $filesystem
@@ -196,11 +195,13 @@ class Extensions extends \Magento\Config\Block\System\Config\Form\Fieldset
     {
         $dir = $this->moduleReader->getModuleDir('', $moduleCode);
         $file = $dir . DIRECTORY_SEPARATOR . 'composer.json';
+
         try {
             $string = $this->filesystem->fileGetContents($file);
         } catch (\Magento\Framework\Exception\FileSystemException $e) {
             return null;
         }
+
         return $this->jsonDecoder->decode($string);
     }
 

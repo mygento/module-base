@@ -18,10 +18,8 @@ use Magento\Framework\Exception\LocalizedException;
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.ExcessiveParameterList)
  */
-
 class File extends \Magento\Framework\App\Config\Value
 {
-
     /**
      * @var \Magento\Config\Model\Config\Backend\File\RequestData\RequestDataInterface
      */
@@ -30,7 +28,7 @@ class File extends \Magento\Framework\App\Config\Value
     /**
      * Upload max file size in kilobytes
      *
-     * @var integer
+     * @var int
      */
     private $maxFileSize = 0;
 
@@ -50,7 +48,6 @@ class File extends \Magento\Framework\App\Config\Value
     private $uploaderFactory;
 
     /**
-     *
      * @param \Magento\Framework\File\UploaderFactory $uploaderFactory
      * @param RequestDataInterface $requestData
      * @param \Magento\Framework\Filesystem $filesystem
@@ -104,6 +101,7 @@ class File extends \Magento\Framework\App\Config\Value
         $file = $this->getFileData();
         if (!empty($file)) {
             $uploadDir = $this->getUploadDir();
+
             try {
                 /** @var \Magento\Framework\File\Uploader $uploader */
                 $uploader = $this->uploaderFactory->create(['fileId' => $file]);
@@ -122,6 +120,7 @@ class File extends \Magento\Framework\App\Config\Value
                 }
                 $this->setValue($filename);
             }
+
             return $this;
         }
         if (is_array($value) && !empty($value['delete'])) {
@@ -129,7 +128,32 @@ class File extends \Magento\Framework\App\Config\Value
         } else {
             $this->unsValue();
         }
+
         return $this;
+    }
+
+    /**
+     * Validation callback for checking max file size
+     *
+     * @param string $filePath Path to temporary uploaded file
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @return void
+     */
+    public function validateMaxSize($filePath)
+    {
+        $directory = $this->filesystem->getDirectoryRead(DirectoryList::SYS_TMP);
+        if ($this->maxFileSize > 0 &&
+            $directory->stat(
+                $directory->getRelativePath($filePath)
+            )['size'] > $this->maxFileSize * 1024
+        ) {
+            throw new LocalizedException(
+                __(
+                    'The file you\'re uploading exceeds the server size limit of %1 kilobytes.',
+                    $this->maxFileSize
+                )
+            );
+        }
     }
 
     /**
@@ -157,38 +181,15 @@ class File extends \Magento\Framework\App\Config\Value
     }
 
     /**
-     * Validation callback for checking max file size
-     *
-     * @param  string $filePath Path to temporary uploaded file
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @return void
-     */
-    public function validateMaxSize($filePath)
-    {
-        $directory = $this->filesystem->getDirectoryRead(DirectoryList::SYS_TMP);
-        if ($this->maxFileSize > 0 &&
-            $directory->stat(
-                $directory->getRelativePath($filePath)
-            )['size'] > $this->maxFileSize * 1024
-        ) {
-            throw new LocalizedException(
-                __(
-                    'The file you\'re uploading exceeds the server size limit of %1 kilobytes.',
-                    $this->maxFileSize
-                )
-            );
-        }
-    }
-
-    /**
      * Makes a decision about whether to add info about the scope.
      *
-     * @return boolean
+     * @return bool
      */
     private function addWhetherScopeInfo()
     {
         $fieldConfig = $this->getFieldConfig();
         $dirParams = array_key_exists('upload_dir', $fieldConfig) ? $fieldConfig['upload_dir'] : [];
+
         return is_array($dirParams) && array_key_exists(
             'scope_info',
             $dirParams
@@ -226,7 +227,8 @@ class File extends \Magento\Framework\App\Config\Value
                 $uploadDir = $this->getUploadDirPath($uploadDir);
             }
         } else {
-            $uploadDir = (string)$fieldConfig['upload_dir'];
+            $uploadDir = (string) $fieldConfig['upload_dir'];
+
             return $this->directoryList->getPath('var') . '/' . $uploadDir;
         }
 
@@ -258,6 +260,7 @@ class File extends \Magento\Framework\App\Config\Value
         if (ScopeConfigInterface::SCOPE_TYPE_DEFAULT != $this->getScope()) {
             $scopeInfo .= '/' . $this->getScopeId();
         }
+
         return $scopeInfo . '/' . $path;
     }
 
@@ -275,6 +278,7 @@ class File extends \Magento\Framework\App\Config\Value
         if (ScopeConfigInterface::SCOPE_TYPE_DEFAULT != $this->getScope()) {
             $path .= '/' . $this->getScopeId();
         }
+
         return $path;
     }
 

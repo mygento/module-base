@@ -37,7 +37,7 @@ class Currency extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
-     * @param int|float $amountValue
+     * @param float|int $amountValue
      * @param string $currencyCodeFrom
      * @param string $currencyCodeTo
      * @throws \Magento\Framework\Exception\NoSuchEntityException

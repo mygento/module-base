@@ -50,7 +50,6 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper implements \Psr\
     }
 
     /**
-     *
      * @param string $phone
      * @return string
      */
@@ -68,8 +67,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper implements \Psr\
     }
 
     /**
-     *
-     * @return \Mygento\Base\Model\Logger\Logger|\Monolog\Logger
+     * @return \Monolog\Logger|\Mygento\Base\Model\Logger\Logger
      */
     public function getLogger()
     {
@@ -78,11 +76,11 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper implements \Psr\
             $level = (int) $this->getGlobalConfig($this->getLoglevelPath());
             $this->logger = $this->logManager->getLogger($this->code, $type, $level);
         }
+
         return $this->logger;
     }
 
     /**
-     *
      * @param string $configPath
      * @return string
      */
@@ -95,7 +93,6 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper implements \Psr\
     }
 
     /**
-     *
      * @param string $configPath
      * @return string
      */
@@ -108,16 +105,6 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper implements \Psr\
     }
 
     /**
-     * @return string
-     */
-    protected function getLoglevelPath()
-    {
-        $code = $this->code === 'mygento' ? 'mygento_base' : $this->code;
-        return $code . '/general/loglevel';
-    }
-
-    /**
-     *
      * @param string $message
      * @param array $context
      */
@@ -127,7 +114,6 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper implements \Psr\
     }
 
     /**
-     *
      * @param string $message
      * @param array $context
      */
@@ -137,7 +123,6 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper implements \Psr\
     }
 
     /**
-     *
      * @param string $message
      * @param array $context
      */
@@ -147,7 +132,6 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper implements \Psr\
     }
 
     /**
-     *
      * @param string $message
      * @param array $context
      */
@@ -157,7 +141,6 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper implements \Psr\
     }
 
     /**
-     *
      * @param string $message
      * @param array $context
      */
@@ -203,7 +186,6 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper implements \Psr\
     }
 
     /**
-     *
      * @param string $message
      * @param array $context
      */
@@ -213,7 +195,6 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper implements \Psr\
     }
 
     /**
-     *
      * @param mixed $text
      * @deprecated
      */
@@ -225,5 +206,15 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper implements \Psr\
             // @codingStandardsIgnoreEnd
         }
         $this->getLogger()->log(\Monolog\Logger::DEBUG, $text);
+    }
+
+    /**
+     * @return string
+     */
+    protected function getLoglevelPath()
+    {
+        $code = $this->code === 'mygento' ? 'mygento_base' : $this->code;
+
+        return $code . '/general/loglevel';
     }
 }

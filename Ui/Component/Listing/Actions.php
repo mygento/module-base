@@ -52,35 +52,36 @@ abstract class Actions extends \Magento\Ui\Component\Listing\Columns\Column
     public function prepareDataSource(array $dataSource)
     {
         if (isset($dataSource['data']['items'])) {
-            foreach ($dataSource['data']['items'] as & $item) {
+            foreach ($dataSource['data']['items'] as &$item) {
                 if (isset($item[$this->key])) {
                     $item[$this->getData('name')] = [
                         'edit' => [
                             'href' => $this->urlBuilder->getUrl(
                                 $this->route . '/' . $this->controller . '/edit',
                                 [
-                                    'id' => $item[$this->key]
+                                    'id' => $item[$this->key],
                                 ]
                             ),
-                            'label' => __('Edit')
+                            'label' => __('Edit'),
                         ],
                         'delete' => [
                             'href' => $this->urlBuilder->getUrl(
                                 $this->route . '/' . $this->controller . '/delete',
                                 [
-                                    'id' => $item[$this->key]
+                                    'id' => $item[$this->key],
                                 ]
                             ),
                             'label' => __('Delete'),
                             'confirm' => [
                                 'title' => __('Delete'),
-                                'message' => __('Are you sure you want to delete a record?')
-                            ]
-                        ]
+                                'message' => __('Are you sure you want to delete a record?'),
+                            ],
+                        ],
                     ];
                 }
             }
         }
+
         return $dataSource;
     }
 }

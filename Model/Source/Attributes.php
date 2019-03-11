@@ -17,6 +17,6 @@ class Attributes extends AbstractAttributes
         'boolean',
         'date',
         'image',
-        'price'
+        'price',
     ];
 }

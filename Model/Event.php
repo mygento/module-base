@@ -13,14 +13,6 @@ use Magento\Framework\Model\AbstractModel;
 class Event extends AbstractModel implements \Mygento\Base\Api\Data\EventInterface
 {
     /**
-     * @return void
-     */
-    protected function _construct()
-    {
-        $this->_init(\Mygento\Base\Model\ResourceModel\Event::class);
-    }
-
-    /**
      * Get id
      * @return int|null
      */
@@ -170,5 +162,13 @@ class Event extends AbstractModel implements \Mygento\Base\Api\Data\EventInterfa
     public function setExtra($extra)
     {
         return $this->setData(self::EXTRA, $extra);
+    }
+
+    /**
+     * @return void
+     */
+    protected function _construct()
+    {
+        $this->_init(\Mygento\Base\Model\ResourceModel\Event::class);
     }
 }

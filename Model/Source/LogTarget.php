@@ -32,6 +32,7 @@ class LogTarget implements \Magento\Framework\Data\OptionSourceInterface
         foreach ($this->logManager->getHandlers() as $handler) {
             $options[$handler] = ucfirst($handler);
         }
+
         return $options;
     }
 }

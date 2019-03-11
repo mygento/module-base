@@ -10,9 +10,7 @@ namespace Mygento\Base\Model\Logger;
 
 class Handler extends \Magento\Framework\Logger\Handler\Base
 {
-
     /**
-     *
      * @param string $name
      * @param \Magento\Framework\Filesystem\DriverInterface $filesystem
      * @param string $filePath

@@ -16,7 +16,7 @@ interface ProductAttributeHelperInterface
      * Fetch attribute code from $pathToParam and then get it from product.
      * Or returns default value ($pathToParam . _default) if $pathToParam is empty.
      * @param string $pathToParam config path like module/general/param
-     * @param string|int $productId
+     * @param int|string $productId
      *
      * @return mixed attribute value
      */
@@ -26,7 +26,7 @@ interface ProductAttributeHelperInterface
      * Returns attribute value or attribute text (for dropdown attributes)
      *
      * @param string $attributeCode
-     * @param string|int $productId
+     * @param int|string $productId
      * @return mixed
      */
     public function getValue(string $attributeCode, $productId);

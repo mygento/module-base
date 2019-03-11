@@ -21,7 +21,7 @@ class Image
     /** @var \Magento\Framework\Image\AdapterFactory */
     private $imageFactory;
 
-    /**  @var array */
+    /** @var array */
     private $imageConfig;
 
     /** @var string */
@@ -103,6 +103,7 @@ class Image
                 'images'
             );
         }
+
         return $this->imageConfig[$this->imageType] ?? null;
     }
 

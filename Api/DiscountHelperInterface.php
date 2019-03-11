@@ -26,13 +26,13 @@ interface DiscountHelperInterface
     /**
      * Returns all items of the entity (order|invoice|creditmemo) with properly calculated discount
      * and properly calculated Sum
-     * @param Order|Invoice|Creditmemo $entity
+     * @param Creditmemo|Invoice|Order $entity
      * @param string $taxValue
      * @param string $taxAttributeCode Set it if info about tax is stored in product in certain
-     *     attr
+     *                                 attr
      * @param string $shippingTaxValue
      * @throws \Exception
-     * @return null|array with calculated items and sum
+     * @return array|null with calculated items and sum
      */
     public function getRecalculated(
         $entity,

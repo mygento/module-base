@@ -20,6 +20,7 @@ class Attribute implements ProductAttributeHelperInterface
      * @var \Magento\Catalog\Model\ProductRepository
      */
     private $productRepository;
+
     /**
      * @var \Mygento\Base\Helper\Data
      */
@@ -72,12 +73,12 @@ class Attribute implements ProductAttributeHelperInterface
     }
 
     /**
-     * @param string|int|null $productId
+     * @param int|string|null $productId
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @return \Magento\Catalog\Api\Data\ProductInterface
      */
     private function getProduct($productId)
     {
-        return $this->productRepository->getById((int)$productId);
+        return $this->productRepository->getById((int) $productId);
     }
 }

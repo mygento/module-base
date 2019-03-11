@@ -13,15 +13,15 @@ use PHPUnit\Framework\TestCase;
 class DiscountGeneralTestCase extends TestCase
 {
     //consts for getRecalculated() method
-    const TEST_CASE_NAME_1  = '#case 1. Скидки только на товары. Все делится нацело. Bug 1 kop. Товары по 1 шт. Два со скидками, а один бесплатный.';
-    const TEST_CASE_NAME_2  = '#case 2. Скидка на весь чек и на отдельный товар. Order 145000128 DemoEE';
-    const TEST_CASE_NAME_3  = '#case 3. Скидка на каждый товар.';
-    const TEST_CASE_NAME_4  = '#case 4. Нет скидок никаких';
-    const TEST_CASE_NAME_5  = '#case 5. Скидки только на товары. Не делятся нацело.';
-    const TEST_CASE_NAME_6  = '#case 6. Есть позиция, на которую НЕ ДОЛЖНА распространиться скидка.';
-    const TEST_CASE_NAME_7  = '#case 7. Bug grandTotal < чем сумма всех позиций. Есть позиция со 100% скидкой.';
-    const TEST_CASE_NAME_8  = '#case 8. Reward points в заказе. 1 товар со скидкой, 1 без';
-    const TEST_CASE_NAME_9  = '#case 9. Reward points в заказе. В заказе только 1 товар и тот без скидки';
+    const TEST_CASE_NAME_1 = '#case 1. Скидки только на товары. Все делится нацело. Bug 1 kop. Товары по 1 шт. Два со скидками, а один бесплатный.';
+    const TEST_CASE_NAME_2 = '#case 2. Скидка на весь чек и на отдельный товар. Order 145000128 DemoEE';
+    const TEST_CASE_NAME_3 = '#case 3. Скидка на каждый товар.';
+    const TEST_CASE_NAME_4 = '#case 4. Нет скидок никаких';
+    const TEST_CASE_NAME_5 = '#case 5. Скидки только на товары. Не делятся нацело.';
+    const TEST_CASE_NAME_6 = '#case 6. Есть позиция, на которую НЕ ДОЛЖНА распространиться скидка.';
+    const TEST_CASE_NAME_7 = '#case 7. Bug grandTotal < чем сумма всех позиций. Есть позиция со 100% скидкой.';
+    const TEST_CASE_NAME_8 = '#case 8. Reward points в заказе. 1 товар со скидкой, 1 без';
+    const TEST_CASE_NAME_9 = '#case 9. Reward points в заказе. В заказе только 1 товар и тот без скидки';
     const TEST_CASE_NAME_10 = '#case 10. Reward points в заказе. На товары нет скидок';
     const TEST_CASE_NAME_11 = '#case 11. (prd nn) order 100374806';
     const TEST_CASE_NAME_12 = '#case 12. invoice NN 100057070. Неверно расчитан grandTotal в Magento';
@@ -35,9 +35,9 @@ class DiscountGeneralTestCase extends TestCase
     const TEST_CASE_NAME_20 = '#case 20. Bug with negative Qty';
     const TEST_CASE_NAME_21 = '#case 21. Bug with negative Price because of converting float -28.9999999999999 to int  (e.g. invoice 100091106)';
 
-    const CHARS_LOWERS   = 'abcdefghijklmnopqrstuvwxyz';
-    const CHARS_UPPERS   = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const CHARS_DIGITS   = '0123456789';
+    const CHARS_LOWERS = 'abcdefghijklmnopqrstuvwxyz';
+    const CHARS_UPPERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const CHARS_DIGITS = '0123456789';
     const CHARS_SPECIALS = '!$*+-.=?@^_|~';
 
     protected $discountHelper = null;
@@ -46,6 +46,11 @@ class DiscountGeneralTestCase extends TestCase
      * @var \Magento\Framework\TestFramework\Unit\Helper\ObjectManager
      */
     private $objectMan;
+
+    protected function setUp()
+    {
+        $this->discountHelper = $this->getDiscountHelperInstance();
+    }
 
     /**
      * @return \Magento\Framework\TestFramework\Unit\Helper\ObjectManager
@@ -70,21 +75,6 @@ class DiscountGeneralTestCase extends TestCase
         return $this->discountHelper;
     }
 
-    protected function setUp()
-    {
-        $this->discountHelper = $this->getDiscountHelperInstance();
-    }
-
-    protected function onNotSuccessfulTest(\Throwable $e)
-    {
-        //beautify output
-        echo "\033[1;31m"; // light red
-        echo "\t" . $e->getMessage() . "\n";
-        echo "\033[0m"; //reset color
-
-        throw $e;
-    }
-
     /**
      * @SuppressWarnings(PHPMD.ExitExpression)
      * @param mixed $order
@@ -104,27 +94,6 @@ class DiscountGeneralTestCase extends TestCase
             echo "\033[0m"; // reset color
             exit();
         }
-    }
-
-    protected function getNewOrderInstance(
-        $subTotalInclTax,
-        $grandTotal,
-        $shippingInclTax,
-        $rewardPoints = 0.00
-    ) {
-        $order = $this->getObjectManager()->getObject(
-            \Magento\Framework\DataObject::class
-        );
-
-        $order->setData('subtotal_incl_tax', $subTotalInclTax);
-        $order->setData('grand_total', $grandTotal);
-        $order->setData('shipping_incl_tax', $shippingInclTax);
-        $order->setData(
-            'discount_amount',
-            $grandTotal + $rewardPoints - $subTotalInclTax - $shippingInclTax
-        );
-
-        return $order;
     }
 
     public function getItem(
@@ -154,7 +123,7 @@ class DiscountGeneralTestCase extends TestCase
 
     public function addItem($order, $item)
     {
-        $items   = (array)$order->getData('all_items');
+        $items = (array) $order->getData('all_items');
         $items[] = $item;
 
         $order->setData('all_items', $items);
@@ -389,5 +358,36 @@ class DiscountGeneralTestCase extends TestCase
         $final[self::TEST_CASE_NAME_21] = $order;
 
         return $final;
+    }
+
+    protected function onNotSuccessfulTest(\Throwable $e)
+    {
+        //beautify output
+        echo "\033[1;31m"; // light red
+        echo "\t" . $e->getMessage() . "\n";
+        echo "\033[0m"; //reset color
+
+        throw $e;
+    }
+
+    protected function getNewOrderInstance(
+        $subTotalInclTax,
+        $grandTotal,
+        $shippingInclTax,
+        $rewardPoints = 0.00
+    ) {
+        $order = $this->getObjectManager()->getObject(
+            \Magento\Framework\DataObject::class
+        );
+
+        $order->setData('subtotal_incl_tax', $subTotalInclTax);
+        $order->setData('grand_total', $grandTotal);
+        $order->setData('shipping_incl_tax', $shippingInclTax);
+        $order->setData(
+            'discount_amount',
+            $grandTotal + $rewardPoints - $subTotalInclTax - $shippingInclTax
+        );
+
+        return $order;
     }
 }

@@ -30,6 +30,7 @@ class DeleteButton extends GenericButton implements ButtonProviderInterface
                 'sort_order' => 20,
             ];
         }
+
         return $data;
     }
 

@@ -60,6 +60,7 @@ class EventRepository implements \Mygento\Base\Api\EventRepositoryInterface
                 __('Base Event with id "%1" does not exist.', $entityId)
             );
         }
+
         return $entity;
     }
 
@@ -79,6 +80,7 @@ class EventRepository implements \Mygento\Base\Api\EventRepositoryInterface
                 __($exception->getMessage())
             );
         }
+
         return $entity;
     }
 
@@ -96,6 +98,7 @@ class EventRepository implements \Mygento\Base\Api\EventRepositoryInterface
                 __($exception->getMessage())
             );
         }
+
         return true;
     }
 
@@ -151,6 +154,7 @@ class EventRepository implements \Mygento\Base\Api\EventRepositoryInterface
         $searchResults->setSearchCriteria($criteria);
         $searchResults->setItems($collection->getItems());
         $searchResults->setTotalCount($collection->getSize());
+
         return $searchResults;
     }
 }

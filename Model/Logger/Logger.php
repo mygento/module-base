@@ -11,7 +11,6 @@ namespace Mygento\Base\Model\Logger;
 class Logger extends \Magento\Framework\Logger\Monolog
 {
     /**
-     *
      * @param string $name
      */
     public function __construct(

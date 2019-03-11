@@ -133,9 +133,8 @@ class ImageUploader
     public function getImageFilePath($imageFileUrl)
     {
         $basePath = $this->filesystem->getDirectoryRead(DirectoryList::MEDIA);
-        $imagePath = $basePath->getAbsolutePath($imageFileUrl);
 
-        return $imagePath;
+        return $basePath->getAbsolutePath($imageFileUrl);
     }
 
     /**
@@ -169,6 +168,7 @@ class ImageUploader
         $basePath = $this->getBasePath();
         $baseImagePath = $this->getFilePath($basePath, $imageName);
         $baseTmpImagePath = $this->getFilePath($baseTmpPath, $imageName);
+
         try {
             $this->coreFileStorageDatabase->copyFile(
                 $baseTmpImagePath,
@@ -183,6 +183,7 @@ class ImageUploader
                 __('Something went wrong while saving the file(s).')
             );
         }
+
         return $imageName;
     }
 
@@ -215,12 +216,14 @@ class ImageUploader
                 $relativePath = rtrim($baseTmpPath, '/') . '/' . ltrim($result['file'], '/');
                 $this->coreFileStorageDatabase->saveFile($relativePath);
             } catch (\Exception $e) {
-                $this->logger->critical((string)$e);
+                $this->logger->critical((string) $e);
+
                 throw new \Magento\Framework\Exception\LocalizedException(
                     __('Something went wrong while saving the file(s).')
                 );
             }
         }
+
         return $result;
     }
 
@@ -241,14 +244,14 @@ class ImageUploader
 
         if (isset($data[$input][0]['name']) && isset($data[$input][0]['tmp_name'])) {
             try {
-                $result = $this->moveFileFromTmp($data[$input][0]['file']);
-                return $result;
+                return $this->moveFileFromTmp($data[$input][0]['file']);
             } catch (\Exception $e) {
                 return '';
             }
         } elseif (isset($data[$input][0]['name'])) {
             return $data[$input][0]['name'];
         }
+
         return '';
     }
 }

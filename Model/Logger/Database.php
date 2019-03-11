@@ -10,7 +10,6 @@ namespace Mygento\Base\Model\Logger;
 
 class Database extends \Monolog\Handler\AbstractProcessingHandler
 {
-
     /**
      * @var \Mygento\Base\Api\EventRepositoryInterface
      */
@@ -71,13 +70,14 @@ class Database extends \Monolog\Handler\AbstractProcessingHandler
      * Serialize field
      *
      * @param mixed $field
-     * @return string|bool|null
+     * @return bool|string|null
      */
     private function serialize($field)
     {
         if (empty($field)) {
             return null;
         }
+
         return $this->serializer->serialize($field);
     }
 }

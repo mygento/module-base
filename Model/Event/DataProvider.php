@@ -64,6 +64,7 @@ class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
             $this->loadedData[$model->getId()] = $model->getData();
             $this->dataPersistor->clear('base_event');
         }
+
         return $this->loadedData;
     }
 }
