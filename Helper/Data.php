@@ -82,25 +82,29 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper implements \Psr\
 
     /**
      * @param string $configPath
+     * @param string|null $scopeCode
      * @return string
      */
-    public function getConfig($configPath)
+    public function getConfig($configPath, $scopeCode = null)
     {
         return $this->scopeConfig->getValue(
             $configPath,
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            $scopeCode
         );
     }
 
     /**
      * @param string $configPath
+     * @param string|null $scopeCode
      * @return string
      */
-    public function getGlobalConfig($configPath)
+    public function getGlobalConfig($configPath, $scopeCode = null)
     {
         return $this->scopeConfig->getValue(
             $configPath,
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            $scopeCode
         );
     }
 
