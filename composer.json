@@ -24,8 +24,8 @@
   ],
   "require": {
     "ext-bcmath": "*",
-    "magento/framework": "102.*",
-    "magento/module-sales": "102.*"
+    "magento/framework": "100.*",
+    "magento/module-sales": "100.*"
   },
   "require-dev": {
     "mygento/coding-standard": "^2.13.0",
