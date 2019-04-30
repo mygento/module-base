@@ -1,7 +1,7 @@
 {
   "name": "mygento/module-base",
   "type": "magento2-module",
-  "version": "2.3.1",
+  "version": "2.1.0",
   "license": "OSL-3.0",
   "homepage": "https://github.com/mygento/module-base",
   "description": "Mygento Base",
@@ -24,8 +24,8 @@
   ],
   "require": {
     "ext-bcmath": "*",
-    "magento/framework": "102.*",
-    "magento/module-sales": "102.*"
+    "magento/framework": "100.*",
+    "magento/module-sales": "100.*"
   },
   "require-dev": {
     "mygento/coding-standard": "^2.13.0",
