@@ -21,27 +21,27 @@ class Database extends \Monolog\Handler\AbstractProcessingHandler
     private $eventFactory;
 
     /**
-     * @var \Magento\Framework\Serialize\SerializerInterface
+     * @var \Magento\Framework\Json\EncoderInterface
      */
-    private $serializer;
+    private $jsonEncoder;
 
     /**
      * @param \Mygento\Base\Api\EventRepositoryInterface $eventRepository
-     * @param \Magento\Framework\Serialize\SerializerInterface $serializer
+     * @param \Magento\Framework\Json\EncoderInterface $jsonEncoder
      * @param \Mygento\Base\Api\Data\EventInterfaceFactory $eventFactory
      * @param int $level
      * @param bool $bubble
      */
     public function __construct(
         \Mygento\Base\Api\EventRepositoryInterface $eventRepository,
-        \Magento\Framework\Serialize\SerializerInterface $serializer,
+        \Magento\Framework\Json\EncoderInterface $jsonEncoder,
         \Mygento\Base\Api\Data\EventInterfaceFactory $eventFactory,
         $level = \Monolog\Logger::DEBUG,
         $bubble = true
     ) {
         parent::__construct($level, $bubble);
         $this->eventRepository = $eventRepository;
-        $this->serializer = $serializer;
+        $this->jsonEncoder = $jsonEncoder;
         $this->eventFactory = $eventFactory;
     }
 
@@ -78,6 +78,6 @@ class Database extends \Monolog\Handler\AbstractProcessingHandler
             return null;
         }
 
-        return $this->serializer->serialize($field);
+        return $this->jsonEncoder->encode($field);
     }
 }
