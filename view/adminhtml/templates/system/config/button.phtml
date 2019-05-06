@@ -6,3 +6,6 @@
         }}'>
     <span><span><span id="<?= $block->getHtmlId() ?>_result"><?= $block->escapeHtml($block->getButtonLabel()) ?></span></span></span>
 </button>
+<?php if ($block->getNote()): ?>
+<div class="note"><?= $block->getNote(); ?></div>
+<?php endif; ?>

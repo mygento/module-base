@@ -45,7 +45,11 @@ define([
             }).done(function (response) {
                 if (response.success) {
                     element.removeClass('fail').addClass('success');
-                    result = self.options.successText;
+                    if (response.successText) {
+                        result = response.successText;
+                    } else {
+                        result = self.options.successText;
+                    }
                 } else {
                     msg = response.errorMessage;
 

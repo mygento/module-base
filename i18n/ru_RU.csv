@@ -24,3 +24,7 @@
 "Shipping name in receipt","Наименование доставки в чеке"
 "All built-in methods of Mygento_Base module will write log","Все встроенные методы в модуле Mygento_Base будут писать лог"
 "-- Please Select --","-- Выберите --"
+"Last Update","Последнее обновление"
+"Scheduled or Running","Запланировано или в работе"
+"Job Code is required","Требуется код задачи"
+"Job Status","Статус задачи"
