@@ -1,0 +1,11 @@
+<button class="scalable" type="button" id="<?= $block->getHtmlId() ?>" data-mage-init='{"<?= $block->getWidgetName(); ?>":{
+        "url": "<?= /* @escapeNotVerified */ $block->getAjaxUrl() ?>",
+        "elementId": "<?= $block->getHtmlId() ?>",
+        "successText": "<?= /* @escapeNotVerified */ __('Successful!') ?>",
+        "failedText": "<?= /* @escapeNotVerified */ __('Failed! Test again?') ?>"
+        }}'>
+    <span><span><span id="<?= $block->getHtmlId() ?>_result"><?= $block->escapeHtml($block->getButtonLabel()) ?></span></span></span>
+</button>
+<?php if ($block->getNote()): ?>
+<div class="note"><?= $block->getNote(); ?></div>
+<?php endif; ?>
