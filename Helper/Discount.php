@@ -26,6 +26,9 @@ class Discount implements DiscountHelperInterface
     const NAME_UNIT_PRICE = 'disc_hlpr_price';
     const NAME_ROW_DIFF = 'recalc_row_diff';
 
+    const ITEMS = 'items';
+    const SHIPPING = 'shipping';
+
     /**
      * @var bool Does item exist with price not divisible evenly?
      *           Есть ли item, цена которого не делится нацело
@@ -509,8 +512,8 @@ class Discount implements DiscountHelperInterface
             'tax' => $this->shippingTaxValue,
         ];
 
-        $itemsFinal['shipping'] = $shippingItem;
-        $receipt['items'] = $itemsFinal;
+        $itemsFinal[self::SHIPPING] = $shippingItem;
+        $receipt[self::ITEMS] = $itemsFinal;
 
         if (!$this->checkReceipt($receipt)) {
             $this->generalHelper->debug(
@@ -657,7 +660,7 @@ class Discount implements DiscountHelperInterface
     private function checkReceipt($receipt)
     {
         $sum = array_reduce(
-            $receipt['items'],
+            $receipt[self::ITEMS],
             function ($carry, $item) {
                 $carry += $item['sum'];
 
