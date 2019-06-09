@@ -14,7 +14,7 @@ class Transaction extends \Magento\Sales\Model\Order\Payment\Transaction
 {
     const TYPE_CAPTURE_CONFIRM = 'capture_confirm';
     const TYPE_FISCAL = 'fiscal_receipt';
-    const TYPE_FISCAL_PREPAYMENT = 'fiscal_receipt_prepayment';
+    const TYPE_FISCAL_PREPAYMENT = 'fiscal_prepay';
     const TYPE_FISCAL_REFUND = 'fiscal_refund';
 
     /**
