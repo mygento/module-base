@@ -34,6 +34,7 @@ class Discount implements DiscountHelperInterface
     const SUM = 'sum';
     const QUANTITY = 'quantity';
     const TAX = 'tax';
+    const TAX_SUM = 'tax_sum';
 
     /**
      * @var bool Does item exist with price not divisible evenly?
