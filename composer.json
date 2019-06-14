@@ -29,8 +29,9 @@
   },
   "require-dev": {
     "mygento/coding-standard": "^2.13.5",
-    "phpunit/phpunit": "~6.5.0",
-    "vimeo/psalm": "3.x-dev"
+    "phpunit/phpunit": "~7.0.0",
+    "vimeo/psalm": "3.x-dev",
+    "magento/magento-coding-standard": "~1.0.0"
   },
   "autoload": {
     "files": [
