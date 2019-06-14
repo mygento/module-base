@@ -21,8 +21,10 @@ class Transaction
         $result
     ) {
         return array_merge($result, [
-            'fiscal_receipt' => __('Fiscal receipt'),
-            'fiscal_refund' => __('Fiscal receipt refund'),
+            \Mygento\Base\Model\Payment\Transaction::TYPE_CAPTURE_CONFIRM => __('Capture confirm'),
+            \Mygento\Base\Model\Payment\Transaction::TYPE_FISCAL => __('Fiscal receipt'),
+            \Mygento\Base\Model\Payment\Transaction::TYPE_FISCAL_PREPAYMENT => __('Fiscal receipt prepayment'),
+            \Mygento\Base\Model\Payment\Transaction::TYPE_FISCAL_REFUND => __('Fiscal receipt refund'),
         ]);
     }
 }
