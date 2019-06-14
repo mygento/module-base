@@ -12,7 +12,9 @@ use Magento\Framework\Exception\LocalizedException;
 
 class Transaction extends \Magento\Sales\Model\Order\Payment\Transaction
 {
+    const TYPE_CAPTURE_CONFIRM = 'capture_confirm';
     const TYPE_FISCAL = 'fiscal_receipt';
+    const TYPE_FISCAL_PREPAYMENT = 'fiscal_prepay';
     const TYPE_FISCAL_REFUND = 'fiscal_refund';
 
     /**
@@ -33,9 +35,11 @@ class Transaction extends \Magento\Sales\Model\Order\Payment\Transaction
             case self::TYPE_ORDER:
             case self::TYPE_AUTH:
             case self::TYPE_CAPTURE:
+            case self::TYPE_CAPTURE_CONFIRM:
             case self::TYPE_VOID:
             case self::TYPE_REFUND:
             case self::TYPE_FISCAL:
+            case self::TYPE_FISCAL_PREPAYMENT:
             case self::TYPE_FISCAL_REFUND:
                 break;
             default:
