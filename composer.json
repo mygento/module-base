@@ -1,7 +1,7 @@
 {
   "name": "mygento/module-base",
   "type": "magento2-module",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "license": "OSL-3.0",
   "homepage": "https://github.com/mygento/module-base",
   "description": "Mygento Base",
@@ -24,13 +24,16 @@
   ],
   "require": {
     "ext-bcmath": "*",
-    "magento/framework": "100.*",
-    "magento/module-sales": "100.*"
+    "magento/framework": "101.*",
+    "magento/module-sales": "101.*"
   },
   "require-dev": {
-    "mygento/coding-standard": "^2.13.0",
+    "mygento/coding-standard": "^2.13.5",
     "phpunit/phpunit": "~6.5.0",
     "vimeo/psalm": "3.x-dev"
+  },
+  "conflict": {
+    "mygento/base": "2.*"
   },
   "autoload": {
     "files": [
