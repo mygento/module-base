@@ -28,9 +28,8 @@
     "magento/module-sales": "101.*"
   },
   "require-dev": {
-    "mygento/coding-standard": "^2.13.5",
-    "phpunit/phpunit": "~6.5.0",
-    "vimeo/psalm": "3.x-dev"
+    "mygento/coding-standard": "^2.4.5",
+    "phpunit/phpunit": "~6.2.4"
   },
   "conflict": {
     "mygento/base": "2.*"
