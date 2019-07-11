@@ -26,6 +26,15 @@ class Discount implements DiscountHelperInterface
     const NAME_UNIT_PRICE = 'disc_hlpr_price';
     const NAME_ROW_DIFF = 'recalc_row_diff';
 
+    const ORIG_GRAND_TOTAL = 'origGrandTotal';
+    const ITEMS = 'items';
+    const SHIPPING = 'shipping';
+    const NAME = 'name';
+    const PRICE = 'price';
+    const SUM = 'sum';
+    const QUANTITY = 'quantity';
+    const TAX = 'tax';
+
     /**
      * @var bool Does item exist with price not divisible evenly?
      *           Есть ли item, цена которого не делится нацело
@@ -488,12 +497,12 @@ class Discount implements DiscountHelperInterface
 
         //Calculate sum
         foreach ($itemsFinal as $item) {
-            $itemsSum += $item['sum'];
+            $itemsSum += $item[self::SUM];
         }
 
         $receipt = [
-            'sum' => $itemsSum,
-            'origGrandTotal' => $grandTotal,
+            self::SUM => $itemsSum,
+            self::ORIG_GRAND_TOTAL => $grandTotal,
         ];
 
         $shippingAmount = $this->entity->getShippingInclTax() ?? 0.00;
@@ -502,15 +511,15 @@ class Discount implements DiscountHelperInterface
         $this->generalHelper->debug("Items sum: {$itemsSum}. Shipping increase: {$itemsSumDiff}");
 
         $shippingItem = [
-            'name' => $this->getShippingName($this->entity),
-            'price' => $shippingAmount + $itemsSumDiff,
-            'quantity' => 1.0,
-            'sum' => $shippingAmount + $itemsSumDiff,
-            'tax' => $this->shippingTaxValue,
+            self::NAME => $this->getShippingName($this->entity),
+            self::PRICE => $shippingAmount + $itemsSumDiff,
+            self::QUANTITY => 1.0,
+            self::SUM => $shippingAmount + $itemsSumDiff,
+            self::TAX => $this->shippingTaxValue,
         ];
 
-        $itemsFinal['shipping'] = $shippingItem;
-        $receipt['items'] = $itemsFinal;
+        $itemsFinal[self::SHIPPING] = $shippingItem;
+        $receipt[self::ITEMS] = $itemsFinal;
 
         if (!$this->checkReceipt($receipt)) {
             $this->generalHelper->debug(
@@ -542,19 +551,19 @@ class Discount implements DiscountHelperInterface
         }
 
         $entityItem = [
-            'price' => round($price, 2),
-            'name' => $item->getName(),
-            'quantity' => round($qty, 2),
-            'sum' => round($price * $qty, 2),
-            'tax' => $taxValue,
+            self::PRICE => round($price, 2),
+            self::NAME => $item->getName(),
+            self::QUANTITY => round($qty, 2),
+            self::SUM => round($price * $qty, 2),
+            self::TAX => $taxValue,
         ];
 
         if (!$this->doCalculation) {
-            $entityItem['sum'] = round(
+            $entityItem[self::SUM] = round(
                 $item->getData('row_total_incl_tax') - $item->getData('discount_amount'),
                 2
             );
-            $entityItem['price'] = 1;
+            $entityItem[self::PRICE] = 1;
         }
 
         $context = [
@@ -618,9 +627,9 @@ class Discount implements DiscountHelperInterface
         $item1 = $entityItem;
         $item2 = $entityItem;
 
-        $item1['price'] = $item1['price'] + $inc / 100;
-        $item1['quantity'] = $qty - $qtyUpdate;
-        $item1['sum'] = round($item1['quantity'] * $item1['price'], 2);
+        $item1[self::PRICE] = $item1[self::PRICE] + $inc / 100;
+        $item1[self::QUANTITY] = $qty - $qtyUpdate;
+        $item1[self::SUM] = round($item1[self::QUANTITY] * $item1[self::PRICE], 2);
 
         if ($qtyUpdate == 0) {
             $final[$item->getId()] = $item1;
@@ -628,9 +637,9 @@ class Discount implements DiscountHelperInterface
             return $final;
         }
 
-        $item2['price'] = $item2['price'] + $sign * 0.01 + $inc / 100;
-        $item2['quantity'] = $qtyUpdate;
-        $item2['sum'] = round($item2['quantity'] * $item2['price'], 2);
+        $item2[self::PRICE] = $item2[self::PRICE] + $sign * 0.01 + $inc / 100;
+        $item2[self::QUANTITY] = $qtyUpdate;
+        $item2[self::SUM] = round($item2[self::QUANTITY] * $item2[self::PRICE], 2);
 
         $final[$item->getId() . '_1'] = $item1;
         $final[$item->getId() . '_2'] = $item2;
@@ -657,15 +666,15 @@ class Discount implements DiscountHelperInterface
     private function checkReceipt($receipt)
     {
         $sum = array_reduce(
-            $receipt['items'],
+            $receipt[self::ITEMS],
             function ($carry, $item) {
-                $carry += $item['sum'];
+                $carry += $item[self::SUM];
 
                 return $carry;
             }
         );
 
-        return bcsub($sum, $receipt['origGrandTotal'], 2) === '0.00';
+        return bcsub($sum, $receipt[self::ORIG_GRAND_TOTAL], 2) === '0.00';
     }
 
     /**
