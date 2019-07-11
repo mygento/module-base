@@ -229,7 +229,7 @@ class Discount implements DiscountHelperInterface
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    private function applyDiscount(): void
+    private function applyDiscount()
     {
         $subTotal = $this->entity->getSubtotalInclTax() ?? 0;
         $discount = $this->entity->getDiscountAmount() ?? 0;
