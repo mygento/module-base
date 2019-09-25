@@ -8,7 +8,7 @@ cache:
     - $HOME/.composer/cache
 
 before_script:
-- sudo apt-get install libxml2-utils
+- sudo apt-get -qqy install libxml2-utils
 - composer self-update
 - echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${MAGE_LOGIN}\",\"password\":\"${MAGE_PWD}\"}}}" > auth.json
 - phpenv config-rm xdebug.ini
