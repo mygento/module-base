@@ -59,9 +59,10 @@ class Image
      * @param string $folder
      * @param string $viewId
      * @param string $moduleName
+     * @param string|null $quality
      * @return string
      */
-    public function resize($image, $folder = '', $viewId = '', $moduleName = '')
+    public function resize($image, $folder = '', $viewId = '', $moduleName = '', $quality = null)
     {
         if (!$image) {
             return null;
@@ -91,6 +92,11 @@ class Image
             return '';
         }
 
+        if (!$quality) {
+            $quality = $this->scopeConfig->getValue(ProductImage::XML_PATH_JPEG_QUALITY);
+        }
+
+
         $imageResize = $this->imageFactory->create();
         $imageResize->open($imagePath);
         $imageResize->constrainOnly($imageConfig['constrain'] ?? true);
@@ -98,7 +104,7 @@ class Image
         $imageResize->keepFrame($imageConfig['frame'] ?? true);
         $imageResize->keepTransparency($imageConfig['transparency'] ?? true);
         $imageResize->backgroundColor($imageConfig['background'] ?? '[255, 255, 255]');
-        $imageResize->quality($this->scopeConfig->getValue(ProductImage::XML_PATH_JPEG_QUALITY));
+        $imageResize->quality($quality);
         $imageResize->resize($imageConfig['width'], $imageConfig['height']);
         $imageResize->save($thumbnailPath);
 
