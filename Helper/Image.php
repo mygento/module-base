@@ -96,7 +96,6 @@ class Image
             $quality = $this->scopeConfig->getValue(ProductImage::XML_PATH_JPEG_QUALITY);
         }
 
-
         $imageResize = $this->imageFactory->create();
         $imageResize->open($imagePath);
         $imageResize->constrainOnly($imageConfig['constrain'] ?? true);
