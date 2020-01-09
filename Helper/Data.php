@@ -66,18 +66,20 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper implements \Psr\
      * @param array $insertData
      * @param array $updateFields
      * @param bool $clean
+     * @param mixed $cleanWhere
      */
     public function batchInsertData(
         AdapterInterface $conn,
         string $table,
         array $insertData,
         array $updateFields = [],
-        bool $clean = false
+        bool $clean = false,
+        $cleanWhere = ''
     ) {
         try {
             $conn->beginTransaction();
             if ($clean) {
-                $conn->delete($table);
+                $conn->delete($table, $cleanWhere);
             }
             foreach ($insertData as $row) {
                 $conn->insertOnDuplicate(
@@ -88,7 +90,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper implements \Psr\
             }
             $conn->commit();
         } catch (\Exception $e) {
-            $this->error($e->getMessage());
+            $this->error($e->getMessage(), ['exception' => $e]);
             $conn->rollBack();
         }
     }
