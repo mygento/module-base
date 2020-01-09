@@ -8,6 +8,8 @@
 
 namespace Mygento\Base\Helper;
 
+use Magento\Framework\DB\Adapter\AdapterInterface;
+
 /**
  * Base Data helper
  */
@@ -56,6 +58,39 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper implements \Psr\
     public function normalizePhone($phone)
     {
         return preg_replace('/\s+/', '', str_replace(['(', ')', '-', ' '], '', trim($phone)));
+    }
+
+    /**
+     * @param AdapterInterface $conn
+     * @param string $table
+     * @param array $insertData
+     * @param array $updateFields
+     * @param bool $clean
+     */
+    public function batchInsertData(
+        AdapterInterface $conn,
+        string $table,
+        array $insertData,
+        array $updateFields = [],
+        bool $clean = false
+    ) {
+        try {
+            $conn->beginTransaction();
+            if ($clean) {
+                $conn->delete($table);
+            }
+            foreach ($insertData as $row) {
+                $conn->insertOnDuplicate(
+                    $table,
+                    $row,
+                    $updateFields
+                );
+            }
+            $conn->commit();
+        } catch (\Exception $e) {
+            $this->error($e->getMessage());
+            $conn->rollBack();
+        }
     }
 
     /**
