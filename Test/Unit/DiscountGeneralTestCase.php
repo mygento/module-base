@@ -142,6 +142,14 @@ class DiscountGeneralTestCase extends TestCase
     }
 
     /**
+     * getExpected description
+     */
+    protected static function getExpected()
+    {
+
+    }
+
+    /**
      * @return array
      * @SuppressWarnings(PHPMD)
      */
