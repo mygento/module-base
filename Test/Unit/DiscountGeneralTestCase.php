@@ -142,14 +142,6 @@ class DiscountGeneralTestCase extends TestCase
     }
 
     /**
-     * getExpected description
-     */
-    protected static function getExpected()
-    {
-
-    }
-
-    /**
      * @return array
      * @SuppressWarnings(PHPMD)
      */
@@ -366,6 +358,13 @@ class DiscountGeneralTestCase extends TestCase
         $final[self::TEST_CASE_NAME_21] = $order;
 
         return $final;
+    }
+
+    /**
+     * getExpected description
+     */
+    protected static function getExpected()
+    {
     }
 
     protected function onNotSuccessfulTest(\Throwable $e)
