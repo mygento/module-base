@@ -29,5 +29,5 @@ interface ProductAttributeHelperInterface
      * @param int|string $productId
      * @return mixed
      */
-    public function getValue(string $attributeCode, $productId);
+    public function getAttrValue(string $attributeCode, $productId);
 }

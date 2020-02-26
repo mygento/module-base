@@ -10,16 +10,17 @@ namespace Mygento\Base\Helper\Product;
 
 use Mygento\Base\Api\ProductAttributeHelperInterface;
 
-/**
- * Class Attribute helps to fetch easier Product Attributes
- * @package Mygento\Base\Helper\Product
- */
 class Attribute implements ProductAttributeHelperInterface
 {
     /**
-     * @var \Magento\Catalog\Model\ProductRepository
+     * @var \Magento\Store\Model\StoreManagerInterface
      */
-    private $productRepository;
+    private $storeManager;
+
+    /**
+     * @var \Magento\Catalog\Model\ResourceModel\Product
+     */
+    private $productResource;
 
     /**
      * @var \Mygento\Base\Helper\Data
@@ -27,21 +28,22 @@ class Attribute implements ProductAttributeHelperInterface
     private $generalHelper;
 
     /**
-     * Attribute constructor.
      * @param \Mygento\Base\Helper\Data $generalHelper
-     * @param \Magento\Catalog\Model\ProductRepository $productRepository
+     * @param \Magento\Catalog\Model\ResourceModel\Product $productResource
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      */
     public function __construct(
         \Mygento\Base\Helper\Data $generalHelper,
-        \Magento\Catalog\Model\ProductRepository $productRepository
+        \Magento\Catalog\Model\ResourceModel\Product $productResource,
+        \Magento\Store\Model\StoreManagerInterface $storeManager
     ) {
-        $this->productRepository = $productRepository;
         $this->generalHelper = $generalHelper;
+        $this->productResource = $productResource;
+        $this->storeManager = $storeManager;
     }
 
     /**
      * @inheritdoc
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getValueByConfigPathOrDefault(string $pathToParam, $productId)
     {
@@ -52,33 +54,33 @@ class Attribute implements ProductAttributeHelperInterface
             );
         }
 
-        return $this->getValue($attributeCode, $productId);
+        $value = $this->getAttrValue($attributeCode, $productId);
+        if (!empty($value)) {
+            return $value;
+        }
+
+        return $this->generalHelper->getGlobalConfig(
+            $pathToParam . self::CONFIG_PATH_DEFAULT_SUFFIX
+        );
     }
 
     /**
      * @inheritdoc
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @psalm-suppress UndefinedMethod
      */
-    public function getValue(string $attributeCode, $productId)
+    public function getAttrValue(string $attributeCode, $productId)
     {
-        $product = $this->getProduct($productId);
+        $attribute = $this->productResource->getAttribute($attributeCode);
+        $store = $this->storeManager->getStore();
 
-        $attrText = $product->getAttributeText($attributeCode);
-        if ($attrText) {
-            return $attrText;
+        $value = $this->productResource->getAttributeRawValue($productId, $attributeCode, $store);
+        if (!$attribute->usesSource()) {
+            return $value;
         }
 
-        return $product->getData($attributeCode);
-    }
+        if (empty($value)) {
+            return $value;
+        }
 
-    /**
-     * @param int|string|null $productId
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @return \Magento\Catalog\Api\Data\ProductInterface
-     */
-    private function getProduct($productId)
-    {
-        return $this->productRepository->getById((int) $productId);
+        return $attribute->getSource()->getOptionText($value);
     }
 }

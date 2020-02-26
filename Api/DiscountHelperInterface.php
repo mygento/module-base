@@ -18,8 +18,6 @@ use Magento\Sales\Api\Data\OrderInterface as Order;
  * Calculates prices of 1 unit for each item.
  * Recalculates order/invoice/creditmemo.
  * e.g. can spreads one item discount to all items
- *
- * @package Mygento\Base\Api
  */
 interface DiscountHelperInterface
 {
