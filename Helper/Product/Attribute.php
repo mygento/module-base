@@ -82,6 +82,10 @@ class Attribute implements ProductAttributeHelperInterface
 
         $value = $this->productResource->getAttributeRawValue($productId, $attributeCode, $store);
         if (!$attribute->usesSource()) {
+            if ($attribute->getBackend()->isStatic()) {
+                return $value[$attributeCode];
+            }
+
             return $value;
         }
 
