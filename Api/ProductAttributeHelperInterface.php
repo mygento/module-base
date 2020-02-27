@@ -30,4 +30,14 @@ interface ProductAttributeHelperInterface
      * @return mixed
      */
     public function getAttrValue(string $attributeCode, $productId);
+
+    /**
+     * Returns attribute value or attribute text (for dropdown attributes)
+     *
+     * @deprecated
+     * @param string $attributeCode
+     * @param int|string $productId
+     * @return mixed
+     */
+    public function getValue(string $attributeCode, $productId);
 }

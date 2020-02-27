@@ -67,6 +67,14 @@ class Attribute implements ProductAttributeHelperInterface
     /**
      * @inheritdoc
      */
+    public function getValue(string $attributeCode, $productId)
+    {
+        return $this->getAttrValue($attributeCode, $productId);
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getAttrValue(string $attributeCode, $productId)
     {
         $attribute = $this->productResource->getAttribute($attributeCode);
