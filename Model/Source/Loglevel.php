@@ -19,7 +19,7 @@ class Loglevel implements \Magento\Framework\Data\OptionSourceInterface
     {
         $levels = [];
         foreach (\Monolog\Logger::getLevels() as $level => $value) {
-            $levels[$value] = $level;
+            $levels[] = ['value' => $value, 'label' => $level];
         }
 
         return $levels;
