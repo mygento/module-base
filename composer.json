@@ -1,7 +1,7 @@
 {
   "name": "mygento/module-base",
   "type": "magento2-module",
-  "version": "2.3.9",
+  "version": "2.3.10",
   "license": "OSL-3.0",
   "homepage": "https://github.com/mygento/module-base",
   "description": "Mygento Base",
@@ -29,7 +29,7 @@
   },
   "require-dev": {
     "mygento/coding-standard": "~2.13.5",
-    "phpunit/phpunit": "^7.5.12",
+    "phpunit/phpunit": "~7.5.12",
     "vimeo/psalm": "3.x-dev",
     "magento/magento-coding-standard": "~1.0.0"
   },
