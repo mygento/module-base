@@ -18,7 +18,7 @@ use Mygento\Base\Api\DiscountHelperInterface;
 
 class Discount implements DiscountHelperInterface
 {
-    const VERSION = '1.0.19';
+    const VERSION = '1.0.20';
     const NAME_UNIT_PRICE = 'disc_hlpr_price';
     const NAME_ROW_DIFF = 'recalc_row_diff';
 
@@ -30,6 +30,7 @@ class Discount implements DiscountHelperInterface
     const SUM = 'sum';
     const QUANTITY = 'quantity';
     const TAX = 'tax';
+    const DA_INCL_TAX = 'discount_amount_incl_tax';
 
     /**
      * @var bool Does item exist with price not divisible evenly?
@@ -228,7 +229,7 @@ class Discount implements DiscountHelperInterface
     private function applyDiscount(): void
     {
         $subTotal = $this->entity->getSubtotalInclTax() ?? 0;
-        $discount = $this->entity->getDiscountAmount() ?? 0;
+        $discount = $this->getEntityDiscountAmountInclTax($this->entity) ?? 0.0;
 
         /** @var float Скидка на весь заказ.
          * Например, rewardPoints или storeCredit
@@ -259,7 +260,7 @@ class Discount implements DiscountHelperInterface
             $price = $item->getData('price_incl_tax');
             $qty = $item->getQty() ?: $item->getQtyOrdered();
             $rowTotal = $item->getData('row_total_incl_tax');
-            $rowDiscount = round((-1.00) * $item->getDiscountAmount(), 2);
+            $rowDiscount = (-1.00) * $this->getItemDiscountAmountInclTax($item);
 
             // ==== Start Calculate Percentage. The heart of logic. ====
 
@@ -329,10 +330,9 @@ class Discount implements DiscountHelperInterface
             $totalItemsSum += $item->getData('row_total_incl_tax');
         }
 
-        $entityDiscount = $this->entity->getDiscountAmount() ?? 0.00;
         $shippingAmount = $this->entity->getShippingInclTax() ?? 0.00;
         $grandTotal = $this->getGrandTotal();
-        $discount = round($entityDiscount, 2);
+        $discount = $this->getEntityDiscountAmountInclTax($this->entity);
 
         return round($grandTotal - $shippingAmount - $totalItemsSum - $discount, 2);
     }
@@ -354,11 +354,11 @@ class Discount implements DiscountHelperInterface
         while ($i > 0) {
             $item = current($items);
 
-            $itDisc = $item->getData('discount_amount');
+            $itDisc = $this->getItemDiscountAmountInclTax($item);
             $itTotal = $item->getData('row_total_incl_tax');
 
             $inc = $this->getDiscountIncrement($sign * $i, $count, $itTotal, $itDisc);
-            $item->setData('discount_amount', $itDisc - $inc / 100);
+            $item->setData(self::DA_INCL_TAX, $itDisc - $inc / 100);
             $i = (int) ($i - abs($inc));
 
             $next = next($items);
@@ -382,12 +382,10 @@ class Discount implements DiscountHelperInterface
         $shippingAmount = $this->entity->getShippingInclTax() ?? 0.00;
 
         $newItemsSum = 0;
-        $rowDiffSum = 0;
         foreach ($items as $item) {
             $qty = $item->getQty() ?: $item->getQtyOrdered();
             $rowTotalNew = $item->getData(self::NAME_UNIT_PRICE) * $qty
                 + ($item->getData(self::NAME_ROW_DIFF) / 100);
-            $rowDiffSum += $item->getData(self::NAME_ROW_DIFF);
             $newItemsSum += $rowTotalNew;
         }
 
@@ -465,8 +463,9 @@ class Discount implements DiscountHelperInterface
 
             $qty = $item->getQty() ?: $item->getQtyOrdered();
             $rowTotal = $item->getData('row_total_incl_tax');
+            $discountAmountInclTax = $this->getItemDiscountAmountInclTax($item);
 
-            $priceWithDiscount = ($rowTotal - $item->getData('discount_amount')) / $qty;
+            $priceWithDiscount = ($rowTotal - $discountAmountInclTax) / $qty;
             $item->setData(self::NAME_UNIT_PRICE, $priceWithDiscount);
         }
     }
@@ -555,8 +554,10 @@ class Discount implements DiscountHelperInterface
         ];
 
         if (!$this->doCalculation) {
+            $discountAmountInclTax = $this->getItemDiscountAmountInclTax($item);
+
             $entityItem[self::SUM] = round(
-                $item->getData('row_total_incl_tax') - $item->getData('discount_amount'),
+                $item->getData('row_total_incl_tax') - $discountAmountInclTax,
                 2
             );
             $entityItem[self::PRICE] = 1;
@@ -711,9 +712,11 @@ class Discount implements DiscountHelperInterface
         $this->discountlessSum = 0.00;
         foreach ($items as $item) {
             $qty = $item->getQty() ?: $item->getQtyOrdered();
-            $rowPrice = $item->getData('row_total_incl_tax') - $item->getData('discount_amount');
+            $discountAmountInclTax = $this->getItemDiscountAmountInclTax($item);
 
-            if ((float) $item->getData('discount_amount') === 0.00) {
+            $rowPrice = $item->getData('row_total_incl_tax') - $discountAmountInclTax;
+
+            if ($discountAmountInclTax === 0.00) {
                 $this->discountlessSum += $item->getData('row_total_incl_tax');
             }
 
@@ -788,5 +791,49 @@ class Discount implements DiscountHelperInterface
             + $this->entity->getData('customer_balance_amount'),
             2
         );
+    }
+
+    /**
+     * @param CreditmemoItem|InvoiceItem|OrderItem $item
+     * @return float
+     */
+    private function getItemDiscountAmountInclTax($item)
+    {
+        if ($item->getData(self::DA_INCL_TAX)) {
+            return $item->getData(self::DA_INCL_TAX);
+        }
+        if ($item->getTaxPercent() && $item->getRowTotal() !== $item->getRowTotalInclTax()) {
+            $discAmountInclTax = (1 + $item->getTaxPercent() / 100) * $item->getDiscountAmount();
+            $discAmountInclTax = round($discAmountInclTax, 2);
+            $item->setData(self::DA_INCL_TAX, $discAmountInclTax);
+
+            return $item->getData(self::DA_INCL_TAX);
+        }
+
+        $item->setData(self::DA_INCL_TAX, (float) $item->getDiscountAmount());
+
+        return $item->getData(self::DA_INCL_TAX);
+    }
+
+    /**
+     * @param Creditmemo|Invoice|Order $entity
+     * @return float
+     */
+    private function getEntityDiscountAmountInclTax($entity)
+    {
+        if ($entity->getData(self::DA_INCL_TAX)) {
+            return $entity->getData(self::DA_INCL_TAX);
+        }
+
+        $items = $this->getAllItems();
+
+        $discountAmountInclTax = 0.00;
+        foreach ($items as $item) {
+            $discountAmountInclTax += $this->getItemDiscountAmountInclTax($item);
+        }
+
+        $entity->setData(self::DA_INCL_TAX, (-1.00 * $discountAmountInclTax));
+
+        return $entity->getData(self::DA_INCL_TAX);
     }
 }
