@@ -34,6 +34,7 @@ class DiscountGeneralTestCase extends TestCase
     const TEST_CASE_NAME_19 = '#case 19. Store Credit. Частичная оплата';
     const TEST_CASE_NAME_20 = '#case 20. Bug with negative Qty';
     const TEST_CASE_NAME_21 = '#case 21. Bug with negative Price because of converting float -28.9999999999999 to int  (e.g. invoice 100091106)';
+    const TEST_CASE_NAME_22 = '#case 22. Bug with taxes. Когда настроено налоговое правило и цены в каталоге без налога. По умолчанию discount_amount не содержит налог';
 
     const CHARS_LOWERS = 'abcdefghijklmnopqrstuvwxyz';
     const CHARS_UPPERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -100,7 +101,8 @@ class DiscountGeneralTestCase extends TestCase
         $rowTotalInclTax,
         $priceInclTax,
         $discountAmount,
-        $qty = 1
+        $qty = 1,
+        $taxPercent = 0
     ) {
         static $id = 100500;
         $id++;
@@ -117,6 +119,7 @@ class DiscountGeneralTestCase extends TestCase
         $item->setData('discount_amount', $discountAmount);
         $item->setData('qty', $qty);
         $item->setData('name', $name);
+        $item->setData('tax_percent', $taxPercent);
 
         return $item;
     }
@@ -357,6 +360,16 @@ class DiscountGeneralTestCase extends TestCase
         $this->addItem($order, $this->getItem(0.0000, 0.0000, 0, 4.0000));
         $final[self::TEST_CASE_NAME_21] = $order;
 
+        //Discount_amount does not contain TAX
+        $order = $this->getNewOrderInstance(5091.7600, 10.0000, 10.0000, 0, -4243.1300);
+        $item1 = $this->getItem(3150.0000, 3150.0000, 2625.0000, 1, 20);
+        $item1->setRowTotal(2625.0000);//Without Tax
+        $this->addItem($order, $item1);
+        $item2 = $this->getItem(1941.7600, 1941.7600, 1618.1300, 1, 20);
+        $item2->setRowTotal(1618.1300);//Without Tax
+        $this->addItem($order, $item2);
+        $final[self::TEST_CASE_NAME_22] = $order;
+
         return $final;
     }
 
@@ -381,7 +394,8 @@ class DiscountGeneralTestCase extends TestCase
         $subTotalInclTax,
         $grandTotal,
         $shippingInclTax,
-        $rewardPoints = 0.00
+        $rewardPoints = 0.00,
+        $discountAmount = null
     ) {
         $order = $this->getObjectManager()->getObject(
             \Magento\Framework\DataObject::class
@@ -392,6 +406,7 @@ class DiscountGeneralTestCase extends TestCase
         $order->setData('shipping_incl_tax', $shippingInclTax);
         $order->setData(
             'discount_amount',
+            $discountAmount ??
             $grandTotal + $rewardPoints - $subTotalInclTax - $shippingInclTax
         );
 
