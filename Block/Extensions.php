@@ -154,9 +154,7 @@ class Extensions extends \Magento\Config\Block\System\Config\Form\Fieldset
         $html .= '<ul class="mygento-mod-list">';
         sort($modules);
         foreach ($modules as $moduleName) {
-            if (strstr($moduleName, 'Mygento_') === false
-                || $moduleName === 'Mygento_Base'
-            ) {
+            if (strstr($moduleName, 'Mygento_') === false) {
                 continue;
             }
 
