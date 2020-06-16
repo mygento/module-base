@@ -18,7 +18,7 @@ use Mygento\Base\Api\DiscountHelperInterface;
 
 class Discount implements DiscountHelperInterface
 {
-    const VERSION = '1.0.20';
+    const VERSION = '1.0.21';
     const NAME_UNIT_PRICE = 'disc_hlpr_price';
     const NAME_ROW_DIFF = 'recalc_row_diff';
 
@@ -802,7 +802,7 @@ class Discount implements DiscountHelperInterface
         if ($item->getData(self::DA_INCL_TAX)) {
             return $item->getData(self::DA_INCL_TAX);
         }
-        if ($item->getTaxPercent() && $item->getRowTotal() !== $item->getRowTotalInclTax()) {
+        if ($this->isTaxCalculationNeeded($item)) {
             $discAmountInclTax = (1 + $item->getTaxPercent() / 100) * $item->getDiscountAmount();
             $discAmountInclTax = round($discAmountInclTax, 2);
             $item->setData(self::DA_INCL_TAX, $discAmountInclTax);
@@ -835,5 +835,17 @@ class Discount implements DiscountHelperInterface
         $entity->setData(self::DA_INCL_TAX, (-1.00 * $discountAmountInclTax));
 
         return $entity->getData(self::DA_INCL_TAX);
+    }
+
+    /**
+     * @param CreditmemoItem|InvoiceItem|OrderItem $item
+     * @return bool
+     */
+    private function isTaxCalculationNeeded($item)
+    {
+        return $item->getTaxPercent() &&
+            //bccomp returns 0 if operands are equal
+            bccomp($item->getTaxAmount(), '0.00', 2) === 0 &&
+            $item->getRowTotal() !== $item->getRowTotalInclTax();
     }
 }
