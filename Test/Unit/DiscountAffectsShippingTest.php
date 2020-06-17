@@ -965,23 +965,45 @@ class DiscountAffectsShippingTest extends DiscountGeneralTestCase
             'items' => [
                 100605 => [
                     'price' => 0.0,
-                    'name' => 'MI1yi2wG',
                     'quantity' => 1.0,
                     'sum' => 0.0,
                     'tax' => 'vat18',
                 ],
                 100606 => [
                     'price' => 0.0,
-                    'name' => 'oAScgwsB',
                     'quantity' => 1.0,
                     'sum' => 0.0,
                     'tax' => 'vat18',
                 ],
                 'shipping' => [
-                    'name' => '',
                     'price' => 10.0,
                     'quantity' => 1.0,
                     'sum' => 10.0,
+                    'tax' => '',
+                ],
+            ],
+        ];
+
+        $actualData[parent::TEST_CASE_NAME_23] = [
+            'sum' => 0.0,
+            'origGrandTotal' => 200.0,
+            'items' => [
+                100607 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat18',
+                ],
+                100608 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat18',
+                ],
+                'shipping' => [
+                    'price' => 200.0,
+                    'quantity' => 1.0,
+                    'sum' => 200.0,
                     'tax' => '',
                 ],
             ],
