@@ -34,7 +34,8 @@ class DiscountGeneralTestCase extends TestCase
     const TEST_CASE_NAME_19 = '#case 19. Store Credit. Частичная оплата';
     const TEST_CASE_NAME_20 = '#case 20. Bug with negative Qty';
     const TEST_CASE_NAME_21 = '#case 21. Bug with negative Price because of converting float -28.9999999999999 to int  (e.g. invoice 100091106)';
-    const TEST_CASE_NAME_22 = '#case 22. Bug with taxes. Когда настроено налоговое правило и цены в каталоге без налога. По умолчанию discount_amount не содержит налог';
+    const TEST_CASE_NAME_22 = '#case 22. Bug with taxes. Когда настроено налоговое правило и цены в каталоге без налога. Скидка не содержит налог';
+    const TEST_CASE_NAME_23 = '#case 23. Bug with taxes. Есть налоговое правило. Налог применяется до скидки, а скидка применяется на цены, содержащие налог. То есть скидка содержит налог.';
 
     const CHARS_LOWERS = 'abcdefghijklmnopqrstuvwxyz';
     const CHARS_UPPERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -102,7 +103,8 @@ class DiscountGeneralTestCase extends TestCase
         $priceInclTax,
         $discountAmount,
         $qty = 1,
-        $taxPercent = 0
+        $taxPercent = 0,
+        $taxAmount = 0
     ) {
         static $id = 100500;
         $id++;
@@ -120,6 +122,7 @@ class DiscountGeneralTestCase extends TestCase
         $item->setData('qty', $qty);
         $item->setData('name', $name);
         $item->setData('tax_percent', $taxPercent);
+        $item->setData('tax_amount', $taxAmount);
 
         return $item;
     }
@@ -369,6 +372,16 @@ class DiscountGeneralTestCase extends TestCase
         $item2->setRowTotal(1618.1300);//Without Tax
         $this->addItem($order, $item2);
         $final[self::TEST_CASE_NAME_22] = $order;
+
+        //Discount_amount contains TAX
+        $order = $this->getNewOrderInstance(1941.76, 200.0000, 200.0000, 0, -1941.76);
+        $item1 = $this->getItem(0, 0, 0, 1, 20);
+        $item1->setRowTotal(0);//Without Tax
+        $this->addItem($order, $item1);
+        $item2 = $this->getItem(1941.7600, 1941.7600, 1941.76, 1, 20, 323.6300);
+        $item2->setRowTotal(1618.1300);//Without Tax
+        $this->addItem($order, $item2);
+        $final[self::TEST_CASE_NAME_23] = $order;
 
         return $final;
     }

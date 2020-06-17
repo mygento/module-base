@@ -937,6 +937,31 @@ class DiscountSpreadOnAllItemsTest extends DiscountGeneralTestCase
             ],
         ];
 
+        $actualData[parent::TEST_CASE_NAME_23] = [
+            'sum' => 0.0,
+            'origGrandTotal' => 200.0,
+            'items' => [
+                100607 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat18',
+                ],
+                100608 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat18',
+                ],
+                'shipping' => [
+                    'price' => 200.0,
+                    'quantity' => 1.0,
+                    'sum' => 200.0,
+                    'tax' => '',
+                ],
+            ],
+        ];
+
         return $actualData;
     }
 }

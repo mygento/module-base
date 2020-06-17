@@ -16,6 +16,10 @@ use Magento\Sales\Api\Data\OrderInterface as Order;
 use Magento\Sales\Api\Data\OrderItemInterface as OrderItem;
 use Mygento\Base\Api\DiscountHelperInterface;
 
+/**
+ * @inheritDoc
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ */
 class Discount implements DiscountHelperInterface
 {
     const VERSION = '1.0.21';
