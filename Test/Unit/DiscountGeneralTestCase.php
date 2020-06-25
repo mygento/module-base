@@ -36,6 +36,7 @@ class DiscountGeneralTestCase extends TestCase
     const TEST_CASE_NAME_21 = '#case 21. Bug with negative Price because of converting float -28.9999999999999 to int  (e.g. invoice 100091106)';
     const TEST_CASE_NAME_22 = '#case 22. Bug with taxes. Когда настроено налоговое правило и цены в каталоге без налога. Скидка не содержит налог';
     const TEST_CASE_NAME_23 = '#case 23. Bug with taxes. Есть налоговое правило. Налог применяется до скидки, а скидка применяется на цены, содержащие налог. То есть скидка содержит налог.';
+    const TEST_CASE_NAME_24 = '#case 24. Bug with shipping discount. Доставка со скидкой 100%. Настройки налогов как в #23';
 
     const CHARS_LOWERS = 'abcdefghijklmnopqrstuvwxyz';
     const CHARS_UPPERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -98,6 +99,15 @@ class DiscountGeneralTestCase extends TestCase
         }
     }
 
+    /**
+     * @param float $rowTotalInclTax
+     * @param float $priceInclTax
+     * @param float $discountAmount
+     * @param int $qty
+     * @param int $taxPercent
+     * @param float|int $taxAmount
+     * @return \Mygento\Base\Test\OrderItemMock
+     */
     public function getItem(
         $rowTotalInclTax,
         $priceInclTax,
@@ -112,7 +122,7 @@ class DiscountGeneralTestCase extends TestCase
         $name = $this->getRandomString(8);
 
         $item = $this->getObjectManager()->getObject(
-            \Magento\Framework\DataObject::class
+            \Mygento\Base\Test\OrderItemMock::class
         );
 
         $item->setData('id', $id);
@@ -383,6 +393,18 @@ class DiscountGeneralTestCase extends TestCase
         $this->addItem($order, $item2);
         $final[self::TEST_CASE_NAME_23] = $order;
 
+        //Shipping discount amount exists.
+        $order = $this->getNewOrderInstance(1200.0000, 0.0000, 75.0000, 0, -1275.0000);
+        $order->setShippingDiscountAmount(75.0000);
+        $order->setShippingAmount(75.0000);
+
+        $item1 = $this
+            ->getItem(1200.0000, 1200.0000, 1200.0000, 1, 20)
+            ->setRowTotal(1000.0000)
+            ->setTaxAmount(200.0000);
+        $this->addItem($order, $item1);
+        $final[self::TEST_CASE_NAME_24] = $order;
+
         return $final;
     }
 
@@ -403,6 +425,14 @@ class DiscountGeneralTestCase extends TestCase
         throw $e;
     }
 
+    /**
+     * @param float $subTotalInclTax
+     * @param float $grandTotal
+     * @param float $shippingInclTax
+     * @param float $rewardPoints
+     * @param float|null $discountAmount
+     * @return \Mygento\Base\Test\OrderMock
+     */
     protected function getNewOrderInstance(
         $subTotalInclTax,
         $grandTotal,
@@ -411,7 +441,7 @@ class DiscountGeneralTestCase extends TestCase
         $discountAmount = null
     ) {
         $order = $this->getObjectManager()->getObject(
-            \Magento\Framework\DataObject::class
+            \Mygento\Base\Test\OrderMock::class
         );
 
         $order->setData('subtotal_incl_tax', $subTotalInclTax);
