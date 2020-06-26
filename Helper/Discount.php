@@ -248,9 +248,11 @@ class Discount implements DiscountHelperInterface
         }
         $grandDiscount = $superGrandDiscount;
 
-        //Если размазываем скидку - то размазываем всё: (скидки товаров + $superGrandDiscount)
+        //Если размазываем скидку - то размазываем всё: (скидки товаров + $superGrandDiscount) Но не скидку на доставку!
         if ($this->spreadDiscOnAllUnits) {
-            $grandDiscount = $discount + $this->getGlobalDiscount();
+            $shippingDiscount = $this->getShippingDiscountAmountInclTax($this->entity);
+
+            $grandDiscount = $discount + $this->getGlobalDiscount() + $shippingDiscount;
         }
 
         $percentageSum = 0;
@@ -385,6 +387,7 @@ class Discount implements DiscountHelperInterface
         $items = $this->getAllItems();
         $grandTotal = $this->getGrandTotal();
         $shippingAmount = $this->entity->getShippingInclTax() ?? 0.00;
+        $shippingDiscount = $this->getShippingDiscountAmountInclTax($this->entity);
 
         $newItemsSum = 0;
         foreach ($items as $item) {
@@ -394,7 +397,7 @@ class Discount implements DiscountHelperInterface
             $newItemsSum += $rowTotalNew;
         }
 
-        $lostDiscount = round($grandTotal - $shippingAmount - $newItemsSum, 2);
+        $lostDiscount = round($grandTotal - $shippingAmount - $newItemsSum + $shippingDiscount, 2);
 
         if ($lostDiscount === 0.00) {
             return 0;

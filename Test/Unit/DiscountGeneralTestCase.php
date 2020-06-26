@@ -92,7 +92,7 @@ class DiscountGeneralTestCase extends TestCase
             echo "\033[1;33m"; // yellow
             $storedValue = ini_get('serialize_precision');
             ini_set('serialize_precision', 12);
-            var_export($this->discountHelper->getRecalculated($order, 'vat18'));
+            var_export($this->discountHelper->getRecalculated($order, 'vat20'));
             ini_set('serialize_precision', $storedValue);
             echo "\033[0m"; // reset color
             exit();
@@ -397,7 +397,6 @@ class DiscountGeneralTestCase extends TestCase
         $order = $this->getNewOrderInstance(1200.0000, 0.0000, 75.0000, 0, -1275.0000);
         $order->setShippingDiscountAmount(75.0000);
         $order->setShippingAmount(75.0000);
-
         $item1 = $this
             ->getItem(1200.0000, 1200.0000, 1200.0000, 1, 20)
             ->setRowTotal(1000.0000)
