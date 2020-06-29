@@ -22,7 +22,7 @@ use Mygento\Base\Api\DiscountHelperInterface;
  */
 class Discount implements DiscountHelperInterface
 {
-    const VERSION = '1.0.21';
+    const VERSION = '1.0.22';
     const NAME_UNIT_PRICE = 'disc_hlpr_price';
     const NAME_ROW_DIFF = 'recalc_row_diff';
 
@@ -35,6 +35,7 @@ class Discount implements DiscountHelperInterface
     const QUANTITY = 'quantity';
     const TAX = 'tax';
     const DA_INCL_TAX = 'discount_amount_incl_tax';
+    const SHIPPING_DA_INCL_TAX = 'shipping_discount_amount_incl_tax';
 
     /**
      * @var bool Does item exist with price not divisible evenly?
@@ -247,9 +248,11 @@ class Discount implements DiscountHelperInterface
         }
         $grandDiscount = $superGrandDiscount;
 
-        //Если размазываем скидку - то размазываем всё: (скидки товаров + $superGrandDiscount)
+        //Если размазываем скидку - то размазываем всё: (скидки товаров + $superGrandDiscount) Но не скидку на доставку!
         if ($this->spreadDiscOnAllUnits) {
-            $grandDiscount = $discount + $this->getGlobalDiscount();
+            $shippingDiscount = $this->getShippingDiscountAmountInclTax($this->entity);
+
+            $grandDiscount = $discount + $this->getGlobalDiscount() + $shippingDiscount;
         }
 
         $percentageSum = 0;
@@ -384,6 +387,7 @@ class Discount implements DiscountHelperInterface
         $items = $this->getAllItems();
         $grandTotal = $this->getGrandTotal();
         $shippingAmount = $this->entity->getShippingInclTax() ?? 0.00;
+        $shippingDiscount = $this->getShippingDiscountAmountInclTax($this->entity);
 
         $newItemsSum = 0;
         foreach ($items as $item) {
@@ -393,7 +397,7 @@ class Discount implements DiscountHelperInterface
             $newItemsSum += $rowTotalNew;
         }
 
-        $lostDiscount = round($grandTotal - $shippingAmount - $newItemsSum, 2);
+        $lostDiscount = round($grandTotal - $shippingAmount - $newItemsSum + $shippingDiscount, 2);
 
         if ($lostDiscount === 0.00) {
             return 0;
@@ -806,8 +810,10 @@ class Discount implements DiscountHelperInterface
         if ($item->getData(self::DA_INCL_TAX)) {
             return $item->getData(self::DA_INCL_TAX);
         }
+        $taxPercent = $this->getItemTaxPercent($item);
+
         if ($this->isTaxCalculationNeeded($item)) {
-            $discAmountInclTax = (1 + $item->getTaxPercent() / 100) * $item->getDiscountAmount();
+            $discAmountInclTax = (1 + $taxPercent / 100) * $item->getDiscountAmount();
             $discAmountInclTax = round($discAmountInclTax, 2);
             $item->setData(self::DA_INCL_TAX, $discAmountInclTax);
 
@@ -835,10 +841,47 @@ class Discount implements DiscountHelperInterface
         foreach ($items as $item) {
             $discountAmountInclTax += $this->getItemDiscountAmountInclTax($item);
         }
+        //Учет налога в скидке на  доставку
+        $shippingDiscount = $this->getShippingDiscountAmountInclTax($entity);
+
+        $discountAmountInclTax += $shippingDiscount;
 
         $entity->setData(self::DA_INCL_TAX, (-1.00 * $discountAmountInclTax));
 
         return $entity->getData(self::DA_INCL_TAX);
+    }
+
+    /**
+     * Process shipping discount with tax
+     * @param Creditmemo|Invoice|Order $entity
+     * @return float
+     */
+    private function getShippingDiscountAmountInclTax($entity)
+    {
+        if ($entity->getData(self::SHIPPING_DA_INCL_TAX)) {
+            return $entity->getData(self::SHIPPING_DA_INCL_TAX);
+        }
+
+        $ratio = 1;
+
+        //bccomp returns 0 if operands are equal
+        $isShippingsEqual = bccomp($entity->getShippingAmount(), $entity->getShippingInclTax(), 2) === 0;
+        $isShippingNotNull = bccomp($entity->getShippingAmount(), 0.00, 2) !== 0;
+
+        if (!$isShippingsEqual && $isShippingNotNull) {
+            $ratio = round($entity->getShippingInclTax() / $entity->getShippingAmount(), 2);
+        }
+
+        $shippingDiscount = $entity->getShippingDiscountAmount();
+
+        $isOrder = $entity instanceof Order;
+        if (!$isOrder) {
+            $shippingDiscount = $entity->getOrder()->getShippingDiscountAmount();
+        }
+
+        $entity->setData(self::SHIPPING_DA_INCL_TAX, $shippingDiscount * $ratio);
+
+        return $entity->getData(self::SHIPPING_DA_INCL_TAX);
     }
 
     /**
@@ -847,9 +890,40 @@ class Discount implements DiscountHelperInterface
      */
     private function isTaxCalculationNeeded($item)
     {
-        return $item->getTaxPercent() &&
+        $taxPercent = $this->getItemTaxPercent($item);
+        $taxAmount = $this->getItemTaxAmount($item);
+
+        return $taxPercent &&
             //bccomp returns 0 if operands are equal
-            bccomp($item->getTaxAmount(), '0.00', 2) === 0 &&
+            bccomp($taxAmount, '0.00', 2) === 0 &&
             $item->getRowTotal() !== $item->getRowTotalInclTax();
+    }
+
+    /**
+     * @param CreditmemoItem|InvoiceItem|OrderItem $item
+     * @return string
+     */
+    private function getItemTaxPercent($item)
+    {
+        $isOrderItem = $item instanceof OrderItem;
+        if (!$isOrderItem) {
+            return $item->getOrderItem()->getTaxPercent();
+        }
+
+        return $item->getTaxPercent();
+    }
+
+    /**
+     * @param CreditmemoItem|InvoiceItem|OrderItem $item
+     * @return string
+     */
+    private function getItemTaxAmount($item)
+    {
+        $isOrderItem = $item instanceof OrderItem;
+        if (!$isOrderItem) {
+            return $item->getOrderItem()->getTaxAmount();
+        }
+
+        return $item->getTaxAmount();
     }
 }
