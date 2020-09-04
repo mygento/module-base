@@ -11,9 +11,9 @@ namespace Mygento\Base\Test\Unit;
 class DiscountMarkingItemsTest extends DiscountGeneralTestCase
 {
     /**
-     * @var array
+     * @var string
      */
-    private $markings = [];
+    private $markings = '';
 
     /**
      * Attention! Order of items in array is important!
@@ -83,9 +83,13 @@ class DiscountMarkingItemsTest extends DiscountGeneralTestCase
         $name = $this->getRandomString(8);
 
         if (empty($this->markings)) {
+            $markings = [];
+
             for ($i = 1; $i < 1000; $i++) {
-                $this->markings[] = 'SOME_MARK_' . $i;
+                $markings[] = 'SOME_MARK_' . $i;
             }
+
+            $this->markings = implode(',', $markings);
         }
 
         $markingList = $this->markings;
@@ -184,8 +188,8 @@ class DiscountMarkingItemsTest extends DiscountGeneralTestCase
                 [
                     [[], [], [], [], [], [], [], [], [], []],
                     [
-                        'SOME_MARK_1', 'SOME_MARK_2', 'SOME_MARK_3', 'SOME_MARK_4', 'SOME_MARK_5',
-                        'SOME_MARK_6', 'SOME_MARK_7', 'SOME_MARK_8', 'SOME_MARK_9', 'SOME_MARK_10'
+                        'SOME_MARK_1', 'SOME_MARK_2', 'SOME_MARK_3', 'SOME_MARK_4', 'SOME_MARK_5', 'SOME_MARK_6',
+                        'SOME_MARK_7', 'SOME_MARK_8', 'SOME_MARK_9', 'SOME_MARK_10'
                     ]
                 ],
                 [
@@ -312,9 +316,7 @@ class DiscountMarkingItemsTest extends DiscountGeneralTestCase
         $item->setData(\Mygento\Base\Helper\Discount::NAME_ROW_DIFF, 2);
         $item->setData(\Mygento\Base\Helper\Discount::NAME_UNIT_PRICE, 10.59);
         $item->setData(\Mygento\Base\Helper\Discount::NAME_MARKING, true);
-        $item->setData(\Mygento\Base\Helper\Discount::NAME_MARKING_LIST, [
-            'SOME_MARK_1', 'SOME_MARK_2', 'SOME_MARK_3'
-        ]);
+        $item->setData(\Mygento\Base\Helper\Discount::NAME_MARKING_LIST, 'SOME_MARK_1,SOME_MARK_2,SOME_MARK_3');
 
         $expected = [
             [

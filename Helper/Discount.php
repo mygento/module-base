@@ -681,7 +681,10 @@ class Discount implements DiscountHelperInterface
         if ($needMark) {
             // make a full split and mark each item
             $items = $this->fullSplit($items);
-            $items = $this->markItems($items, $item->getData($this->markingListAttributeCode));
+            $items = $this->markItems($items, array_map(
+                'trim',
+                explode(',', $item->getData($this->markingListAttributeCode))
+            ));
         }
 
         return $this->packItems($item, $items);
