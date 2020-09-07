@@ -22,7 +22,7 @@ use Mygento\Base\Api\DiscountHelperInterface;
  */
 class Discount implements DiscountHelperInterface
 {
-    const VERSION = '1.0.22';
+    const VERSION = '1.0.23';
     const NAME_UNIT_PRICE = 'disc_hlpr_price';
     const NAME_ROW_DIFF = 'recalc_row_diff';
     const NAME_MARKING = 'marking';
@@ -275,7 +275,6 @@ class Discount implements DiscountHelperInterface
         $percentageSum = 0;
 
         $items = $this->getAllItems();
-        $itemsSum = 0.00;
         foreach ($items as $item) {
             if (!$this->isValidItem($item)) {
                 continue;
@@ -325,7 +324,6 @@ class Discount implements DiscountHelperInterface
             $item->setData(self::NAME_UNIT_PRICE, $priceWithDiscount);
 
             $rowTotalNew = round($priceWithDiscount * $qty, 2);
-            $itemsSum += $rowTotalNew;
 
             $rowDiscountNew = $rowDiscount + round($rowPercentage * $grandDiscount, 2);
 
@@ -609,8 +607,6 @@ class Discount implements DiscountHelperInterface
      */
     private function getProcessedItem($item)
     {
-        $final = [];
-
         $taxValue = $this->taxAttributeCode
             ? $this->addTaxValue($this->taxAttributeCode, $item)
             : $this->taxValue;
@@ -663,8 +659,8 @@ class Discount implements DiscountHelperInterface
     }
 
     /**
-     * @param $item
-     * @param array $item1
+     * @param CreditmemoItem|InvoiceItem|OrderItem $item
+     * @param array $items1
      * @param array $items2
      * @return array
      */
@@ -676,7 +672,7 @@ class Discount implements DiscountHelperInterface
             $items[] = $items2;
         }
 
-        $needMark = !empty($this->markingAttributeCode) ? (bool)$item->getData($this->markingAttributeCode) : false;
+        $needMark = !empty($this->markingAttributeCode) ? (bool) $item->getData($this->markingAttributeCode) : false;
 
         if ($needMark) {
             // make a full split and mark each item
@@ -700,6 +696,12 @@ class Discount implements DiscountHelperInterface
 
         foreach ($items as $item) {
             $qty = $item[self::QUANTITY];
+
+            if ($qty == 1) {
+                $result[] = $item;
+                continue;
+            }
+
             for ($i = 0; $i < $qty; $i++) {
                 $item[self::QUANTITY] = 1;
                 $item[self::SUM] = $item[self::PRICE];
@@ -719,11 +721,13 @@ class Discount implements DiscountHelperInterface
     {
         return array_map(function (array $item) use (&$marks) {
             $item[self::MARKING] = array_shift($marks);
+
             return $item;
         }, $items);
     }
 
     /**
+     * @param mixed $item
      * @param array $items
      * @return array
      */
@@ -733,6 +737,7 @@ class Discount implements DiscountHelperInterface
 
         if (count($items) == 1) {
             $result[$item->getId()] = array_shift($items);
+
             return $result;
         }
 
