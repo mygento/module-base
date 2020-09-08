@@ -22,9 +22,11 @@ use Mygento\Base\Api\DiscountHelperInterface;
  */
 class Discount implements DiscountHelperInterface
 {
-    const VERSION = '1.0.22';
+    const VERSION = '1.0.23';
     const NAME_UNIT_PRICE = 'disc_hlpr_price';
     const NAME_ROW_DIFF = 'recalc_row_diff';
+    const NAME_MARKING = 'marking';
+    const NAME_MARKING_LIST = 'marking_list';
 
     const ORIG_GRAND_TOTAL = 'origGrandTotal';
     const ITEMS = 'items';
@@ -34,6 +36,7 @@ class Discount implements DiscountHelperInterface
     const SUM = 'sum';
     const QUANTITY = 'quantity';
     const TAX = 'tax';
+    const MARKING = 'marking';
     const DA_INCL_TAX = 'discount_amount_incl_tax';
     const SHIPPING_DA_INCL_TAX = 'shipping_discount_amount_incl_tax';
 
@@ -78,6 +81,16 @@ class Discount implements DiscountHelperInterface
     private $shippingTaxValue;
 
     /**
+     * @var string
+     */
+    private $markingAttributeCode;
+
+    /**
+     * @var string
+     */
+    private $markingListAttributeCode;
+
+    /**
      * @var float
      */
     private $discountlessSum = 0.0;
@@ -107,7 +120,9 @@ class Discount implements DiscountHelperInterface
         $entity,
         $taxValue = '',
         $taxAttributeCode = '',
-        $shippingTaxValue = ''
+        $shippingTaxValue = '',
+        $markingAttributeCode = '',
+        $markingListAttributeCode = ''
     ) {
         if (!$entity) {
             return null;
@@ -122,6 +137,8 @@ class Discount implements DiscountHelperInterface
         $this->taxValue = $taxValue;
         $this->taxAttributeCode = $taxAttributeCode;
         $this->shippingTaxValue = $shippingTaxValue;
+        $this->markingAttributeCode = $markingAttributeCode;
+        $this->markingListAttributeCode = $markingListAttributeCode;
 
         $globalDiscount = $this->getGlobalDiscount();
 
@@ -258,7 +275,6 @@ class Discount implements DiscountHelperInterface
         $percentageSum = 0;
 
         $items = $this->getAllItems();
-        $itemsSum = 0.00;
         foreach ($items as $item) {
             if (!$this->isValidItem($item)) {
                 continue;
@@ -308,7 +324,6 @@ class Discount implements DiscountHelperInterface
             $item->setData(self::NAME_UNIT_PRICE, $priceWithDiscount);
 
             $rowTotalNew = round($priceWithDiscount * $qty, 2);
-            $itemsSum += $rowTotalNew;
 
             $rowDiscountNew = $rowDiscount + round($rowPercentage * $grandDiscount, 2);
 
@@ -500,7 +515,7 @@ class Discount implements DiscountHelperInterface
 
         //Calculate sum
         foreach ($itemsFinal as $item) {
-            $itemsSum += $item[self::SUM];
+            $itemsSum = bcadd($item[self::SUM], $itemsSum, 2);
         }
 
         $receipt = [
@@ -592,8 +607,6 @@ class Discount implements DiscountHelperInterface
      */
     private function getProcessedItem($item)
     {
-        $final = [];
-
         $taxValue = $this->taxAttributeCode
             ? $this->addTaxValue($this->taxAttributeCode, $item)
             : $this->taxValue;
@@ -606,9 +619,7 @@ class Discount implements DiscountHelperInterface
         $rowDiff = $item->getData(self::NAME_ROW_DIFF);
 
         if (!$rowDiff || !$this->isSplitItemsAllowed || !$this->doCalculation) {
-            $final[$item->getId()] = $entityItem;
-
-            return $final;
+            return $this->splitMarkFinalItems($item, $entityItem);
         }
 
         $qty = $item->getQty() ?: $item->getQtyOrdered();
@@ -637,19 +648,106 @@ class Discount implements DiscountHelperInterface
         $item1[self::SUM] = round($item1[self::QUANTITY] * $item1[self::PRICE], 2);
 
         if ($qtyUpdate == 0) {
-            $final[$item->getId()] = $item1;
-
-            return $final;
+            return $this->splitMarkFinalItems($item, $item1);
         }
 
         $item2[self::PRICE] = $item2[self::PRICE] + $sign * 0.01 + $inc / 100;
         $item2[self::QUANTITY] = $qtyUpdate;
         $item2[self::SUM] = round($item2[self::QUANTITY] * $item2[self::PRICE], 2);
 
-        $final[$item->getId() . '_1'] = $item1;
-        $final[$item->getId() . '_2'] = $item2;
+        return $this->splitMarkFinalItems($item, $item1, $item2);
+    }
 
-        return $final;
+    /**
+     * @param CreditmemoItem|InvoiceItem|OrderItem $item
+     * @param array $items1
+     * @param array $items2
+     * @return array
+     */
+    private function splitMarkFinalItems($item, array $items1, array $items2 = [])
+    {
+        $items = [$items1];
+
+        if (!empty($items2)) {
+            $items[] = $items2;
+        }
+
+        $needMark = !empty($this->markingAttributeCode) ? (bool) $item->getData($this->markingAttributeCode) : false;
+
+        if ($needMark) {
+            // make a full split and mark each item
+            $items = $this->fullSplit($items);
+            $items = $this->markItems($items, array_map(
+                'trim',
+                explode(',', $item->getData($this->markingListAttributeCode))
+            ));
+        }
+
+        return $this->packItems($item, $items);
+    }
+
+    /**
+     * @param array $items
+     * @return array
+     */
+    private function fullSplit(array $items)
+    {
+        $result = [];
+
+        foreach ($items as $item) {
+            $qty = $item[self::QUANTITY];
+
+            if ($qty == 1) {
+                $result[] = $item;
+                continue;
+            }
+
+            for ($i = 0; $i < $qty; $i++) {
+                $item[self::QUANTITY] = 1;
+                $item[self::SUM] = $item[self::PRICE];
+                $result[] = $item;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param array $items
+     * @param array $marks
+     * @return array
+     */
+    private function markItems(array $items, array $marks)
+    {
+        return array_map(function (array $item) use (&$marks) {
+            $item[self::MARKING] = array_shift($marks);
+
+            return $item;
+        }, $items);
+    }
+
+    /**
+     * @param mixed $item
+     * @param array $items
+     * @return array
+     */
+    private function packItems($item, array $items)
+    {
+        $result = [];
+
+        if (count($items) == 1) {
+            $result[$item->getId()] = array_shift($items);
+
+            return $result;
+        }
+
+        $index = 1;
+        foreach ($items as $resultItem) {
+            $result[$item->getId() . '_' . $index] = $resultItem;
+            $index++;
+        }
+
+        return $result;
     }
 
     /**
