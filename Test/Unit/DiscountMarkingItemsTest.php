@@ -82,7 +82,7 @@ class DiscountMarkingItemsTest extends DiscountSplitItemsTest
             $markings = [];
 
             for ($i = 1; $i < 1000; $i++) {
-                $markings[] = 'SOME_MARK_' . $i;
+                $markings[] = base64_encode('SOME_MARK_' . $i);
             }
 
             $this->markings = implode(',', $markings);
@@ -302,7 +302,16 @@ class DiscountMarkingItemsTest extends DiscountSplitItemsTest
         $item->setData(\Mygento\Base\Helper\Discount::NAME_ROW_DIFF, 2);
         $item->setData(\Mygento\Base\Helper\Discount::NAME_UNIT_PRICE, 10.59);
         $item->setData(\Mygento\Base\Helper\Discount::NAME_MARKING, true);
-        $item->setData(\Mygento\Base\Helper\Discount::NAME_MARKING_LIST, 'SOME_MARK_1,SOME_MARK_2,SOME_MARK_3');
+        $item->setData(
+            \Mygento\Base\Helper\Discount::NAME_MARKING_LIST,
+            implode(
+                ',',
+                array_map(
+                    'base64_encode',
+                    ['SOME_MARK_1', 'SOME_MARK_2', 'SOME_MARK_3']
+                )
+            )
+        );
 
         $expected = [
             [
