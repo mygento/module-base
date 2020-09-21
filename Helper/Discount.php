@@ -672,7 +672,7 @@ class Discount implements DiscountHelperInterface
             $items[] = $items2;
         }
 
-        $needMark = !empty($this->markingAttributeCode) ? (bool) $item->getData($this->markingAttributeCode) : false;
+        $needMark = !empty($this->markingAttributeCode) ? $this->isItemNeedMark($item) : false;
 
         if ($needMark) {
             // make a full split and mark each item
@@ -683,7 +683,7 @@ class Discount implements DiscountHelperInterface
                     'base64_decode',
                     array_map(
                         'trim',
-                        explode(',', $item->getData($this->markingListAttributeCode))
+                        explode(',', $this->getItemMark($item))
                     )
                 )
             );
@@ -1015,6 +1015,34 @@ class Discount implements DiscountHelperInterface
         }
 
         return $item->getTaxPercent();
+    }
+
+    /**
+     * @param CreditmemoItem|InvoiceItem|OrderItem $item
+     * @return bool
+     */
+    private function isItemNeedMark($item): bool
+    {
+        $isOrderItem = $item instanceof OrderItem;
+        if (!$isOrderItem) {
+            return (bool) $item->getOrderItem()->getData($this->markingAttributeCode);
+        }
+
+        return (bool) $item->getData($this->markingAttributeCode);
+    }
+
+    /**
+     * @param CreditmemoItem|InvoiceItem|OrderItem $item
+     * @return string
+     */
+    private function getItemMark($item)
+    {
+        $isOrderItem = $item instanceof OrderItem;
+        if (!$isOrderItem) {
+            return $item->getOrderItem()->getData($this->markingListAttributeCode);
+        }
+
+        return $item->getData($this->markingListAttributeCode);
     }
 
     /**
