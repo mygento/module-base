@@ -8,7 +8,7 @@
 
 namespace Mygento\Base\Model\Source;
 
-class Status implements \Magento\Framework\Option\ArrayInterface
+class Status implements \Magento\Framework\Data\OptionSourceInterface
 {
     const UNDEFINED_OPTION_LABEL = '-- Please Select --';
 

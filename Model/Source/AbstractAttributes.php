@@ -8,7 +8,7 @@
 
 namespace Mygento\Base\Model\Source;
 
-abstract class AbstractAttributes implements \Magento\Framework\Option\ArrayInterface
+abstract class AbstractAttributes implements \Magento\Framework\Data\OptionSourceInterface
 {
     /**
      * @var array
