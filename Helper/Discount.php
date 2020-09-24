@@ -322,7 +322,7 @@ class Discount implements DiscountHelperInterface
                 $rowDiscount = 0;
             }
 
-            $discountPerUnit = $this->slyCeil(
+            $discountPerUnit = $this->slyFloor(
                 ($rowDiscount + $rowPercentage * $grandDiscount) / $qty
             );
 
