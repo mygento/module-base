@@ -91,6 +91,11 @@ class Discount implements DiscountHelperInterface
     private $markingListAttributeCode;
 
     /**
+     * @var string
+     */
+    private $markingRefundAttributeCode;
+
+    /**
      * @var float
      */
     private $discountlessSum = 0.0;
@@ -122,7 +127,8 @@ class Discount implements DiscountHelperInterface
         $taxAttributeCode = '',
         $shippingTaxValue = '',
         $markingAttributeCode = '',
-        $markingListAttributeCode = ''
+        $markingListAttributeCode = '',
+        $markingRefundAttributeCode = ''
     ) {
         if (!$entity) {
             return null;
@@ -139,6 +145,7 @@ class Discount implements DiscountHelperInterface
         $this->shippingTaxValue = $shippingTaxValue;
         $this->markingAttributeCode = $markingAttributeCode;
         $this->markingListAttributeCode = $markingListAttributeCode;
+        $this->markingRefundAttributeCode = $markingRefundAttributeCode;
 
         $globalDiscount = $this->getGlobalDiscount();
 
@@ -1037,12 +1044,18 @@ class Discount implements DiscountHelperInterface
      */
     private function getItemMark($item)
     {
-        $isOrderItem = $item instanceof OrderItem;
-        if (!$isOrderItem) {
-            return $item->getOrderItem()->getData($this->markingListAttributeCode);
+        $attr = $this->markingListAttributeCode;
+
+        if ($item instanceof CreditmemoItem) {
+            $attr = $this->markingRefundAttributeCode;
         }
 
-        return $item->getData($this->markingListAttributeCode);
+        $isOrderItem = $item instanceof OrderItem;
+        if (!$isOrderItem) {
+            return $item->getOrderItem()->getData($attr);
+        }
+
+        return $item->getData($attr);
     }
 
     /**
