@@ -35,7 +35,7 @@ class DiscountMarkingItemsTest extends DiscountSplitItemsTest
         $order->setShippingDescription('test_shipping');
         $this->assertTrue(method_exists($this->discountHelper, 'getRecalculated'));
 
-        $recalculatedData = $this->discountHelper->getRecalculated($order, 'vat20', '', '', 'marking', 'marking_list');
+        $recalculatedData = $this->discountHelper->getRecalculated($order, 'vat20', '', '', 'marking', 'marking_list', 'marking_refund');
 
         $this->assertEquals($recalculatedData['sum'], $expectedArray['sum'], 'Total sum failed');
         $this->assertEquals($recalculatedData['origGrandTotal'], $expectedArray['origGrandTotal']);
@@ -92,6 +92,7 @@ class DiscountMarkingItemsTest extends DiscountSplitItemsTest
 
         $item->setData('marking', true);
         $item->setData('marking_list', $markingList);
+        $item->setData('marking_refund', '');
 
         return $item;
     }
@@ -116,6 +117,10 @@ class DiscountMarkingItemsTest extends DiscountSplitItemsTest
         $markingAttributeCodeListAttr = $dHelper->getProperty('markingListAttributeCode');
         $markingAttributeCodeListAttr->setAccessible(true);
         $markingAttributeCodeListAttr->setValue($discountHelper, \Mygento\Base\Helper\Discount::NAME_MARKING_LIST);
+
+        $markingAttributeCodeRefundAttr = $dHelper->getProperty('markingRefundAttributeCode');
+        $markingAttributeCodeRefundAttr->setAccessible(true);
+        $markingAttributeCodeRefundAttr->setValue($discountHelper, \Mygento\Base\Helper\Discount::NAME_MARKING_REFUND);
 
         $getProcessedItem = $dHelper->getMethod('getProcessedItem');
         $getProcessedItem->setAccessible(true);

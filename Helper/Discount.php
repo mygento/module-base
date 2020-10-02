@@ -27,6 +27,7 @@ class Discount implements DiscountHelperInterface
     const NAME_ROW_DIFF = 'recalc_row_diff';
     const NAME_MARKING = 'marking';
     const NAME_MARKING_LIST = 'marking_list';
+    const NAME_MARKING_REFUND = 'marking_refund';
 
     const ORIG_GRAND_TOTAL = 'origGrandTotal';
     const ITEMS = 'items';
@@ -679,7 +680,7 @@ class Discount implements DiscountHelperInterface
             $items[] = $items2;
         }
 
-        $needMark = !empty($this->markingAttributeCode) ? $this->isItemNeedMark($item) : false;
+        $needMark = $this->canMark() ? $this->isItemNeedMark($item) : false;
 
         if ($needMark) {
             // make a full split and mark each item
@@ -1070,5 +1071,15 @@ class Discount implements DiscountHelperInterface
         }
 
         return $item->getTaxAmount();
+    }
+
+    /**
+     * @return bool
+     */
+    private function canMark(): bool
+    {
+        return $this->markingAttributeCode
+            && $this->markingListAttributeCode
+            && $this->markingRefundAttributeCode;
     }
 }

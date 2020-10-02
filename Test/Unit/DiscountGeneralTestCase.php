@@ -43,6 +43,9 @@ class DiscountGeneralTestCase extends TestCase
     const CHARS_DIGITS = '0123456789';
     const CHARS_SPECIALS = '!$*+-.=?@^_|~';
 
+    /**
+     * @var \Mygento\Base\Helper\Discount
+     */
     protected $discountHelper = null;
 
     /**
