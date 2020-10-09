@@ -37,6 +37,7 @@ class DiscountGeneralTestCase extends TestCase
     const TEST_CASE_NAME_22 = '#case 22. Bug with taxes. Когда настроено налоговое правило и цены в каталоге без налога. Скидка не содержит налог';
     const TEST_CASE_NAME_23 = '#case 23. Bug with taxes. Есть налоговое правило. Налог применяется до скидки, а скидка применяется на цены, содержащие налог. То есть скидка содержит налог.';
     const TEST_CASE_NAME_24 = '#case 24. Bug with shipping discount. Доставка со скидкой 100%. Настройки налогов как в #23';
+    const TEST_CASE_NAME_25 = '#case 25. Баг с отрицательной суммой товара (макс. цена в заказе) и отрицательной суммой доставки';
 
     const CHARS_LOWERS = 'abcdefghijklmnopqrstuvwxyz';
     const CHARS_UPPERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -406,6 +407,24 @@ class DiscountGeneralTestCase extends TestCase
             ->setTaxAmount(200.0000);
         $this->addItem($order, $item1);
         $final[self::TEST_CASE_NAME_24] = $order;
+
+        //Баг: Отрицательная стоимость для товара и доставки
+        $order = $this->getNewOrderInstance(29820.0000, 19830.0000, 0);
+        $this->addItem($order, $this->getItem(9990.0000, 9990.0000, 9990.0000, 1, 20, 0)->setData('name', 'Product 1'));
+        $this->addItem($order, $this->getItem(990.0000, 99.0000, 0, 10, 20, 165.0000)->setData('name', 'Product 2'));
+        $this->addItem($order, $this->getItem(410.0000, 41.0000, 0, 10, 20, 68.3300)->setData('name', 'Product 3'));
+        $this->addItem($order, $this->getItem(820.0000, 41.0000, 0, 20, 20, 136.6700)->setData('name', 'Product 4'));
+        $this->addItem($order, $this->getItem(1550.0000, 31.0000, 0, 50, 20, 258.3300)->setData('name', 'Product 5'));
+        $this->addItem($order, $this->getItem(1860.0000, 31.0000, 0, 60, 20, 310.0000)->setData('name', 'Product 6'));
+        $this->addItem($order, $this->getItem(2050.0000, 41.0000, 0, 50, 20, 341.6700)->setData('name', 'Product 7'));
+        $this->addItem($order, $this->getItem(1950.0000, 39.0000, 0, 50, 20, 325.0000)->setData('name', 'Product 8'));
+        $this->addItem($order, $this->getItem(2050.0000, 41.0000, 0, 50, 20, 341.6700)->setData('name', 'Product 9'));
+        $this->addItem($order, $this->getItem(2050.0000, 41.0000, 0, 50, 20, 341.6600)->setData('name', 'Product 10'));
+        $this->addItem($order, $this->getItem(2050.0000, 41.0000, 0, 50, 20, 341.6700)->setData('name', 'Product 11'));
+        $this->addItem($order, $this->getItem(1550.0000, 31.0000, 0, 50, 20, 258.3300)->setData('name', 'Product 12'));
+        $this->addItem($order, $this->getItem(2500.0000, 50.0000, 0, 50, 20, 416.6700)->setData('name', 'Product 13'));
+        $this->addItem($order, $this->getItem(0.0000, 0.0000, 0, 4, 20, 0)->setData('name', 'Product 14'));
+        $final[self::TEST_CASE_NAME_25] = $order;
 
         return $final;
     }

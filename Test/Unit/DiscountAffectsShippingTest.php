@@ -1030,6 +1030,118 @@ class DiscountAffectsShippingTest extends DiscountGeneralTestCase
             ],
         ];
 
+        $actualData[parent::TEST_CASE_NAME_25] = [
+            'sum' => 19830.00,
+            'origGrandTotal' => 19830,
+            'items' => [
+                100501 => [
+                    'price' => 0,
+                    'name' => 'Product 1',
+                    'quantity' => 1,
+                    'sum' => 0,
+                    'tax' => 'vat20',
+                ],
+                100502 => [
+                    'price' => 99,
+                    'name' => 'Product 2',
+                    'quantity' => 10,
+                    'sum' => 990,
+                    'tax' => 'vat20',
+                ],
+                100503 => [
+                    'price' => 41,
+                    'name' => 'Product 3',
+                    'quantity' => 10,
+                    'sum' => 410,
+                    'tax' => 'vat20',
+                ],
+                100504 => [
+                    'price' => 41,
+                    'name' => 'Product 4',
+                    'quantity' => 20,
+                    'sum' => 820,
+                    'tax' => 'vat20',
+                ],
+                100505 => [
+                    'price' => 31,
+                    'name' => 'Product 5',
+                    'quantity' => 50,
+                    'sum' => 1550,
+                    'tax' => 'vat20',
+                ],
+                100506 => [
+                    'price' => 31,
+                    'name' => 'Product 6',
+                    'quantity' => 60,
+                    'sum' => 1860,
+                    'tax' => 'vat20',
+                ],
+                100507 => [
+                    'price' => 41,
+                    'name' => 'Product 7',
+                    'quantity' => 50,
+                    'sum' => 2050,
+                    'tax' => 'vat20',
+                ],
+                100508 => [
+                    'price' => 39,
+                    'name' => 'Product 8',
+                    'quantity' => 50,
+                    'sum' => 1950,
+                    'tax' => 'vat20',
+                ],
+                100509 => [
+                    'price' => 41,
+                    'name' => 'Product 9',
+                    'quantity' => 50,
+                    'sum' => 2050,
+                    'tax' => 'vat20',
+                ],
+                100510 => [
+                    'price' => 41,
+                    'name' => 'Product 10',
+                    'quantity' => 50,
+                    'sum' => 2050,
+                    'tax' => 'vat20',
+                ],
+                100511 => [
+                    'price' => 41,
+                    'name' => 'Product 11',
+                    'quantity' => 50,
+                    'sum' => 2050,
+                    'tax' => 'vat20',
+                ],
+                100512 => [
+                    'price' => 31,
+                    'name' => 'Product 12',
+                    'quantity' => 50,
+                    'sum' => 1550,
+                    'tax' => 'vat20',
+                ],
+                100513 => [
+                    'price' => 50,
+                    'name' => 'Product 13',
+                    'quantity' => 50,
+                    'sum' => 2500,
+                    'tax' => 'vat20',
+                ],
+                100514 => [
+                    'price' => 0,
+                    'name' => 'Product 14',
+                    'quantity' => 4,
+                    'sum' => 0,
+                    'tax' => 'vat20',
+                ],
+                'shipping' => [
+                    'name' => '',
+                    'price' => 0,
+                    'quantity' => 1,
+                    'sum' => 0,
+                    'tax' => 'vat20',
+                ],
+            ],
+        ];
+
         return $actualData;
     }
 }
