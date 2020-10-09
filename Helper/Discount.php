@@ -1009,7 +1009,7 @@ class Discount implements DiscountHelperInterface
             //bccomp returns 0 if operands are equal
             bccomp($taxAmount, '0.00', 2) === 0 &&
             $item->getRowTotal() !== $item->getRowTotalInclTax() &&
-            //Bug NN-3475 Проверка остатка стоимости с налогов за вычетом скидки
+            //Bug NN-3475 Проверка остатка стоимости с налогом за вычетом скидки
             bccomp(($item->getBaseRowTotalInclTax() - $item->getBaseDiscountAmount()), '0.00', 2) != 0;
     }
 
