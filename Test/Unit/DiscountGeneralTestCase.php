@@ -37,7 +37,7 @@ class DiscountGeneralTestCase extends TestCase
     const TEST_CASE_NAME_22 = '#case 22. Bug with taxes. Когда настроено налоговое правило и цены в каталоге без налога. Скидка не содержит налог';
     const TEST_CASE_NAME_23 = '#case 23. Bug with taxes. Есть налоговое правило. Налог применяется до скидки, а скидка применяется на цены, содержащие налог. То есть скидка содержит налог.';
     const TEST_CASE_NAME_24 = '#case 24. Bug with shipping discount. Доставка со скидкой 100%. Настройки налогов как в #23';
-    const TEST_CASE_NAME_25 = '#case 25. Баг с отрицательной суммой товара(макс цена в заказе) и отрицательной суммой доставки';
+    const TEST_CASE_NAME_25 = '#case 25. Баг с отрицательной суммой товара (макс. цена в заказе) и отрицательной суммой доставки';
 
     const CHARS_LOWERS = 'abcdefghijklmnopqrstuvwxyz';
     const CHARS_UPPERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
