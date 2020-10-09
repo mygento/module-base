@@ -1030,6 +1030,118 @@ class DiscountAffectsShippingTest extends DiscountGeneralTestCase
             ],
         ];
 
+        $actualData[parent::TEST_CASE_NAME_25] = [
+            'sum' => 19827.44,//19832.05
+            'origGrandTotal' => 19830,
+            'items' => [
+                100501 => [
+                    'price' => 6643.24,//-1328.65,
+                    'name' => 'Кофемашина Essenza Mini Piano Black',
+                    'quantity' => 1,
+                    'sum' => 6643.24,//-1328.65,
+                    'tax' => 'vat20',
+                ],
+                100502 => [
+                    'price' => 65.83,//105.64,
+                    'name' => 'Кофе бленд  Master Origins Aged Sumatra',
+                    'quantity' => 10,
+                    'sum' => 658.3,//1056.4,
+                    'tax' => 'vat20',
+                ],
+                100503 => [
+                    'price' => 27.26,//43.75,
+                    'name' => 'Кофе бленд  Chiaro',
+                    'quantity' => 10,
+                    'sum' => 272.6,//437.5,
+                    'tax' => 'vat20',
+                ],
+                100504 => [
+                    'price' => 27.26,//43.75,
+                    'name' => 'Кофе бленд  Nicaragua',
+                    'quantity' => 20,
+                    'sum' => 545.2,//875,
+                    'tax' => 'vat20',
+                ],
+                100505 => [
+                    'price' => 20.61,//33.08,
+                    'name' => 'Кофе бленд  Cosi',
+                    'quantity' => 50,
+                    'sum' => 1030.5,//1654,
+                    'tax' => 'vat20',
+                ],
+                100506 => [
+                    'price' => 20.61,//33.08,
+                    'name' => 'Кофе бленд  Ispirazione Roma',
+                    'quantity' => 60,
+                    'sum' => 1236.6,//1984.8,
+                    'tax' => 'vat20',
+                ],
+                100507 => [
+                    'price' => 27.26,//43.75,
+                    'name' => 'Кофе бленд India',
+                    'quantity' => 50,
+                    'sum' => 1363,//2187.5,
+                    'tax' => 'vat20',
+                ],
+                100508 => [
+                    'price' => 25.93,//41.62,
+                    'name' => 'Кофе бленд Ispirazione Napoli',
+                    'quantity' => 50,
+                    'sum' => 1296.5,//2081,
+                    'tax' => 'vat20',
+                ],
+                100509 => [
+                    'price' => 27.26,//43.75,
+                    'name' => 'Кофе бленд Colombia',
+                    'quantity' => 50,
+                    'sum' => 1363,//2187.5,
+                    'tax' => 'vat20',
+                ],
+                100510 => [
+                    'price' => 27.26,//43.75,
+                    'name' => 'Кофе бленд Ethiopia',
+                    'quantity' => 50,
+                    'sum' => 1363,//2187.5,
+                    'tax' => 'vat20',
+                ],
+                100511 => [
+                    'price' => 27.26,//43.75,
+                    'name' => 'Кофе бленд Indonesia',
+                    'quantity' => 50,
+                    'sum' => 1363,//2187.5,
+                    'tax' => 'vat20',
+                ],
+                100512 => [
+                    'price' => 20.61,//33.08,
+                    'name' => 'Кофе бленд Ispirazione Genova Livanto',
+                    'quantity' => 50,
+                    'sum' => 1030.5,//1654,
+                    'tax' => 'vat20',
+                ],
+                100513 => [
+                    'price' => 33.24,//53.36,
+                    'name' => 'Кофе бленд Barista Creations Freddo Delicato For Ice',
+                    'quantity' => 50,
+                    'sum' => 1662,//2668,
+                    'tax' => 'vat20',
+                ],
+                100514 => [
+                    'price' => 0,
+                    'name' => 'Пакет для использованных капсул (только для доставки по России)',
+                    'quantity' => 4,
+                    'sum' => 0,
+                    'tax' => 'vat20',
+                ],
+                'shipping' => [
+                    'name' => 'Доставка товара',
+                    'price' => 2.56,//-2.05,
+                    'quantity' => 1,
+                    'sum' => 2.56,//-2.05,
+                    'tax' => 'vat20',
+                ],
+            ],
+        ];
+
         return $actualData;
     }
 }

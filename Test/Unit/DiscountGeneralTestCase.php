@@ -37,6 +37,7 @@ class DiscountGeneralTestCase extends TestCase
     const TEST_CASE_NAME_22 = '#case 22. Bug with taxes. Когда настроено налоговое правило и цены в каталоге без налога. Скидка не содержит налог';
     const TEST_CASE_NAME_23 = '#case 23. Bug with taxes. Есть налоговое правило. Налог применяется до скидки, а скидка применяется на цены, содержащие налог. То есть скидка содержит налог.';
     const TEST_CASE_NAME_24 = '#case 24. Bug with shipping discount. Доставка со скидкой 100%. Настройки налогов как в #23';
+    const TEST_CASE_NAME_25 = '#case 25. Отрицательная сумма кофе-машины (макс цена в заказе) и отрицательная сумма доставки';
 
     const CHARS_LOWERS = 'abcdefghijklmnopqrstuvwxyz';
     const CHARS_UPPERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -406,6 +407,24 @@ class DiscountGeneralTestCase extends TestCase
             ->setTaxAmount(200.0000);
         $this->addItem($order, $item1);
         $final[self::TEST_CASE_NAME_24] = $order;
+
+        //Отрицательная сумма для кофемашины и доставки
+        $order = $this->getNewOrderInstance(29820.0000, 19830.0000, 0);
+        $this->addItem($order, $this->getItem(9990.0000, 9990.0000, 9990.0000, 1, 20, 0)->setData('name', 'Кофемашина Essenza Mini Piano Black'));
+        $this->addItem($order, $this->getItem(990.0000, 99.0000, 0, 10, 20, 165.0000)->setData('name', 'Кофе бленд  Master Origins Aged Sumatra'));
+        $this->addItem($order, $this->getItem(410.0000, 41.0000, 0, 10, 20, 68.3300)->setData('name', 'Кофе бленд Chiaro'));
+        $this->addItem($order, $this->getItem(820.0000, 41.0000, 0, 20, 20, 136.6700)->setData('name', 'Кофе бленд Nicaragua'));
+        $this->addItem($order, $this->getItem(1550.0000, 31.0000, 0, 50, 20, 258.3300)->setData('name', 'Кофе бленд Cosi'));
+        $this->addItem($order, $this->getItem(1860.0000, 31.0000, 0, 60, 20, 310.0000)->setData('name', 'Кофе бленд Ispirazione Roma'));
+        $this->addItem($order, $this->getItem(2050.0000, 41.0000, 0, 50, 20, 341.6700)->setData('name', 'Кофе бленд India'));
+        $this->addItem($order, $this->getItem(1950.0000, 39.0000, 0, 50, 20, 325.0000)->setData('name', 'Кофе бленд Ispirazione Napoli'));
+        $this->addItem($order, $this->getItem(2050.0000, 41.0000, 0, 50, 20, 341.6700)->setData('name', 'Кофе бленд Colombia'));
+        $this->addItem($order, $this->getItem(2050.0000, 41.0000, 0, 50, 20, 341.6600)->setData('name', 'Кофе бленд Ethiopia'));
+        $this->addItem($order, $this->getItem(2050.0000, 41.0000, 0, 50, 20, 341.6700)->setData('name', 'Кофе бленд Indonesia'));
+        $this->addItem($order, $this->getItem(1550.0000, 31.0000, 0, 50, 20, 258.3300)->setData('name', 'Кофе бленд Ispirazione Genova Livanto'));
+        $this->addItem($order, $this->getItem(2500.0000, 50.0000, 0, 50, 20, 416.6700)->setData('name', 'Кофе бленд Barista Creations Freddo Delicato For Ice'));
+        $this->addItem($order, $this->getItem(0.0000, 0.0000, 0, 4, 20, 0)->setData('name', 'Пакет для использованных капсул (только для доставки по России)'));
+        $final[self::TEST_CASE_NAME_25] = $order;
 
         return $final;
     }
