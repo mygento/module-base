@@ -408,7 +408,7 @@ class DiscountGeneralTestCase extends TestCase
         $this->addItem($order, $item1);
         $final[self::TEST_CASE_NAME_24] = $order;
 
-        //Была ошибка: Отрицательная сумма для кофемашины и доставки
+        //Ошибка: Отрицательная сумма для кофемашины и доставки
         $order = $this->getNewOrderInstance(29820.0000, 19830.0000, 0);
         $this->addItem($order, $this->getItem(9990.0000, 9990.0000, 9990.0000, 1, 20, 0)->setData('name', 'Кофемашина Essenza Mini Piano Black'));
         $this->addItem($order, $this->getItem(990.0000, 99.0000, 0, 10, 20, 165.0000)->setData('name', 'Кофе бленд  Master Origins Aged Sumatra'));
