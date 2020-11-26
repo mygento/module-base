@@ -19,4 +19,7 @@ parameters:
         phpcs:
             warning_severity: null
         xmllint:
+        phpstan:
+          autoload_file: 'vendor/mygento/coding-standard/stan/autoload.php'
+          ignore_patterns: ['Test']
         #psalm:

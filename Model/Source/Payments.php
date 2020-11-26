@@ -8,9 +8,6 @@
 
 namespace Mygento\Base\Model\Source;
 
-/**
- * Class Payments
- */
 class Payments implements \Magento\Framework\Data\OptionSourceInterface
 {
     /** @var array */
@@ -20,8 +17,6 @@ class Payments implements \Magento\Framework\Data\OptionSourceInterface
     protected $paymentHelper;
 
     /**
-     * Constructor
-     *
      * @param \Magento\Payment\Helper\Data $paymentHelper
      */
     public function __construct(
