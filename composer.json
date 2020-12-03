@@ -28,10 +28,8 @@
     "magento/module-sales": "102.*"
   },
   "require-dev": {
-    "mygento/coding-standard": "~2.13.5",
-    "phpunit/phpunit": "~7.5.12",
-    "vimeo/psalm": "3.x-dev",
-    "magento/magento-coding-standard": "~1.0.0"
+    "mygento/coding-standard": "~2.13.6-beta1",
+    "phpunit/phpunit": "~7.5.12"
   },
   "autoload": {
     "files": [
