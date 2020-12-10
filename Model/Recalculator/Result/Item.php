@@ -16,7 +16,7 @@ class Item extends DataObject implements RecalculateResultItemInterface
     /**
      * @inheritdoc
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->getData(self::NAME_FIELD_KEY);
     }
@@ -88,7 +88,7 @@ class Item extends DataObject implements RecalculateResultItemInterface
     /**
      * @inheritdoc
      */
-    public function getTax(): string
+    public function getTax(): ?string
     {
         return $this->getData(self::TAX_FIELD_KEY);
     }
@@ -106,7 +106,7 @@ class Item extends DataObject implements RecalculateResultItemInterface
     /**
      * @inheritdoc
      */
-    public function getRewardCurrencyAmount(): float
+    public function getRewardCurrencyAmount(): ?float
     {
         return $this->getData(self::REWARDS_FIELD_KEY);
     }
@@ -124,7 +124,7 @@ class Item extends DataObject implements RecalculateResultItemInterface
     /**
      * @inheritdoc
      */
-    public function getGiftCardAmount(): float
+    public function getGiftCardAmount(): ?float
     {
         return $this->getData(self::GIFT_CARD_AMOUNT_FIELD_KEY);
     }
@@ -142,7 +142,7 @@ class Item extends DataObject implements RecalculateResultItemInterface
     /**
      * @inheritdoc
      */
-    public function getCustomerBalanceAmount(): float
+    public function getCustomerBalanceAmount(): ?float
     {
         return $this->getData(self::CUSTOMER_BALANCE_AMOUNT_FIELD_KEY);
     }

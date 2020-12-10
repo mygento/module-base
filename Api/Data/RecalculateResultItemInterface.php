@@ -22,7 +22,7 @@ interface RecalculateResultItemInterface
     /**
      * @return string
      */
-    public function getName(): string;
+    public function getName(): ?string;
 
     /**
      * @param string $name
@@ -66,7 +66,7 @@ interface RecalculateResultItemInterface
     /**
      * @return string
      */
-    public function getTax(): string;
+    public function getTax(): ?string;
 
     /**
      * @param string $tax
@@ -77,7 +77,7 @@ interface RecalculateResultItemInterface
     /**
      * @return float
      */
-    public function getRewardCurrencyAmount(): float;
+    public function getRewardCurrencyAmount(): ?float;
 
     /**
      * @param float|string $rewards
@@ -88,7 +88,7 @@ interface RecalculateResultItemInterface
     /**
      * @return float
      */
-    public function getGiftCardAmount(): float;
+    public function getGiftCardAmount(): ?float;
 
     /**
      * @param float|string $amount
@@ -99,7 +99,7 @@ interface RecalculateResultItemInterface
     /**
      * @return float
      */
-    public function getCustomerBalanceAmount(): float;
+    public function getCustomerBalanceAmount(): ?float;
 
     /**
      * @param float|string $amount
