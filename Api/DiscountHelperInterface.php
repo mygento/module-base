@@ -40,6 +40,12 @@ interface DiscountHelperInterface
     );
 
     /**
+     * @param Creditmemo|Invoice|Order $entity
+     * @param float|int $amountToSpread
+     */
+    public function applyDiscount($entity = null, $amountToSpread = 0): void;
+
+    /**
      * @param bool $isSplitItemsAllowed
      * @return $this
      */
@@ -56,20 +62,4 @@ interface DiscountHelperInterface
      * @return $this
      */
     public function setSpreadDiscOnAllUnits(bool $spreadDiscOnAllUnits);
-
-    /**
-     * Custom floor() function
-     * @param float $val
-     * @param int $precision
-     * @return float|int
-     */
-    public function slyFloor($val, $precision = 2);
-
-    /**
-     * Custom ceil() function
-     * @param float $val
-     * @param int $precision
-     * @return float|int
-     */
-    public function slyCeil($val, $precision = 2);
 }
