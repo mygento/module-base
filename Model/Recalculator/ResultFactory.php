@@ -9,6 +9,8 @@
 namespace Mygento\Base\Model\Recalculator;
 
 use Mygento\Base\Api\Data\RecalculateResultInterface;
+use Mygento\Base\Api\Data\RecalculateResultInterfaceFactory;
+use Mygento\Base\Api\Data\RecalculateResultItemInterfaceFactory;
 
 /**
  * Factory class for @see \Mygento\Base\Api\Data\RecalculateResultInterface
@@ -16,18 +18,22 @@ use Mygento\Base\Api\Data\RecalculateResultInterface;
 class ResultFactory
 {
     /**
-     * @var \Mygento\Base\Api\Data\RecalculateResultInterfaceFactory
+     * @var RecalculateResultInterfaceFactory
      */
     private $resultInterfaceFactory;
 
     /**
-     * @var \Mygento\Base\Api\Data\RecalculateResultItemInterfaceFactory
+     * @var RecalculateResultItemInterfaceFactory
      */
     private $itemInterfaceFactory;
 
+    /**
+     * @param RecalculateResultInterfaceFactory $resultInterfaceFactory
+     * @param RecalculateResultItemInterfaceFactory $itemInterfaceFactory
+     */
     public function __construct(
-        \Mygento\Base\Api\Data\RecalculateResultInterfaceFactory $resultInterfaceFactory,
-        \Mygento\Base\Api\Data\RecalculateResultItemInterfaceFactory $itemInterfaceFactory
+        RecalculateResultInterfaceFactory $resultInterfaceFactory,
+        RecalculateResultItemInterfaceFactory $itemInterfaceFactory
     ) {
         $this->itemInterfaceFactory = $itemInterfaceFactory;
         $this->resultInterfaceFactory = $resultInterfaceFactory;

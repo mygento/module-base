@@ -15,11 +15,17 @@ class OrderRepository extends \Magento\Sales\Model\OrderRepository
     /**
      * Clear repository cache
      */
-    public function clearCache()
+    public function clearCache(): void
     {
         $this->registry = [];
     }
 
+    /**
+     * @param int $orderId
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @return \Magento\Sales\Api\Data\OrderInterface
+     */
     public function reloadOrder($orderId): OrderInterface
     {
         $this->clearCache();

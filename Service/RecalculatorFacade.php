@@ -37,6 +37,11 @@ class RecalculatorFacade
      */
     private $recalculateResultFactory;
 
+    /**
+     * @param \Mygento\Base\Helper\Discount $discountHelper
+     * @param \Mygento\Base\Model\OrderRepository $orderRepository
+     * @param \Mygento\Base\Model\Recalculator\ResultFactory $recalculateResultFactory
+     */
     public function __construct(
         Discount $discountHelper,
         OrderRepository $orderRepository,
@@ -59,6 +64,8 @@ class RecalculatorFacade
      * @param string $markingRefundAttributeCode
      * @throws \Exception
      * @return array|RecalculateResultInterface with calculated items and sum
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function execute(
         $entity,
@@ -84,6 +91,8 @@ class RecalculatorFacade
      * @param string $markingRefundAttributeCode
      * @throws \Exception
      * @return array|RecalculateResultInterface with calculated items and sum
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function executeWithoutCalculation(
         $entity,
@@ -113,6 +122,8 @@ class RecalculatorFacade
      * @param string $markingRefundAttributeCode
      * @throws \Exception
      * @return array|RecalculateResultInterface with calculated items and sum
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function executeWithSpreading(
         $entity,
@@ -142,6 +153,8 @@ class RecalculatorFacade
      * @param string $markingRefundAttributeCode
      * @throws \Exception
      * @return array|RecalculateResultInterface with calculated items and sum
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function executeWithSplitting(
         $entity,
@@ -170,6 +183,8 @@ class RecalculatorFacade
      * @param string $markingRefundAttributeCode
      * @throws \Exception
      * @return array|RecalculateResultInterface with calculated items and sum
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function executeWithSpreadingAndSplitting(
         $entity,
@@ -186,6 +201,13 @@ class RecalculatorFacade
         return $this->recalculate(...func_get_args());
     }
 
+    /**
+     * @param Creditmemo|Invoice|Order $entity
+     * @param mixed $args
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @return \Mygento\Base\Api\Data\RecalculateResultInterface
+     */
     protected function recalculate($entity, ...$args): RecalculateResultInterface
     {
         $res = $this->discountHelper->getRecalculated($entity, ...$args);
@@ -203,6 +225,8 @@ class RecalculatorFacade
     /**
      * @param Order $order
      * @param RecalculateResultInterface $recalcObject
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @return RecalculateResultInterface
      */
     protected function addExtraDiscounts($order, $recalcObject): RecalculateResultInterface
@@ -229,7 +253,7 @@ class RecalculatorFacade
             $this->discountHelper->applyDiscount($order, (float) $extraAmount);
 
             foreach ($order->getAllVisibleItems() as $item) {
-                $recalcObject->getItems()[$item->getId()][$extraAmountKey] = $item->getData(\Mygento\Base\Helper\Discount::NAME_NEW_DISC);
+                $recalcObject->getItems()[$item->getId()][$extraAmountKey] = $item->getData(Discount::NAME_NEW_DISC);
             }
         }
 
@@ -238,7 +262,10 @@ class RecalculatorFacade
         return $recalcObject;
     }
 
-    protected function resetHelper()
+    /**
+     * Reset Discount helper to default state
+     */
+    protected function resetHelper(): void
     {
         $this->discountHelper->setDoCalculation(self::DO_CALCULATION_DEFAULT_VALUE);
         $this->discountHelper->setIsSplitItemsAllowed(self::IS_SPLIT_ALLOWED_DEFAULT_VALUE);

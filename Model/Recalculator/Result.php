@@ -22,6 +22,9 @@ class Result extends DataObject implements RecalculateResultInterface
         return $this->getData(self::ITEMS_FIELD_NAME);
     }
 
+    /**
+     * @return float|string|null
+     */
     public function getSum()
     {
         return $this->getData(self::SUM_FIELD_NAME);
