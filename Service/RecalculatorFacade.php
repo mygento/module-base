@@ -13,11 +13,12 @@ use Magento\Sales\Api\Data\InvoiceInterface as Invoice;
 use Magento\Sales\Api\Data\OrderInterface as Order;
 use Mygento\Base\Api\Data\RecalculateResultInterface;
 use Mygento\Base\Api\DiscountHelperInterface;
+use Mygento\Base\Api\RecalculatorFacadeInterface;
 use Mygento\Base\Helper\Discount;
 use Mygento\Base\Model\OrderRepository;
 use Mygento\Base\Model\Recalculator\ResultFactory;
 
-class RecalculatorFacade
+class RecalculatorFacade implements RecalculatorFacadeInterface
 {
     private const DO_CALCULATION_DEFAULT_VALUE = true;
     private const IS_SPLIT_ALLOWED_DEFAULT_VALUE = false;
@@ -54,18 +55,7 @@ class RecalculatorFacade
     }
 
     /**
-     * Returns all items of the entity (order|invoice|creditmemo) with properly calculated discount
-     * and properly calculated Sum
-     * @param Creditmemo|Invoice|Order $entity
-     * @param string $taxValue
-     * @param string $taxAttributeCode Set it if info about tax is stored in product in certain attr
-     * @param string $shippingTaxValue
-     * @param string $markingAttributeCode
-     * @param string $markingListAttributeCode
-     * @param string $markingRefundAttributeCode
-     * @throws \Exception
-     * @return array|RecalculateResultInterface with calculated items and sum
-     *
+     * @inheritDoc
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function execute(
@@ -83,16 +73,7 @@ class RecalculatorFacade
     }
 
     /**
-     * Returns all items of the entity (order|invoice|creditmemo) with properly calculated discount
-     * and properly calculated Sum
-     * @param Creditmemo|Invoice|Order $entity
-     * @param string $taxValue
-     * @param string $taxAttributeCode Set it if info about tax is stored in product in certain attr
-     * @param string $shippingTaxValue
-     * @param string $markingAttributeCode
-     * @param string $markingListAttributeCode
-     * @param string $markingRefundAttributeCode
-     * @throws \Exception
+     * @inheritDoc
      * @return array|RecalculateResultInterface with calculated items and sum
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -113,20 +94,7 @@ class RecalculatorFacade
     }
 
     /**
-     * Returns all items of the entity (order|invoice|creditmemo) with properly calculated discount
-     * and properly calculated Sum.
-     * Discounts are spread on all items
-     *
-     * @param Creditmemo|Invoice|Order $entity
-     * @param string $taxValue
-     * @param string $taxAttributeCode Set it if info about tax is stored in product in certain attr
-     * @param string $shippingTaxValue
-     * @param string $markingAttributeCode
-     * @param string $markingListAttributeCode
-     * @param string $markingRefundAttributeCode
-     * @throws \Exception
-     * @return array|RecalculateResultInterface with calculated items and sum
-     *
+     * @inheritDoc
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function executeWithSpreading(
@@ -145,20 +113,7 @@ class RecalculatorFacade
     }
 
     /**
-     * Returns all items of the entity (order|invoice|creditmemo) with properly calculated discount
-     * and properly calculated Sum
-     * Some items might be split up on 2 items
-     *
-     * @param Creditmemo|Invoice|Order $entity
-     * @param string $taxValue
-     * @param string $taxAttributeCode Set it if info about tax is stored in product in certain attr
-     * @param string $shippingTaxValue
-     * @param string $markingAttributeCode
-     * @param string $markingListAttributeCode
-     * @param string $markingRefundAttributeCode
-     * @throws \Exception
-     * @return array|RecalculateResultInterface with calculated items and sum
-     *
+     * @inheritDoc
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function executeWithSplitting(
@@ -177,19 +132,7 @@ class RecalculatorFacade
     }
 
     /**
-     * Returns all items of the entity (order|invoice|creditmemo) with properly calculated discount
-     * and properly calculated Sum
-     *
-     * @param Creditmemo|Invoice|Order $entity
-     * @param string $taxValue
-     * @param string $taxAttributeCode Set it if info about tax is stored in product in certain attr
-     * @param string $shippingTaxValue
-     * @param string $markingAttributeCode
-     * @param string $markingListAttributeCode
-     * @param string $markingRefundAttributeCode
-     * @throws \Exception
-     * @return array|RecalculateResultInterface with calculated items and sum
-     *
+     * @inheritDoc
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function executeWithSpreadingAndSplitting(
