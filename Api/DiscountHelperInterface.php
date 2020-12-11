@@ -21,6 +21,28 @@ use Magento\Sales\Api\Data\OrderInterface as Order;
  */
 interface DiscountHelperInterface
 {
+    /** @deprecated */
+    public const VERSION = '1.0.24';
+
+    public const NAME_UNIT_PRICE = 'disc_hlpr_price';
+    public const NAME_ROW_DIFF = 'recalc_row_diff';
+    public const NAME_NEW_DISC = 'recalc_new_discount';
+    public const NAME_MARKING = 'marking';
+    public const NAME_MARKING_LIST = 'marking_list';
+    public const NAME_MARKING_REFUND = 'marking_refund';
+
+    public const ORIG_GRAND_TOTAL = 'origGrandTotal';
+    public const ITEMS = 'items';
+    public const SHIPPING = 'shipping';
+    public const NAME = 'name';
+    public const PRICE = 'price';
+    public const SUM = 'sum';
+    public const QUANTITY = 'quantity';
+    public const TAX = 'tax';
+    public const MARKING = 'marking';
+    public const DA_INCL_TAX = 'discount_amount_incl_tax';
+    public const SHIPPING_DA_INCL_TAX = 'shipping_discount_amount_incl_tax';
+
     /**
      * Returns all items of the entity (order|invoice|creditmemo) with properly calculated discount
      * and properly calculated Sum

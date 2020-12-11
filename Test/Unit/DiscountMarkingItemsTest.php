@@ -8,6 +8,8 @@
 
 namespace Mygento\Base\Test\Unit;
 
+use Mygento\Base\Api\DiscountHelperInterface;
+
 /**
  * Class DiscountMarkingItemsTest
  * has the same calculation as DiscountSplitItemsTest.
@@ -112,15 +114,15 @@ class DiscountMarkingItemsTest extends DiscountSplitItemsTest
 
         $markingAttributeCodeAttr = $dHelper->getProperty('markingAttributeCode');
         $markingAttributeCodeAttr->setAccessible(true);
-        $markingAttributeCodeAttr->setValue($discountHelper, \Mygento\Base\Helper\Discount::NAME_MARKING);
+        $markingAttributeCodeAttr->setValue($discountHelper, DiscountHelperInterface::NAME_MARKING);
 
         $markingAttributeCodeListAttr = $dHelper->getProperty('markingListAttributeCode');
         $markingAttributeCodeListAttr->setAccessible(true);
-        $markingAttributeCodeListAttr->setValue($discountHelper, \Mygento\Base\Helper\Discount::NAME_MARKING_LIST);
+        $markingAttributeCodeListAttr->setValue($discountHelper, DiscountHelperInterface::NAME_MARKING_LIST);
 
         $markingAttributeCodeRefundAttr = $dHelper->getProperty('markingRefundAttributeCode');
         $markingAttributeCodeRefundAttr->setAccessible(true);
-        $markingAttributeCodeRefundAttr->setValue($discountHelper, \Mygento\Base\Helper\Discount::NAME_MARKING_REFUND);
+        $markingAttributeCodeRefundAttr->setValue($discountHelper, DiscountHelperInterface::NAME_MARKING_REFUND);
 
         $getProcessedItem = $dHelper->getMethod('getProcessedItem');
         $getProcessedItem->setAccessible(true);
@@ -262,8 +264,8 @@ class DiscountMarkingItemsTest extends DiscountSplitItemsTest
         $final = [];
 
         $item1 = $this->getItem(0, 0, 0, 1);
-        $item1->setData(\Mygento\Base\Helper\Discount::NAME_ROW_DIFF, 2);
-        $item1->setData(\Mygento\Base\Helper\Discount::NAME_UNIT_PRICE, 10.59);
+        $item1->setData(DiscountHelperInterface::NAME_ROW_DIFF, 2);
+        $item1->setData(DiscountHelperInterface::NAME_UNIT_PRICE, 10.59);
 
         $final['#case 1. qty = 1.'] = [
             [
@@ -276,8 +278,8 @@ class DiscountMarkingItemsTest extends DiscountSplitItemsTest
         ];
 
         $item2 = $this->getItem(0, 0, 0, 3);
-        $item2->setData(\Mygento\Base\Helper\Discount::NAME_ROW_DIFF, 2);
-        $item2->setData(\Mygento\Base\Helper\Discount::NAME_UNIT_PRICE, 10.59);
+        $item2->setData(DiscountHelperInterface::NAME_ROW_DIFF, 2);
+        $item2->setData(DiscountHelperInterface::NAME_UNIT_PRICE, 10.59);
 
         $final['#case 2. qty = 3.'] = [
             [
@@ -304,11 +306,11 @@ class DiscountMarkingItemsTest extends DiscountSplitItemsTest
 
         // #1 rowDiff = 2 kop. qty = 3. qtyUpdate = 3
         $item = $this->getItem(0, 0, 0, 3);
-        $item->setData(\Mygento\Base\Helper\Discount::NAME_ROW_DIFF, 2);
-        $item->setData(\Mygento\Base\Helper\Discount::NAME_UNIT_PRICE, 10.59);
-        $item->setData(\Mygento\Base\Helper\Discount::NAME_MARKING, true);
+        $item->setData(DiscountHelperInterface::NAME_ROW_DIFF, 2);
+        $item->setData(DiscountHelperInterface::NAME_UNIT_PRICE, 10.59);
+        $item->setData(DiscountHelperInterface::NAME_MARKING, true);
         $item->setData(
-            \Mygento\Base\Helper\Discount::NAME_MARKING_LIST,
+            DiscountHelperInterface::NAME_MARKING_LIST,
             implode(
                 ',',
                 array_map(

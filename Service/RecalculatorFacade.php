@@ -12,6 +12,7 @@ use Magento\Sales\Api\Data\CreditmemoInterface as Creditmemo;
 use Magento\Sales\Api\Data\InvoiceInterface as Invoice;
 use Magento\Sales\Api\Data\OrderInterface as Order;
 use Mygento\Base\Api\Data\RecalculateResultInterface;
+use Mygento\Base\Api\DiscountHelperInterface;
 use Mygento\Base\Helper\Discount;
 use Mygento\Base\Model\OrderRepository;
 use Mygento\Base\Model\Recalculator\ResultFactory;
@@ -76,6 +77,8 @@ class RecalculatorFacade
         $markingListAttributeCode = '',
         $markingRefundAttributeCode = ''
     ) {
+        $this->resetHelper();
+
         return $this->recalculate(...func_get_args());
     }
 
@@ -103,6 +106,7 @@ class RecalculatorFacade
         $markingListAttributeCode = '',
         $markingRefundAttributeCode = ''
     ) {
+        $this->resetHelper();
         $this->discountHelper->setDoCalculation(false);
 
         return $this->recalculate(...func_get_args());
@@ -134,6 +138,7 @@ class RecalculatorFacade
         $markingListAttributeCode = '',
         $markingRefundAttributeCode = ''
     ) {
+        $this->resetHelper();
         $this->discountHelper->setSpreadDiscOnAllUnits(true);
 
         return $this->recalculate(...func_get_args());
@@ -165,6 +170,7 @@ class RecalculatorFacade
         $markingListAttributeCode = '',
         $markingRefundAttributeCode = ''
     ) {
+        $this->resetHelper();
         $this->discountHelper->setIsSplitItemsAllowed(true);
 
         return $this->recalculate(...func_get_args());
@@ -195,6 +201,7 @@ class RecalculatorFacade
         $markingListAttributeCode = '',
         $markingRefundAttributeCode = ''
     ) {
+        $this->resetHelper();
         $this->discountHelper->setIsSplitItemsAllowed(true);
         $this->discountHelper->setSpreadDiscOnAllUnits(true);
 
@@ -253,7 +260,9 @@ class RecalculatorFacade
             $this->discountHelper->applyDiscount($order, (float) $extraAmount);
 
             foreach ($order->getAllVisibleItems() as $item) {
-                $recalcObject->getItems()[$item->getId()][$extraAmountKey] = $item->getData(Discount::NAME_NEW_DISC);
+                $recalcObject->getItems()[$item->getId()][$extraAmountKey] = $item->getData(
+                    DiscountHelperInterface::NAME_NEW_DISC
+                );
             }
         }
 

@@ -8,6 +8,8 @@
 
 namespace Mygento\Base\Test\Unit;
 
+use Mygento\Base\Api\DiscountHelperInterface;
+
 class DiscountSplitItemsTest extends DiscountGeneralTestCase
 {
     protected function setUp()
@@ -84,8 +86,8 @@ class DiscountSplitItemsTest extends DiscountGeneralTestCase
 
         // #1 rowDiff = 2 kop. qty = 3. qtyUpdate = 3
         $item = $this->getItem(0, 0, 0, 3);
-        $item->setData(\Mygento\Base\Helper\Discount::NAME_ROW_DIFF, 2);
-        $item->setData(\Mygento\Base\Helper\Discount::NAME_UNIT_PRICE, 10.59);
+        $item->setData(DiscountHelperInterface::NAME_ROW_DIFF, 2);
+        $item->setData(DiscountHelperInterface::NAME_UNIT_PRICE, 10.59);
 
         $expected = [
             [
@@ -105,8 +107,8 @@ class DiscountSplitItemsTest extends DiscountGeneralTestCase
 
         // #2 rowDiff = 150 kop. qty = 30. qtyUpdate = 0
         $item2 = $this->getItem(0, 0, 0, 30);
-        $item2->setData(\Mygento\Base\Helper\Discount::NAME_ROW_DIFF, 150);
-        $item2->setData(\Mygento\Base\Helper\Discount::NAME_UNIT_PRICE, 10);
+        $item2->setData(DiscountHelperInterface::NAME_ROW_DIFF, 150);
+        $item2->setData(DiscountHelperInterface::NAME_UNIT_PRICE, 10);
 
         $expected2 = [
             [
@@ -119,8 +121,8 @@ class DiscountSplitItemsTest extends DiscountGeneralTestCase
 
         // #3 rowDiff = 5 kop. qty = 3. qtyUpdate = 2
         $item3 = $this->getItem(0, 0, 0, 3);
-        $item3->setData(\Mygento\Base\Helper\Discount::NAME_ROW_DIFF, 5);
-        $item3->setData(\Mygento\Base\Helper\Discount::NAME_UNIT_PRICE, 10);
+        $item3->setData(DiscountHelperInterface::NAME_ROW_DIFF, 5);
+        $item3->setData(DiscountHelperInterface::NAME_UNIT_PRICE, 10);
 
         $expected3 = [
             [

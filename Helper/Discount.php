@@ -23,26 +23,6 @@ use Mygento\Base\Helper\Discount\Math;
  */
 class Discount implements DiscountHelperInterface
 {
-    const VERSION = '1.0.24';
-    const NAME_UNIT_PRICE = 'disc_hlpr_price';
-    const NAME_ROW_DIFF = 'recalc_row_diff';
-    const NAME_NEW_DISC = 'recalc_new_discount';
-    const NAME_MARKING = 'marking';
-    const NAME_MARKING_LIST = 'marking_list';
-    const NAME_MARKING_REFUND = 'marking_refund';
-
-    const ORIG_GRAND_TOTAL = 'origGrandTotal';
-    const ITEMS = 'items';
-    const SHIPPING = 'shipping';
-    const NAME = 'name';
-    const PRICE = 'price';
-    const SUM = 'sum';
-    const QUANTITY = 'quantity';
-    const TAX = 'tax';
-    const MARKING = 'marking';
-    const DA_INCL_TAX = 'discount_amount_incl_tax';
-    const SHIPPING_DA_INCL_TAX = 'shipping_discount_amount_incl_tax';
-
     /**
      * @var bool Does item exist with price not divisible evenly?
      *           Есть ли item, цена которого не делится нацело
