@@ -207,6 +207,7 @@ class Discount implements DiscountHelperInterface
     /**
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @param mixed|null $order
      * @param mixed $amountToSpread
      */
@@ -257,25 +258,37 @@ class Discount implements DiscountHelperInterface
 
             // ==== Start Calculate Percentage. The heart of logic. ====
 
-            /** @var float Это знаменатель дроби (rowTotal/сумма).
+            /** @var float $denominator Это знаменатель дроби rowTotal/сумма.
              * Если скидка должна распространиться на все позиции - то это subTotal.
              * Если же позиции без скидок должны остаться без изменений - то это
              * subTotal за вычетом всех позиций без скидок.*/
+            $numerator = $rowTotal;
             $denominator = $subTotal - $this->discountlessSum;
 
-            if ($this->spreadDiscOnAllUnits
-                || ($subTotal == $this->discountlessSum)
-                || ($superGrandDiscount !== 0.00)) {
+            /**
+             * @var
+             * Может ли супер-скидка (rewards, gift cards etc) распределиться только
+             * по тем позициям, которые уже имеют скидку?
+             * Проверка нужна, чтобы при распределении супер-скидки цена не ушла в минус
+             * для дешевых или бесплатных позиций
+             */
+            $canSpreadSuperGrandDiscount = $subTotal - $this->discountlessSum + $discount > abs($superGrandDiscount);
+
+            if ($superGrandDiscount !== 0.00 && !$canSpreadSuperGrandDiscount) {
+                $numerator = $rowTotal + $rowDiscount;
+                $denominator = $subTotal + $discount;
+            }
+
+            if ($this->spreadDiscOnAllUnits || $subTotal == $this->discountlessSum || $canSpreadSuperGrandDiscount) {
+                $numerator = $rowTotal;
                 $denominator = $subTotal;
             }
 
-            $rowPercentage = $rowTotal / $denominator;
+            $rowPercentage = $numerator / $denominator;
 
             // ==== End Calculate Percentage. ====
 
-            if (!$this->spreadDiscOnAllUnits
-                && ($rowDiscount === 0.00)
-                && ($superGrandDiscount === 0.00)) {
+            if (!$this->spreadDiscOnAllUnits && $rowDiscount === 0.00 && $superGrandDiscount === 0.00) {
                 $rowPercentage = 0;
             }
             $percentageSum += $rowPercentage;
