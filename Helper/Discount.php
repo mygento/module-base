@@ -258,7 +258,7 @@ class Discount implements DiscountHelperInterface
 
             // ==== Start Calculate Percentage. The heart of logic. ====
 
-            /** @var float $denominator Это знаменатель дроби rowTotal/сумма.
+            /** @var float Вычисляем знаменатель дроби rowTotal/сумма.
              * Если скидка должна распространиться на все позиции - то это subTotal.
              * Если же позиции без скидок должны остаться без изменений - то это
              * subTotal за вычетом всех позиций без скидок.*/
