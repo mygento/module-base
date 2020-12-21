@@ -34,7 +34,7 @@ class Item extends DataObject implements RecalculateResultItemInterface
     /**
      * @inheritdoc
      */
-    public function getPrice(): float
+    public function getPrice(): ?float
     {
         return $this->getData(self::PRICE_FIELD_KEY);
     }
@@ -42,7 +42,7 @@ class Item extends DataObject implements RecalculateResultItemInterface
     /**
      * @inheritdoc
      */
-    public function setPrice($price): RecalculateResultItemInterface
+    public function setPrice(float $price): RecalculateResultItemInterface
     {
         $this->setData(self::PRICE_FIELD_KEY, $price);
 
@@ -70,7 +70,7 @@ class Item extends DataObject implements RecalculateResultItemInterface
     /**
      * @inheritdoc
      */
-    public function getSum(): float
+    public function getSum(): ?float
     {
         return $this->getData(self::QUANTITY_FIELD_KEY);
     }
@@ -78,7 +78,7 @@ class Item extends DataObject implements RecalculateResultItemInterface
     /**
      * @inheritdoc
      */
-    public function setSum($sum): RecalculateResultItemInterface
+    public function setSum(?float $sum): RecalculateResultItemInterface
     {
         $this->setData(self::SUM_FIELD_KEY, $sum);
 
@@ -96,7 +96,7 @@ class Item extends DataObject implements RecalculateResultItemInterface
     /**
      * @inheritdoc
      */
-    public function setTax($tax): RecalculateResultItemInterface
+    public function setTax(?string $tax): RecalculateResultItemInterface
     {
         $this->setData(self::TAX_FIELD_KEY, $tax);
 
@@ -114,7 +114,7 @@ class Item extends DataObject implements RecalculateResultItemInterface
     /**
      * @inheritdoc
      */
-    public function setRewardCurrencyAmount($rewards): RecalculateResultItemInterface
+    public function setRewardCurrencyAmount(?float $rewards): RecalculateResultItemInterface
     {
         $this->setData(self::REWARDS_FIELD_KEY, $rewards);
 
@@ -132,7 +132,7 @@ class Item extends DataObject implements RecalculateResultItemInterface
     /**
      * @inheritdoc
      */
-    public function setGiftCardAmount($amount): RecalculateResultItemInterface
+    public function setGiftCardAmount(?float $amount): RecalculateResultItemInterface
     {
         $this->setData(self::GIFT_CARD_AMOUNT_FIELD_KEY, $amount);
 
@@ -150,7 +150,7 @@ class Item extends DataObject implements RecalculateResultItemInterface
     /**
      * @inheritdoc
      */
-    public function setCustomerBalanceAmount($amount): RecalculateResultItemInterface
+    public function setCustomerBalanceAmount(?float $amount): RecalculateResultItemInterface
     {
         $this->setData(self::CUSTOMER_BALANCE_AMOUNT_FIELD_KEY, $amount);
 
