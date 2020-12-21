@@ -38,6 +38,7 @@ class DiscountGeneralTestCase extends TestCase
     const TEST_CASE_NAME_23 = '#case 23. Bug with taxes. Есть налоговое правило. Налог применяется до скидки, а скидка применяется на цены, содержащие налог. То есть скидка содержит налог.';
     const TEST_CASE_NAME_24 = '#case 24. Bug with shipping discount. Доставка со скидкой 100%. Настройки налогов как в #23';
     const TEST_CASE_NAME_25 = '#case 25. Баг с отрицательной суммой товара (макс. цена в заказе) и отрицательной суммой доставки';
+    const TEST_CASE_NAME_26 = '#case 26. Баг с отрицательной стоимостью товара если есть Reward Points';
 
     const CHARS_LOWERS = 'abcdefghijklmnopqrstuvwxyz';
     const CHARS_UPPERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -425,6 +426,16 @@ class DiscountGeneralTestCase extends TestCase
         $this->addItem($order, $this->getItem(2500.0000, 50.0000, 0, 50, 20, 416.6700)->setData('name', 'Product 13'));
         $this->addItem($order, $this->getItem(0.0000, 0.0000, 0, 4, 20, 0)->setData('name', 'Product 14'));
         $final[self::TEST_CASE_NAME_25] = $order;
+
+        //Баг: Отрицательная стоимость для товара если есть Rewards Points
+        $order = $this->getNewOrderInstance(21218.6400, 10307.3200, 0, 302);
+        $this->addItem($order, $this->getItem(0.0000, 0.0000, 0.0000, 1, 20, 0));
+        $this->addItem($order, $this->getItem(0.0000, 0.0000, 0.0000, 1, 20, 0));
+        $this->addItem($order, $this->getItem(10609.3200, 10609.3200, 0.0000, 1, 20, 1768.22));
+        $this->addItem($order, $this->getItem(0.0000, 0.0000, 0.0000, 1, 20, 0));
+        $this->addItem($order, $this->getItem(10609.3200, 10609.3200, 10609.3200, 1, 20, 1768.22));
+        $this->addItem($order, $this->getItem(0.0000, 0.0000, 0.0000, 1, 20, 0));
+        $final[self::TEST_CASE_NAME_26] = $order;
 
         return $final;
     }

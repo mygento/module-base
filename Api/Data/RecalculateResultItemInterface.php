@@ -31,15 +31,15 @@ interface RecalculateResultItemInterface
     public function setName(string $name): RecalculateResultItemInterface;
 
     /**
-     * @return float
+     * @return float|null
      */
-    public function getPrice(): float;
+    public function getPrice(): ?float;
 
     /**
-     * @param float|string $price
+     * @param float $price
      * @return $this
      */
-    public function setPrice($price): RecalculateResultItemInterface;
+    public function setPrice(float $price): RecalculateResultItemInterface;
 
     /**
      * @return float
@@ -53,26 +53,26 @@ interface RecalculateResultItemInterface
     public function setQuantity($quantity): RecalculateResultItemInterface;
 
     /**
-     * @return float
+     * @return float|null
      */
-    public function getSum(): float;
+    public function getSum(): ?float;
 
     /**
-     * @param float|string $sum
+     * @param float|null $sum
      * @return $this
      */
-    public function setSum($sum): RecalculateResultItemInterface;
+    public function setSum(?float $sum): RecalculateResultItemInterface;
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getTax(): ?string;
 
     /**
-     * @param string $tax
+     * @param string|null $tax
      * @return $this
      */
-    public function setTax($tax): RecalculateResultItemInterface;
+    public function setTax(?string $tax): RecalculateResultItemInterface;
 
     /**
      * @return float
@@ -80,10 +80,10 @@ interface RecalculateResultItemInterface
     public function getRewardCurrencyAmount(): ?float;
 
     /**
-     * @param float|string $rewards
+     * @param float|null $rewards
      * @return $this
      */
-    public function setRewardCurrencyAmount($rewards): RecalculateResultItemInterface;
+    public function setRewardCurrencyAmount(?float $rewards): RecalculateResultItemInterface;
 
     /**
      * @return float
@@ -91,10 +91,10 @@ interface RecalculateResultItemInterface
     public function getGiftCardAmount(): ?float;
 
     /**
-     * @param float|string $amount
+     * @param float|null $amount
      * @return $this
      */
-    public function setGiftCardAmount($amount): RecalculateResultItemInterface;
+    public function setGiftCardAmount(?float $amount): RecalculateResultItemInterface;
 
     /**
      * @return float
@@ -102,8 +102,8 @@ interface RecalculateResultItemInterface
     public function getCustomerBalanceAmount(): ?float;
 
     /**
-     * @param float|string $amount
+     * @param float|null $amount
      * @return $this
      */
-    public function setCustomerBalanceAmount($amount): RecalculateResultItemInterface;
+    public function setCustomerBalanceAmount(?float $amount): RecalculateResultItemInterface;
 }
