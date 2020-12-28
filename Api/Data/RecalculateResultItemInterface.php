@@ -18,6 +18,7 @@ interface RecalculateResultItemInterface
     public const REWARDS_FIELD_KEY = 'reward_currency_amount';
     public const GIFT_CARD_AMOUNT_FIELD_KEY = 'gift_cards_amount';
     public const CUSTOMER_BALANCE_AMOUNT_FIELD_KEY = 'customer_balance_amount';
+    public const MARKING = 'marking';
 
     /**
      * @return string
@@ -106,4 +107,14 @@ interface RecalculateResultItemInterface
      * @return $this
      */
     public function setCustomerBalanceAmount(?float $amount): RecalculateResultItemInterface;
+
+    /**
+     * @return string|null
+     */
+    public function getMarking(): ?string;
+
+    /**
+     * @return string|null
+     */
+    public function setMarking(?string $marking): RecalculateResultItemInterface;
 }

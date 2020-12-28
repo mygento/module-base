@@ -156,4 +156,22 @@ class Item extends DataObject implements RecalculateResultItemInterface
 
         return $this;
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function getMarking(): ?string
+    {
+        return $this->getData(self::MARKING);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setMarking(?string $marking): RecalculateResultItemInterface
+    {
+        $this->setData(self::MARKING, $marking);
+
+        return $this;
+    }
 }
