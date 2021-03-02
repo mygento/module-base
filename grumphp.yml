@@ -22,4 +22,4 @@ parameters:
         phpstan:
           autoload_file: 'vendor/mygento/coding-standard/stan/autoload.php'
           ignore_patterns: ['Test']
-        #psalm:
+          level: 1

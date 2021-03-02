@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2020 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2021 Mygento (https://www.mygento.ru)
  * @package Mygento_Base
  */
 
@@ -1533,6 +1533,251 @@ class DiscountSpreadAndSplitTest extends DiscountGeneralTestCase
                 ],
                 'shipping' => [
                     'name' => '',
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => '',
+                ],
+            ],
+        ];
+
+        $actualData[parent::TEST_CASE_NAME_25] = [
+            'sum' => '19830.00',
+            'origGrandTotal' => 19830.0,
+            'items' => [
+                100610 => [
+                    'price' => 6643.26,
+                    'name' => 'Product 1',
+                    'quantity' => 1,
+                    'sum' => 6643.26,
+                    'tax' => 'vat20',
+                ],
+                '100611_1' => [
+                    'price' => 65.83,
+                    'name' => 'Product 2',
+                    'quantity' => 6,
+                    'sum' => 394.98,
+                    'tax' => 'vat20',
+                ],
+                '100611_2' => [
+                    'price' => 65.84,
+                    'name' => 'Product 2',
+                    'quantity' => 4,
+                    'sum' => 263.36,
+                    'tax' => 'vat20',
+                ],
+                '100612_1' => [
+                    'price' => 27.26,
+                    'name' => 'Product 3',
+                    'quantity' => 5,
+                    'sum' => 136.3,
+                    'tax' => 'vat20',
+                ],
+                '100612_2' => [
+                    'price' => 27.27,
+                    'name' => 'Product 3',
+                    'quantity' => 5,
+                    'sum' => 136.35,
+                    'tax' => 'vat20',
+                ],
+                '100613_1' => [
+                    'price' => 27.26,
+                    'name' => 'Product 4',
+                    'quantity' => 11,
+                    'sum' => 299.86,
+                    'tax' => 'vat20',
+                ],
+                '100613_2' => [
+                    'price' => 27.27,
+                    'name' => 'Product 4',
+                    'quantity' => 9,
+                    'sum' => 245.43,
+                    'tax' => 'vat20',
+                ],
+                '100614_1' => [
+                    'price' => 20.61,
+                    'name' => 'Product 5',
+                    'quantity' => 27,
+                    'sum' => 556.47,
+                    'tax' => 'vat20',
+                ],
+                '100614_2' => [
+                    'price' => 20.62,
+                    'name' => 'Product 5',
+                    'quantity' => 23,
+                    'sum' => 474.26,
+                    'tax' => 'vat20',
+                ],
+                '100615_1' => [
+                    'price' => 20.61,
+                    'name' => 'Product 6',
+                    'quantity' => 32,
+                    'sum' => 659.52,
+                    'tax' => 'vat20',
+                ],
+                '100615_2' => [
+                    'price' => 20.62,
+                    'name' => 'Product 6',
+                    'quantity' => 28,
+                    'sum' => 577.36,
+                    'tax' => 'vat20',
+                ],
+                '100616_1' => [
+                    'price' => 27.26,
+                    'name' => 'Product 7',
+                    'quantity' => 27,
+                    'sum' => 736.02,
+                    'tax' => 'vat20',
+                ],
+                '100616_2' => [
+                    'price' => 27.27,
+                    'name' => 'Product 7',
+                    'quantity' => 23,
+                    'sum' => 627.21,
+                    'tax' => 'vat20',
+                ],
+                '100617_1' => [
+                    'price' => 25.93,
+                    'name' => 'Product 8',
+                    'quantity' => 27,
+                    'sum' => 700.11,
+                    'tax' => 'vat20',
+                ],
+                '100617_2' => [
+                    'price' => 25.94,
+                    'name' => 'Product 8',
+                    'quantity' => 23,
+                    'sum' => 596.62,
+                    'tax' => 'vat20',
+                ],
+                '100618_1' => [
+                    'price' => 27.26,
+                    'name' => 'Product 9',
+                    'quantity' => 27,
+                    'sum' => 736.02,
+                    'tax' => 'vat20',
+                ],
+                '100618_2' => [
+                    'price' => 27.27,
+                    'name' => 'Product 9',
+                    'quantity' => 23,
+                    'sum' => 627.21,
+                    'tax' => 'vat20',
+                ],
+                '100619_1' => [
+                    'price' => 27.26,
+                    'name' => 'Product 10',
+                    'quantity' => 27,
+                    'sum' => 736.02,
+                    'tax' => 'vat20',
+                ],
+                '100619_2' => [
+                    'price' => 27.27,
+                    'name' => 'Product 10',
+                    'quantity' => 23,
+                    'sum' => 627.21,
+                    'tax' => 'vat20',
+                ],
+                '100620_1' => [
+                    'price' => 27.26,
+                    'name' => 'Product 11',
+                    'quantity' => 27,
+                    'sum' => 736.02,
+                    'tax' => 'vat20',
+                ],
+                '100620_2' => [
+                    'price' => 27.27,
+                    'name' => 'Product 11',
+                    'quantity' => 23,
+                    'sum' => 627.21,
+                    'tax' => 'vat20',
+                ],
+                '100621_1' => [
+                    'price' => 20.61,
+                    'name' => 'Product 12',
+                    'quantity' => 27,
+                    'sum' => 556.47,
+                    'tax' => 'vat20',
+                ],
+                '100621_2' => [
+                    'price' => 20.62,
+                    'name' => 'Product 12',
+                    'quantity' => 23,
+                    'sum' => 474.26,
+                    'tax' => 'vat20',
+                ],
+                '100622_1' => [
+                    'price' => 33.24,
+                    'name' => 'Product 13',
+                    'quantity' => 3,
+                    'sum' => 99.72,
+                    'tax' => 'vat20',
+                ],
+                '100622_2' => [
+                    'price' => 33.25,
+                    'name' => 'Product 13',
+                    'quantity' => 47,
+                    'sum' => 1562.75,
+                    'tax' => 'vat20',
+                ],
+                100623 => [
+                    'price' => 0.0,
+                    'name' => 'Product 14',
+                    'quantity' => 4.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat20',
+                ],
+                'shipping' => [
+                    'name' => '',
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => '',
+                ],
+            ],
+        ];
+
+        $actualData[parent::TEST_CASE_NAME_26] = [
+            'sum' => '10307.32',
+            'origGrandTotal' => 10307.32,
+            'items' => [
+                100624 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat20',
+                ],
+                100625 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat20',
+                ],
+                100626 => [
+                    'price' => 5153.66,
+                    'quantity' => 1.0,
+                    'sum' => 5153.66,
+                    'tax' => 'vat20',
+                ],
+                100627 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat20',
+                ],
+                100628 => [
+                    'price' => 5153.66,
+                    'quantity' => 1.0,
+                    'sum' => 5153.66,
+                    'tax' => 'vat20',
+                ],
+                100629 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat20',
+                ],
+                'shipping' => [
                     'price' => 0.0,
                     'quantity' => 1.0,
                     'sum' => 0.0,

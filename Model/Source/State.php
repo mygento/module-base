@@ -8,7 +8,7 @@
 
 namespace Mygento\Base\Model\Source;
 
-class Status implements \Magento\Framework\Data\OptionSourceInterface
+class State implements \Magento\Framework\Data\OptionSourceInterface
 {
     const UNDEFINED_OPTION_LABEL = '-- Please Select --';
 
@@ -36,9 +36,9 @@ class Status implements \Magento\Framework\Data\OptionSourceInterface
     public function toOptionArray()
     {
         if ($this->options === null) {
-            $statuses = $this->orderConfig->getStatuses();
+            $states = $this->orderConfig->getStates();
             $this->options = [['value' => '', 'label' => __('-- Please Select --')]];
-            foreach ($statuses as $code => $label) {
+            foreach ($states as $code => $label) {
                 $this->options[] = ['value' => $code, 'label' => $label];
             }
         }

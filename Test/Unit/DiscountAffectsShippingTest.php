@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2020 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2021 Mygento (https://www.mygento.ru)
  * @package Mygento_Base
  */
 
@@ -1138,6 +1138,55 @@ class DiscountAffectsShippingTest extends DiscountGeneralTestCase
                     'quantity' => 1,
                     'sum' => 0,
                     'tax' => 'vat20',
+                ],
+            ],
+        ];
+
+        $actualData[parent::TEST_CASE_NAME_26] = [
+            'sum' => '10307.32',
+            'origGrandTotal' => 10307.32,
+            'items' => [
+                100624 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat20',
+                ],
+                100625 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat20',
+                ],
+                100626 => [
+                    'price' => 10307.32,
+                    'quantity' => 1.0,
+                    'sum' => 10307.32,
+                    'tax' => 'vat20',
+                ],
+                100627 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat20',
+                ],
+                100628 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat20',
+                ],
+                100629 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat20',
+                ],
+                'shipping' => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => '',
                 ],
             ],
         ];

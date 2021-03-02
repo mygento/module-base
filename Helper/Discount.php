@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2020 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2021 Mygento (https://www.mygento.ru)
  * @package Mygento_Base
  */
 
@@ -15,6 +15,7 @@ use Magento\Sales\Api\Data\InvoiceItemInterface as InvoiceItem;
 use Magento\Sales\Api\Data\OrderInterface as Order;
 use Magento\Sales\Api\Data\OrderItemInterface as OrderItem;
 use Mygento\Base\Api\DiscountHelperInterface;
+use Mygento\Base\Helper\Discount\Math;
 
 /**
  * @inheritDoc
@@ -22,25 +23,6 @@ use Mygento\Base\Api\DiscountHelperInterface;
  */
 class Discount implements DiscountHelperInterface
 {
-    const VERSION = '1.0.23';
-    const NAME_UNIT_PRICE = 'disc_hlpr_price';
-    const NAME_ROW_DIFF = 'recalc_row_diff';
-    const NAME_MARKING = 'marking';
-    const NAME_MARKING_LIST = 'marking_list';
-    const NAME_MARKING_REFUND = 'marking_refund';
-
-    const ORIG_GRAND_TOTAL = 'origGrandTotal';
-    const ITEMS = 'items';
-    const SHIPPING = 'shipping';
-    const NAME = 'name';
-    const PRICE = 'price';
-    const SUM = 'sum';
-    const QUANTITY = 'quantity';
-    const TAX = 'tax';
-    const MARKING = 'marking';
-    const DA_INCL_TAX = 'discount_amount_incl_tax';
-    const SHIPPING_DA_INCL_TAX = 'shipping_discount_amount_incl_tax';
-
     /**
      * @var bool Does item exist with price not divisible evenly?
      *           Есть ли item, цена которого не делится нацело
@@ -195,36 +177,6 @@ class Discount implements DiscountHelperInterface
     /**
      * @inheritdoc
      */
-    public function slyFloor($val, $precision = 2)
-    {
-        $factor = 1.00;
-        $divider = pow(10, $precision);
-
-        if ($val < 0) {
-            $factor = -1.00;
-        }
-
-        return (floor(abs($val) * $divider) / $divider) * $factor;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function slyCeil($val, $precision = 2)
-    {
-        $factor = 1.00;
-        $divider = pow(10, $precision);
-
-        if ($val < 0) {
-            $factor = -1.00;
-        }
-
-        return (ceil(abs($val) * $divider) / $divider) * $factor;
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function setIsSplitItemsAllowed(bool $isSplitItemsAllowed)
     {
         $this->isSplitItemsAllowed = $isSplitItemsAllowed;
@@ -255,9 +207,16 @@ class Discount implements DiscountHelperInterface
     /**
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @param mixed|null $order
+     * @param mixed $amountToSpread
      */
-    private function applyDiscount(): void
+    public function applyDiscount($order = null, $amountToSpread = 0): void
     {
+        if ($order) {
+            $this->entity = $order;
+        }
+
         $subTotal = $this->entity->getSubtotalInclTax() ?? 0;
         $discount = $this->getEntityDiscountAmountInclTax($this->entity) ?? 0.0;
 
@@ -280,6 +239,10 @@ class Discount implements DiscountHelperInterface
             $grandDiscount = $discount + $this->getGlobalDiscount() + $shippingDiscount;
         }
 
+        if ($amountToSpread) {
+            $grandDiscount = $amountToSpread;
+        }
+
         $percentageSum = 0;
 
         $items = $this->getAllItems();
@@ -295,25 +258,37 @@ class Discount implements DiscountHelperInterface
 
             // ==== Start Calculate Percentage. The heart of logic. ====
 
-            /** @var float Это знаменатель дроби (rowTotal/сумма).
+            /** @var float Вычисляем знаменатель дроби rowTotal/сумма.
              * Если скидка должна распространиться на все позиции - то это subTotal.
              * Если же позиции без скидок должны остаться без изменений - то это
              * subTotal за вычетом всех позиций без скидок.*/
+            $numerator = $rowTotal;
             $denominator = $subTotal - $this->discountlessSum;
 
-            if ($this->spreadDiscOnAllUnits
-                || ($subTotal == $this->discountlessSum)
-                || ($superGrandDiscount !== 0.00)) {
+            /**
+             * @var
+             * Может ли супер-скидка (rewards, gift cards etc) распределиться только
+             * по тем позициям, которые уже имеют скидку?
+             * Проверка нужна, чтобы при распределении супер-скидки цена не ушла в минус
+             * для дешевых или бесплатных позиций
+             */
+            $canSpreadSuperGrandDiscount = $subTotal - $this->discountlessSum + $discount > abs($superGrandDiscount);
+
+            if ($superGrandDiscount !== 0.00 && !$canSpreadSuperGrandDiscount) {
+                $numerator = $rowTotal + $rowDiscount;
+                $denominator = $subTotal + $discount;
+            }
+
+            if ($this->spreadDiscOnAllUnits || $subTotal == $this->discountlessSum || $canSpreadSuperGrandDiscount) {
+                $numerator = $rowTotal;
                 $denominator = $subTotal;
             }
 
-            $rowPercentage = $rowTotal / $denominator;
+            $rowPercentage = $numerator / $denominator;
 
             // ==== End Calculate Percentage. ====
 
-            if (!$this->spreadDiscOnAllUnits
-                && ($rowDiscount === 0.00)
-                && ($superGrandDiscount === 0.00)) {
+            if (!$this->spreadDiscOnAllUnits && $rowDiscount === 0.00 && $superGrandDiscount === 0.00) {
                 $rowPercentage = 0;
             }
             $percentageSum += $rowPercentage;
@@ -322,7 +297,7 @@ class Discount implements DiscountHelperInterface
                 $rowDiscount = 0;
             }
 
-            $discountPerUnit = $this->slyCeil(
+            $discountPerUnit = Math::slyCeil(
                 ($rowDiscount + $rowPercentage * $grandDiscount) / $qty
             );
 
@@ -338,6 +313,7 @@ class Discount implements DiscountHelperInterface
             $rowDiff = round($rowTotal + $rowDiscountNew - $rowTotalNew, 2) * 100;
 
             $item->setData(self::NAME_ROW_DIFF, $rowDiff);
+            $item->setData(self::NAME_NEW_DISC, $rowDiscountNew);
         }
 
         if ($this->spreadDiscOnAllUnits && $this->isSplitItemsAllowed) {
@@ -387,7 +363,7 @@ class Discount implements DiscountHelperInterface
             $itDisc = $this->getItemDiscountAmountInclTax($item);
             $itTotal = $item->getData('row_total_incl_tax');
 
-            $inc = $this->getDiscountIncrement($sign * $i, $count, $itTotal, $itDisc);
+            $inc = Math::getDiscountIncrement($sign * $i, $count, $itTotal, $itDisc);
             $item->setData(self::DA_INCL_TAX, $itDisc - $inc / 100);
             $i = (int) ($i - abs($inc));
 
@@ -438,7 +414,7 @@ class Discount implements DiscountHelperInterface
             $rowDiff = $item->getData(self::NAME_ROW_DIFF);
             $itTotalNew = $item->getData(self::NAME_UNIT_PRICE) * $qty + $rowDiff / 100;
 
-            $inc = $this->getDiscountIncrement($sign * $i, $count, $itTotalNew, 0);
+            $inc = Math::getDiscountIncrement($sign * $i, $count, $itTotalNew, 0);
 
             $item->setData(self::NAME_ROW_DIFF, $item->getData(self::NAME_ROW_DIFF) + $inc);
             $i = (int) ($i - abs($inc));
@@ -451,33 +427,6 @@ class Discount implements DiscountHelperInterface
         }
 
         return $iter;
-    }
-
-    /**
-     * Calculates how many kopeyki can be added to item
-     * considering number of items, rowTotal and rowDiscount
-     * @param int $amountToSpread (in kops)
-     * @param int $itemsCount
-     * @param float $itemTotal
-     * @param float $itemDiscount
-     * @return int
-     */
-    private function getDiscountIncrement($amountToSpread, $itemsCount, $itemTotal, $itemDiscount)
-    {
-        $sign = (int) ($amountToSpread / abs($amountToSpread));
-
-        //Пытаемся размазать поровну
-        $discPerItem = (int) (abs($amountToSpread) / $itemsCount);
-        $inc = ($discPerItem > 1) && ($itemTotal - $itemDiscount) > $discPerItem
-            ? $sign * $discPerItem
-            : $sign;
-
-        //Изменяем скидку позиции
-        if (($itemTotal - $itemDiscount) > abs($inc)) {
-            return $inc;
-        }
-
-        return 0;
     }
 
     /**
@@ -532,7 +481,7 @@ class Discount implements DiscountHelperInterface
         ];
 
         $shippingAmount = $this->entity->getShippingInclTax() ?? 0.00;
-        $itemsSumDiff = round($this->slyFloor($grandTotal - $itemsSum - $shippingAmount, 3), 2);
+        $itemsSumDiff = round(Math::slyFloor($grandTotal - $itemsSum - $shippingAmount, 3), 2);
 
         $this->generalHelper->debug("Items sum: {$itemsSum}. Shipping increase: {$itemsSumDiff}");
 
@@ -842,7 +791,7 @@ class Discount implements DiscountHelperInterface
 
             // Означает, что есть item, цена которого не делится нацело
             if (!$this->wryItemUnitPriceExists) {
-                $decimals = $this->getDecimalsCountAfterDiv($rowPrice, $qty);
+                $decimals = Math::getDecimalsCountAfterDiv($rowPrice, $qty);
 
                 $this->wryItemUnitPriceExists = $decimals > 2 ? true : false;
             }
@@ -869,20 +818,6 @@ class Discount implements DiscountHelperInterface
         }
 
         return false;
-    }
-
-    /**
-     * @param int $x
-     * @param int $y
-     * @return int
-     */
-    private function getDecimalsCountAfterDiv($x, $y)
-    {
-        $divRes = (string) round($x / $y, 20);
-
-        $pos = strrchr($divRes, '.');
-
-        return $pos !== false ? strlen($pos) - 1 : 0;
     }
 
     /**

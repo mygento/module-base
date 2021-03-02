@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2020 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2021 Mygento (https://www.mygento.ru)
  * @package Mygento_Base
  */
 
@@ -21,6 +21,28 @@ use Magento\Sales\Api\Data\OrderInterface as Order;
  */
 interface DiscountHelperInterface
 {
+    /** @deprecated */
+    public const VERSION = '1.0.24';
+
+    public const NAME_UNIT_PRICE = 'disc_hlpr_price';
+    public const NAME_ROW_DIFF = 'recalc_row_diff';
+    public const NAME_NEW_DISC = 'recalc_new_discount';
+    public const NAME_MARKING = 'marking';
+    public const NAME_MARKING_LIST = 'marking_list';
+    public const NAME_MARKING_REFUND = 'marking_refund';
+
+    public const ORIG_GRAND_TOTAL = 'origGrandTotal';
+    public const ITEMS = 'items';
+    public const SHIPPING = 'shipping';
+    public const NAME = 'name';
+    public const PRICE = 'price';
+    public const SUM = 'sum';
+    public const QUANTITY = 'quantity';
+    public const TAX = 'tax';
+    public const MARKING = 'marking';
+    public const DA_INCL_TAX = 'discount_amount_incl_tax';
+    public const SHIPPING_DA_INCL_TAX = 'shipping_discount_amount_incl_tax';
+
     /**
      * Returns all items of the entity (order|invoice|creditmemo) with properly calculated discount
      * and properly calculated Sum
@@ -40,6 +62,12 @@ interface DiscountHelperInterface
     );
 
     /**
+     * @param Creditmemo|Invoice|Order $entity
+     * @param float|int $amountToSpread
+     */
+    public function applyDiscount($entity = null, $amountToSpread = 0): void;
+
+    /**
      * @param bool $isSplitItemsAllowed
      * @return $this
      */
@@ -56,20 +84,4 @@ interface DiscountHelperInterface
      * @return $this
      */
     public function setSpreadDiscOnAllUnits(bool $spreadDiscOnAllUnits);
-
-    /**
-     * Custom floor() function
-     * @param float $val
-     * @param int $precision
-     * @return float|int
-     */
-    public function slyFloor($val, $precision = 2);
-
-    /**
-     * Custom ceil() function
-     * @param float $val
-     * @param int $precision
-     * @return float|int
-     */
-    public function slyCeil($val, $precision = 2);
 }
