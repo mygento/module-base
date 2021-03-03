@@ -10,7 +10,7 @@ namespace Mygento\Base\Test\Unit;
 
 class DiscountWithoutCalcTest extends DiscountGeneralTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->discountHelper = $this->getDiscountHelperInstance();
         $this->discountHelper->setDoCalculation(false);

@@ -56,7 +56,7 @@ class DiscountMarkingItemsTest extends DiscountSplitItemsTest
         $recalcQty = 0;
         foreach ($recalcItems as $recalcItem) {
             if ($recalcItem['name'] !== 'test_shipping') {
-                $this->assertContains('SOME_MARK_', $recalcItem['marking'], 'Marking of item failed');
+                $this->assertStringStartsWith('SOME_MARK_', $recalcItem['marking'], 'Marking of item failed');
             }
 
             $this->assertEquals(1, $recalcItem['quantity']);

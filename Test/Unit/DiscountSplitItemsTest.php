@@ -12,7 +12,7 @@ use Mygento\Base\Api\DiscountHelperInterface;
 
 class DiscountSplitItemsTest extends DiscountGeneralTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->discountHelper = $this->getDiscountHelperInstance();
         $this->discountHelper->setIsSplitItemsAllowed(true);

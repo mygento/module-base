@@ -9,7 +9,7 @@ cache:
 
 before_script:
 - sudo apt-get -qqy install libxml2-utils
-- composer self-update --1
+- composer self-update --2
 - echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${MAGE_LOGIN}\",\"password\":\"${MAGE_PWD}\"}}}" > auth.json
 - phpenv config-rm xdebug.ini
 - composer install --no-interaction --prefer-dist

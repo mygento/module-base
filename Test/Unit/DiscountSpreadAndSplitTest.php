@@ -10,7 +10,7 @@ namespace Mygento\Base\Test\Unit;
 
 class DiscountSpreadAndSplitTest extends DiscountGeneralTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->discountHelper = $this->getDiscountHelperInstance();
         $this->discountHelper->setSpreadDiscOnAllUnits(true);

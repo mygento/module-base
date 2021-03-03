@@ -55,7 +55,7 @@ class DiscountGeneralTestCase extends TestCase
      */
     private $objectMan;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->discountHelper = $this->getDiscountHelperInstance();
     }
@@ -447,7 +447,7 @@ class DiscountGeneralTestCase extends TestCase
     {
     }
 
-    protected function onNotSuccessfulTest(\Throwable $e)
+    protected function onNotSuccessfulTest(\Throwable $e): void
     {
         //beautify output
         echo "\033[1;31m"; // light red
