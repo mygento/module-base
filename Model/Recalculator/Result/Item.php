@@ -72,7 +72,7 @@ class Item extends DataObject implements RecalculateResultItemInterface
      */
     public function getSum(): ?float
     {
-        return $this->getData(self::QUANTITY_FIELD_KEY);
+        return $this->getData(self::SUM_FIELD_KEY);
     }
 
     /**
