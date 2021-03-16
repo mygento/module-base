@@ -298,7 +298,7 @@ class Discount implements DiscountHelperInterface
             }
 
             $discountPerUnit = Math::slyCeil(
-                ($rowDiscount + $rowPercentage * $grandDiscount) / $qty
+                bcadd($rowDiscount, $rowPercentage * $grandDiscount, 4) / $qty
             );
 
             $priceWithDiscount = bcadd($price, (string) $discountPerUnit, 2);
@@ -833,19 +833,12 @@ class Discount implements DiscountHelperInterface
 
     /**
      * Calculates grandTotal manually
-     * due to Gift Card and Customer Balance should be visible in tax receipt
      * @return float
      */
     private function getGrandTotal()
     {
         /** @psalm-suppress UndefinedMethod */
-        return round(
-            $this->entity->getGrandTotal()
-            //Magento Commerce Features
-            + $this->entity->getData('gift_cards_amount')
-            + $this->entity->getData('customer_balance_amount'),
-            2
-        );
+        return round($this->entity->getGrandTotal(), 2);
     }
 
     /**
