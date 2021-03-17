@@ -31,7 +31,7 @@ class File extends \Magento\Framework\App\Config\Value
      *
      * @var int
      */
-    private $maxFileSize = 0;
+    protected $maxFileSize = 0;
 
     /**
      * @var \Magento\Framework\Filesystem
@@ -288,7 +288,7 @@ class File extends \Magento\Framework\App\Config\Value
      *
      * @return array
      */
-    private function getAllowedExtensions()
+    protected function getAllowedExtensions()
     {
         return [];
     }
