@@ -39,6 +39,7 @@ class DiscountGeneralTestCase extends TestCase
     const TEST_CASE_NAME_24 = '#case 24. Bug with shipping discount. Доставка со скидкой 100%. Настройки налогов как в #23';
     const TEST_CASE_NAME_25 = '#case 25. Баг с отрицательной суммой товара (макс. цена в заказе) и отрицательной суммой доставки';
     const TEST_CASE_NAME_26 = '#case 26. Баг с отрицательной стоимостью товара если есть Reward Points';
+    const TEST_CASE_NAME_27 = '#case 27. Division by zero';
 
     const CHARS_LOWERS = 'abcdefghijklmnopqrstuvwxyz';
     const CHARS_UPPERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -436,6 +437,11 @@ class DiscountGeneralTestCase extends TestCase
         $this->addItem($order, $this->getItem(10609.3200, 10609.3200, 10609.3200, 1, 20, 1768.22));
         $this->addItem($order, $this->getItem(0.0000, 0.0000, 0.0000, 1, 20, 0));
         $final[self::TEST_CASE_NAME_26] = $order;
+
+        //Заказ бесплатного пробника. Клиент оплачивает только доставку
+        $order = $this->getNewOrderInstance(0.0000, 100.0000, 100, 0);
+        $this->addItem($order, $this->getItem(0.0000, 0.0000, 0.0000, 1, 20, 0));
+        $final[self::TEST_CASE_NAME_27] = $order;
 
         return $final;
     }
