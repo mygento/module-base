@@ -773,12 +773,14 @@ class Discount implements DiscountHelperInterface
      * It checks do we need to spread discount on all units and sets flag
      * $this->spreadDiscOnAllUnits
      * @return bool
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function checkSpread()
     {
         $items = $this->getAllItems();
 
         $this->discountlessSum = 0.00;
+        $discountSum = 0;
         foreach ($items as $item) {
             $qty = $item->getQty() ?: $item->getQtyOrdered();
             $discountAmountInclTax = $this->getItemDiscountAmountInclTax($item);
@@ -795,10 +797,13 @@ class Discount implements DiscountHelperInterface
 
                 $this->wryItemUnitPriceExists = $decimals > 2 ? true : false;
             }
+
+            $discountSum += $discountAmountInclTax;
         }
 
         //Есть ли общая скидка на Чек. bccomp returns 0 if operands are equal
-        if (bccomp((string) $this->getGlobalDiscount(), '0.00', 2) !== 0) {
+        $isGlobalDiscountExist = bccomp((string) $this->getGlobalDiscount(), '0.00', 2) !== 0;
+        if ($isGlobalDiscountExist) {
             $this->generalHelper->debug('1. Global discount on whole cheque.');
 
             return true;
@@ -811,7 +816,8 @@ class Discount implements DiscountHelperInterface
             return true;
         }
 
-        if ($this->spreadDiscOnAllUnits) {
+        $isDiscountExist = bccomp($discountSum, '0.00', 2) !== 0;
+        if ($this->spreadDiscOnAllUnits && $isDiscountExist) {
             $this->generalHelper->debug('3. SpreadDiscount = Yes.');
 
             return true;
