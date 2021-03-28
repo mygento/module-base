@@ -24,6 +24,16 @@
         <plugin name="mygento_base_transaction_receipt" type="Mygento\Base\Plugin\Transaction"/>
     </type>
 
+    <preference for="Mygento\Base\Api\DiscountHelperInterface" type="Mygento\Base\Helper\Discount"/>
+
+    <type name="Mygento\Base\Service\RecalculatorFacade">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="add_extra_discounts_like_rewards" xsi:type="object">Mygento\Base\Service\Handlers\AddExtraDiscounts</item>
+            </argument>
+        </arguments>
+    </type>
+
     <!-- generated -->
     <preference for="Mygento\Base\Api\EventRepositoryInterface" type="Mygento\Base\Model\EventRepository"/>
     <preference for="Mygento\Base\Api\Data\EventInterface" type="Mygento\Base\Model\Event"/>

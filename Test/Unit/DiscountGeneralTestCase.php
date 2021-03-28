@@ -148,6 +148,7 @@ class DiscountGeneralTestCase extends TestCase
         $items = (array) $order->getData('all_items');
         $items[] = $item;
 
+        $order->setData('items', $items);
         $order->setData('all_items', $items);
     }
 
