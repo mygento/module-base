@@ -13,33 +13,34 @@ use PHPUnit\Framework\TestCase;
 class DiscountGeneralTestCase extends TestCase
 {
     //consts for getRecalculated() method
-    public const TEST_CASE_NAME_1 = '#case 1. Скидки только на товары. Все делится нацело. Bug 1 kop. Товары по 1 шт. Два со скидками, а один бесплатный.';
-    public const TEST_CASE_NAME_2 = '#case 2. Скидка на весь чек и на отдельный товар. Order 145000128 DemoEE';
-    public const TEST_CASE_NAME_3 = '#case 3. Скидка на каждый товар.';
-    public const TEST_CASE_NAME_4 = '#case 4. Нет скидок никаких';
-    public const TEST_CASE_NAME_5 = '#case 5. Скидки только на товары. Не делятся нацело.';
-    public const TEST_CASE_NAME_6 = '#case 6. Есть позиция, на которую НЕ ДОЛЖНА распространиться скидка.';
-    public const TEST_CASE_NAME_7 = '#case 7. Bug grandTotal < чем сумма всех позиций. Есть позиция со 100% скидкой.';
-    public const TEST_CASE_NAME_8 = '#case 8. Reward points в заказе. 1 товар со скидкой, 1 без';
-    public const TEST_CASE_NAME_9 = '#case 9. Reward points в заказе. В заказе только 1 товар и тот без скидки';
-    public const TEST_CASE_NAME_10 = '#case 10. Reward points в заказе. На товары нет скидок';
-    public const TEST_CASE_NAME_11 = '#case 11. (prd nn) order 100374806';
-    public const TEST_CASE_NAME_12 = '#case 12. invoice NN 100057070. Неверно расчитан grandTotal в Magento';
-    public const TEST_CASE_NAME_13 = '#case 13. Такой же как и invoice NN 100057070, но без большого продукта. Неверно расчитан grandTotal в Magento';
-    public const TEST_CASE_NAME_14 = '#case 14. Тест 1 на мелкие rewardPoints (0.01)';
-    public const TEST_CASE_NAME_15 = '#case 15. Тест 2 на мелкие rewardPoints (0.31)';
-    public const TEST_CASE_NAME_16 = '#case 16. Тест 1 на мелкие rewardPoints (9.99)';
-    public const TEST_CASE_NAME_17 = '#case 17. гипотетическая ситуация с ошибкой расчета Мagento -1 коп.';
-    public const TEST_CASE_NAME_18 = '#case 18. Gift Card. Полная оплата';
-    public const TEST_CASE_NAME_19 = '#case 19. Store Credit. Частичная оплата';
-    public const TEST_CASE_NAME_20 = '#case 20. Bug with negative Qty';
-    public const TEST_CASE_NAME_21 = '#case 21. Bug with negative Price because of converting float -28.9999999999999 to int  (e.g. invoice 100091106)';
-    public const TEST_CASE_NAME_22 = '#case 22. Bug with taxes. Когда настроено налоговое правило и цены в каталоге без налога. Скидка не содержит налог';
-    public const TEST_CASE_NAME_23 = '#case 23. Bug with taxes. Есть налоговое правило. Налог применяется до скидки, а скидка применяется на цены, содержащие налог. То есть скидка содержит налог.';
-    public const TEST_CASE_NAME_24 = '#case 24. Bug with shipping discount. Доставка со скидкой 100%. Настройки налогов как в #23';
-    public const TEST_CASE_NAME_25 = '#case 25. Баг с отрицательной суммой товара (макс. цена в заказе) и отрицательной суммой доставки';
-    public const TEST_CASE_NAME_26 = '#case 26. Баг с отрицательной стоимостью товара если есть Reward Points';
+    const TEST_CASE_NAME_1 = '#case 1. Скидки только на товары. Все делится нацело. Bug 1 kop. Товары по 1 шт. Два со скидками, а один бесплатный.';
+    const TEST_CASE_NAME_2 = '#case 2. Скидка на весь чек и на отдельный товар. Order 145000128 DemoEE';
+    const TEST_CASE_NAME_3 = '#case 3. Скидка на каждый товар.';
+    const TEST_CASE_NAME_4 = '#case 4. Нет скидок никаких';
+    const TEST_CASE_NAME_5 = '#case 5. Скидки только на товары. Не делятся нацело.';
+    const TEST_CASE_NAME_6 = '#case 6. Есть позиция, на которую НЕ ДОЛЖНА распространиться скидка.';
+    const TEST_CASE_NAME_7 = '#case 7. Bug grandTotal < чем сумма всех позиций. Есть позиция со 100% скидкой.';
+    const TEST_CASE_NAME_8 = '#case 8. Reward points в заказе. 1 товар со скидкой, 1 без';
+    const TEST_CASE_NAME_9 = '#case 9. Reward points в заказе. В заказе только 1 товар и тот без скидки';
+    const TEST_CASE_NAME_10 = '#case 10. Reward points в заказе. На товары нет скидок';
+    const TEST_CASE_NAME_11 = '#case 11. (prd nn) order 100374806';
+    const TEST_CASE_NAME_12 = '#case 12. invoice NN 100057070. Неверно расчитан grandTotal в Magento';
+    const TEST_CASE_NAME_13 = '#case 13. Такой же как и invoice NN 100057070, но без большого продукта. Неверно расчитан grandTotal в Magento';
+    const TEST_CASE_NAME_14 = '#case 14. Тест 1 на мелкие rewardPoints (0.01)';
+    const TEST_CASE_NAME_15 = '#case 15. Тест 2 на мелкие rewardPoints (0.31)';
+    const TEST_CASE_NAME_16 = '#case 16. Тест 1 на мелкие rewardPoints (9.99)';
+    const TEST_CASE_NAME_17 = '#case 17. гипотетическая ситуация с ошибкой расчета Мagento -1 коп.';
+    const TEST_CASE_NAME_18 = '#case 18. Подарочная карта. Полная оплата';
+    const TEST_CASE_NAME_19 = '#case 19. Store Credit. Частичная оплата';
+    const TEST_CASE_NAME_20 = '#case 20. Bug with negative Qty';
+    const TEST_CASE_NAME_21 = '#case 21. Bug with negative Price because of converting float -28.9999999999999 to int  (e.g. invoice 100091106)';
+    const TEST_CASE_NAME_22 = '#case 22. Bug with taxes. Когда настроено налоговое правило и цены в каталоге без налога. Скидка не содержит налог';
+    const TEST_CASE_NAME_23 = '#case 23. Bug with taxes. Есть налоговое правило. Налог применяется до скидки, а скидка применяется на цены, содержащие налог. То есть скидка содержит налог.';
+    const TEST_CASE_NAME_24 = '#case 24. Bug with shipping discount. Доставка со скидкой 100%. Настройки налогов как в #23';
+    const TEST_CASE_NAME_25 = '#case 25. Баг с отрицательной суммой товара (макс. цена в заказе) и отрицательной суммой доставки';
+    const TEST_CASE_NAME_26 = '#case 26. Баг с отрицательной стоимостью товара если есть Reward Points';
     public const TEST_CASE_NAME_27 = '#case 27. Баг с отрицательной стоимостью товара если есть Gift Card + позиция со скидкой';
+    public const TEST_CASE_NAME_28 = '#case 28. Division by zero';
 
     private const CHARS_LOWERS = 'abcdefghijklmnopqrstuvwxyz';
     private const CHARS_UPPERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -445,6 +446,11 @@ class DiscountGeneralTestCase extends TestCase
         $this->addItem($order, $this->getItem(1000.0000, 1000.0000, 100, 1));
         $this->addItem($order, $this->getItem(500.0000, 250.0000, 0, 2));
         $final[self::TEST_CASE_NAME_27] = $order;
+
+        //Заказ бесплатного пробника. Клиент оплачивает только доставку
+        $order = $this->getNewOrderInstance(0.0000, 100.0000, 100, 0);
+        $this->addItem($order, $this->getItem(0.0000, 0.0000, 0.0000, 1, 20, 0));
+        $final[self::TEST_CASE_NAME_28] = $order;
 
         return $final;
     }
