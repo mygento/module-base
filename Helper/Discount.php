@@ -239,10 +239,6 @@ class Discount implements DiscountHelperInterface
             $grandDiscount = $discount + $this->getGlobalDiscount() + $shippingDiscount;
         }
 
-        if ($amountToSpread) {
-            $grandDiscount = $amountToSpread;
-        }
-
         $percentageSum = 0;
 
         $items = $this->getAllItems();
@@ -300,6 +296,10 @@ class Discount implements DiscountHelperInterface
             $discountPerUnit = Math::slyCeil(
                 bcadd($rowDiscount, $rowPercentage * $grandDiscount, 4) / $qty
             );
+
+            //Set посчитанная на ряд $amountToSpread. Округленная вверх.
+            $amountToSpreadPerUnit = Math::slyCeil($rowPercentage * $amountToSpread / $qty);
+            $item->setData(self::NAME_ROW_AMOUNT_TO_SPREAD, $amountToSpreadPerUnit * $qty);
 
             $priceWithDiscount = bcadd($price, (string) $discountPerUnit, 2);
 
