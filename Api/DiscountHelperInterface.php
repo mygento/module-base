@@ -22,9 +22,10 @@ use Magento\Sales\Api\Data\OrderInterface as Order;
 interface DiscountHelperInterface
 {
     /** @deprecated */
-    public const VERSION = '1.0.24';
+    public const VERSION = '1.0.25';
 
     public const NAME_UNIT_PRICE = 'disc_hlpr_price';
+    public const NAME_ROW_AMOUNT_TO_SPREAD = 'discount_hlpr_row_amount_to_spread';
     public const NAME_ROW_DIFF = 'recalc_row_diff';
     public const NAME_NEW_DISC = 'recalc_new_discount';
     public const NAME_MARKING = 'marking';

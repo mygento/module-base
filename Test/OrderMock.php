@@ -21,6 +21,23 @@ use Magento\Sales\Api\Data\OrderInterface;
  */
 class OrderMock extends DataObject implements OrderInterface
 {
+    /**
+     * Get all visible items
+     *
+     * @return array
+     */
+    public function getAllVisibleItems()
+    {
+        $items = [];
+        foreach ($this->getItems() as $item) {
+            if (!$item->isDeleted() && !$item->getParentItemId()) {
+                $items[] = $item;
+            }
+        }
+
+        return $items;
+    }
+
     public function getPayment()
     {
         return parent::getPayment();

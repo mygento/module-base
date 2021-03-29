@@ -12,10 +12,8 @@ use Magento\Sales\Api\Data\CreditmemoInterface as Creditmemo;
 use Magento\Sales\Api\Data\InvoiceInterface as Invoice;
 use Magento\Sales\Api\Data\OrderInterface as Order;
 use Mygento\Base\Api\Data\RecalculateResultInterface;
-use Mygento\Base\Api\DiscountHelperInterface;
+use Mygento\Base\Api\DiscountHelperInterface as Discount;
 use Mygento\Base\Api\RecalculatorFacadeInterface;
-use Mygento\Base\Helper\Discount;
-use Mygento\Base\Model\OrderRepository;
 use Mygento\Base\Model\Recalculator\ResultFactory;
 
 class RecalculatorFacade implements RecalculatorFacadeInterface
@@ -25,14 +23,9 @@ class RecalculatorFacade implements RecalculatorFacadeInterface
     private const SPREAD_DISC_ON_ALL_UNITS_DEFAULT_VALUE = false;
 
     /**
-     * @var \Mygento\Base\Helper\Discount
+     * @var \Mygento\Base\Api\DiscountHelperInterface
      */
     private $discountHelper;
-
-    /**
-     * @var \Mygento\Base\Model\OrderRepository
-     */
-    private $orderRepository;
 
     /**
      * @var \Mygento\Base\Model\Recalculator\ResultFactory
@@ -40,18 +33,22 @@ class RecalculatorFacade implements RecalculatorFacadeInterface
     private $recalculateResultFactory;
 
     /**
-     * @param \Mygento\Base\Helper\Discount $discountHelper
-     * @param \Mygento\Base\Model\OrderRepository $orderRepository
+     * @var \Mygento\Base\Api\RecalculationHandler[]
+     */
+    private $handlers;
+
+    /**
+     * @param \Mygento\Base\Api\DiscountHelperInterface $discountHelper
      * @param \Mygento\Base\Model\Recalculator\ResultFactory $recalculateResultFactory
      */
     public function __construct(
         Discount $discountHelper,
-        OrderRepository $orderRepository,
-        ResultFactory $recalculateResultFactory
+        ResultFactory $recalculateResultFactory,
+        array $handlers = []
     ) {
         $this->discountHelper = $discountHelper;
-        $this->orderRepository = $orderRepository;
         $this->recalculateResultFactory = $recalculateResultFactory;
+        $this->handlers = $handlers;
     }
 
     /**
@@ -163,55 +160,17 @@ class RecalculatorFacade implements RecalculatorFacadeInterface
         $res = $this->discountHelper->getRecalculated($entity, ...$args);
         $resultObject = $this->recalculateResultFactory->create($res);
 
+        //Apply POST Handlers
         if ($entity instanceof Order) {
-            $this->addExtraDiscounts($entity, $resultObject);
+            //Make some auxiliary actions after recalculation
+            foreach ($this->handlers as $handler) {
+                $handler->handle($entity, $resultObject);
+            }
         }
 
         $this->resetHelper();
 
         return $resultObject;
-    }
-
-    /**
-     * @param Order $order
-     * @param RecalculateResultInterface $recalcObject
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @return RecalculateResultInterface
-     */
-    protected function addExtraDiscounts($order, $recalcObject): RecalculateResultInterface
-    {
-        $extraAmounts = [
-            'reward_currency_amount',
-            'gift_cards_amount',
-            'customer_balance_amount',
-        ];
-
-        $this->discountHelper->setSpreadDiscOnAllUnits(true);
-
-        foreach ($extraAmounts as $extraAmountKey) {
-            $extraAmount = $order->getData($extraAmountKey);
-
-            //Do nothing if $extraAmount === 0
-            if (bccomp((string) $extraAmount, '0.00', 2) === 0) {
-                continue;
-            }
-
-            //Clean up the order
-            $this->orderRepository->reloadOrder($order->getId());
-
-            $this->discountHelper->applyDiscount($order, (float) $extraAmount);
-
-            foreach ($order->getAllVisibleItems() as $item) {
-                $recalcObject->getItems()[$item->getId()][$extraAmountKey] = $item->getData(
-                    DiscountHelperInterface::NAME_NEW_DISC
-                );
-            }
-        }
-
-        $this->resetHelper();
-
-        return $recalcObject;
     }
 
     /**
