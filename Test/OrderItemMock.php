@@ -21,6 +21,8 @@ use Magento\Sales\Api\Data\OrderItemInterface;
  */
 class OrderItemMock extends DataObject implements OrderItemInterface
 {
+    protected $_isDeleted = false;
+
     public function setParentItem($item)
     {
         return parent::setParentItem($item);
@@ -969,6 +971,22 @@ class OrderItemMock extends DataObject implements OrderItemInterface
     public function setProductOption(\Magento\Catalog\Api\Data\ProductOptionInterface $productOption)
     {
         return parent::setProductOption($productOption);
+    }
+
+    /**
+     * Set _isDeleted flag value (if $isDeleted parameter is defined) and return current flag value
+     *
+     * @param bool $isDeleted
+     * @return bool
+     */
+    public function isDeleted($isDeleted = null)
+    {
+        $result = $this->_isDeleted;
+        if ($isDeleted !== null) {
+            $this->_isDeleted = $isDeleted;
+        }
+
+        return $result;
     }
 
     public function getExtensionAttributes()

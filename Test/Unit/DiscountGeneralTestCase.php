@@ -39,11 +39,13 @@ class DiscountGeneralTestCase extends TestCase
     const TEST_CASE_NAME_24 = '#case 24. Bug with shipping discount. Доставка со скидкой 100%. Настройки налогов как в #23';
     const TEST_CASE_NAME_25 = '#case 25. Баг с отрицательной суммой товара (макс. цена в заказе) и отрицательной суммой доставки';
     const TEST_CASE_NAME_26 = '#case 26. Баг с отрицательной стоимостью товара если есть Reward Points';
+    public const TEST_CASE_NAME_27 = '#case 27. Баг с отрицательной стоимостью товара если есть Gift Card + позиция со скидкой';
+    public const TEST_CASE_NAME_28 = '#case 28. Division by zero';
 
-    const CHARS_LOWERS = 'abcdefghijklmnopqrstuvwxyz';
-    const CHARS_UPPERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const CHARS_DIGITS = '0123456789';
-    const CHARS_SPECIALS = '!$*+-.=?@^_|~';
+    private const CHARS_LOWERS = 'abcdefghijklmnopqrstuvwxyz';
+    private const CHARS_UPPERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    private const CHARS_DIGITS = '0123456789';
+    private const CHARS_SPECIALS = '!$*+-.=?@^_|~';
 
     /**
      * @var \Mygento\Base\Helper\Discount
@@ -147,6 +149,7 @@ class DiscountGeneralTestCase extends TestCase
         $items = (array) $order->getData('all_items');
         $items[] = $item;
 
+        $order->setData('items', $items);
         $order->setData('all_items', $items);
     }
 
@@ -334,21 +337,20 @@ class DiscountGeneralTestCase extends TestCase
         $this->addItem($order, $this->getItem(7990.0000, 7990.0000, 0, 1.0000));
         $final[self::TEST_CASE_NAME_17] = $order;
 
-        //Оплата Подарочной картой или Store Credit - должна в налоговую быть предоставленой как обычное поступление средств
         //Gift Card - полная оплата
         $order = $this->getNewOrderInstance(1500.0000, 0.0000, 0.0000);
         $order->setData('discount_amount', 0);
         $order->setData('gift_cards_amount', 1500);
         $this->addItem($order, $this->getItem(1000.0000, 1000.0000, 0, 1));
-        $this->addItem($order, $this->getItem(500.0000, 500.0000, 0, 1.0000));
+        $this->addItem($order, $this->getItem(500.0000, 250.0000, 0, 2));
         $final[self::TEST_CASE_NAME_18] = $order;
 
         //Store Credit - частичная оплата
         $order = $this->getNewOrderInstance(1500.0000, 1000.0000, 0.0000);
         $order->setData('discount_amount', 0);
         $order->setData('customer_balance_amount', 500);
-        $this->addItem($order, $this->getItem(1000.0000, 1000.0000, 0, 1));
-        $this->addItem($order, $this->getItem(500.0000, 500.0000, 0, 1.0000));
+        $this->addItem($order, $this->getItem(1000.0000, 500.0000, 0, 2));
+        $this->addItem($order, $this->getItem(500.0000, 250.0000, 0, 2.0000));
         $final[self::TEST_CASE_NAME_19] = $order;
 
         //Стоимость доставки 315 Р надо распределить по товарам.
@@ -436,6 +438,19 @@ class DiscountGeneralTestCase extends TestCase
         $this->addItem($order, $this->getItem(10609.3200, 10609.3200, 10609.3200, 1, 20, 1768.22));
         $this->addItem($order, $this->getItem(0.0000, 0.0000, 0.0000, 1, 20, 0));
         $final[self::TEST_CASE_NAME_26] = $order;
+
+        //Gift Card и 1 товар со скидкой
+        $order = $this->getNewOrderInstance(1500.0000, 0.0000, 0.0000);
+        $order->setData('discount_amount', 100);
+        $order->setData('gift_cards_amount', 1400);
+        $this->addItem($order, $this->getItem(1000.0000, 1000.0000, 100, 1));
+        $this->addItem($order, $this->getItem(500.0000, 250.0000, 0, 2));
+        $final[self::TEST_CASE_NAME_27] = $order;
+
+        //Заказ бесплатного пробника. Клиент оплачивает только доставку
+        $order = $this->getNewOrderInstance(0.0000, 100.0000, 100, 0);
+        $this->addItem($order, $this->getItem(0.0000, 0.0000, 0.0000, 1, 20, 0));
+        $final[self::TEST_CASE_NAME_28] = $order;
 
         return $final;
     }

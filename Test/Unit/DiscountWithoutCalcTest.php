@@ -742,21 +742,21 @@ class DiscountWithoutCalcTest extends DiscountGeneralTestCase
         ];
 
         $actualData[parent::TEST_CASE_NAME_18] = [
-            'sum' => 1500.0,
-            'origGrandTotal' => 1500.0,
+            'sum' => 0.0,
+            'origGrandTotal' => 0.0,
             'items' => [
                 0 => [
-                    'price' => 1,
-                    'name' => 'xvLe17zk',
+                    'price' => 0.0,
+                    'name' => '4hhM1Zad',
                     'quantity' => 1.0,
-                    'sum' => 1000.0,
+                    'sum' => 0.0,
                     'tax' => 'vat20',
                 ],
                 1 => [
-                    'price' => 1,
-                    'name' => 'y4q9piJk',
-                    'quantity' => 1.0,
-                    'sum' => 500.0,
+                    'price' => 0.0,
+                    'name' => 'nWllUitS',
+                    'quantity' => 2.0,
+                    'sum' => 0.0,
                     'tax' => 'vat20',
                 ],
                 'shipping' => [
@@ -769,7 +769,33 @@ class DiscountWithoutCalcTest extends DiscountGeneralTestCase
             ],
         ];
 
-        $actualData[parent::TEST_CASE_NAME_19] = $actualData[parent::TEST_CASE_NAME_18];
+        $actualData[parent::TEST_CASE_NAME_19] = [
+            'sum' => '999.98',
+            'origGrandTotal' => 1000.0,
+            'items' => [
+                0 => [
+                    'price' => 333.33,
+                    'name' => 'YRvTdqS1',
+                    'quantity' => 2.0,
+                    'sum' => 666.66,
+                    'tax' => 'vat20',
+                ],
+                1 => [
+                    'price' => 166.66,
+                    'name' => 'ucj8jQte',
+                    'quantity' => 2.0,
+                    'sum' => 333.32,
+                    'tax' => 'vat20',
+                ],
+                'shipping' => [
+                    'name' => '',
+                    'price' => 0.02,
+                    'quantity' => 1.0,
+                    'sum' => 0.02,
+                    'tax' => '',
+                ],
+            ],
+        ];
 
         $actualData[parent::TEST_CASE_NAME_20] = [
             'sum' => 14671.65,
@@ -1152,6 +1178,27 @@ class DiscountWithoutCalcTest extends DiscountGeneralTestCase
                     'price' => 0.0,
                     'quantity' => 1.0,
                     'sum' => 0.0,
+                    'tax' => '',
+                ],
+            ],
+        ];
+
+        $actualData[parent::TEST_CASE_NAME_27] = $actualData[parent::TEST_CASE_NAME_18];
+
+        $actualData[parent::TEST_CASE_NAME_28] = [
+            'sum' => '0.00',
+            'origGrandTotal' => 100.0,
+            'items' => [
+                100630 => [
+                    'price' => 1,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat20',
+                ],
+                'shipping' => [
+                    'price' => 100.0,
+                    'quantity' => 1.0,
+                    'sum' => 100.0,
                     'tax' => '',
                 ],
             ],
