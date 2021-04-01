@@ -10,14 +10,14 @@ namespace Mygento\Base\Api\Data;
 
 interface EventInterface
 {
-    const ID = 'id';
-    const INSTANCE = 'instance';
-    const CHANNEL = 'channel';
-    const LEVEL = 'level';
-    const MESSAGE = 'message';
-    const LOGGED_AT = 'logged_at';
-    const CONTEXT = 'context';
-    const EXTRA = 'extra';
+    public const ID = 'id';
+    public const INSTANCE = 'instance';
+    public const CHANNEL = 'channel';
+    public const LEVEL = 'level';
+    public const MESSAGE = 'message';
+    public const LOGGED_AT = 'logged_at';
+    public const CONTEXT = 'context';
+    public const EXTRA = 'extra';
 
     /**
      * Get id
