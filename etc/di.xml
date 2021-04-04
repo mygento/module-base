@@ -30,6 +30,7 @@
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="add_extra_discounts_like_rewards" xsi:type="object">Mygento\Base\Service\Handlers\AddExtraDiscounts</item>
+                <item name="add_bundle_children" xsi:type="object">Mygento\Base\Service\Handlers\AddChildrenOfBundle</item>
             </argument>
         </arguments>
     </type>

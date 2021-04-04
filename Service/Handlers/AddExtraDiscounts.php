@@ -72,7 +72,7 @@ class AddExtraDiscounts implements RecalculationHandler
             $discountHelper->applyDiscount($order, (float) $extraAmount);
 
             foreach ($order->getAllVisibleItems() as $item) {
-                $recalcOriginal->getItems()[$item->getId()][$extraAmountKey] = $item->getData(
+                 $recalcOriginal->getItemById($item->getId())[$extraAmountKey] = $item->getData(
                     DiscountHelperInterface::NAME_ROW_AMOUNT_TO_SPREAD
                 );
             }

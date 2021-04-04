@@ -19,6 +19,7 @@ interface RecalculateResultItemInterface
     public const GIFT_CARD_AMOUNT_FIELD_KEY = 'gift_cards_amount';
     public const CUSTOMER_BALANCE_AMOUNT_FIELD_KEY = 'customer_balance_amount';
     public const MARKING = 'marking';
+    public const CHILDREN = 'children';
 
     /**
      * @return string
@@ -114,7 +115,19 @@ interface RecalculateResultItemInterface
     public function getMarking(): ?string;
 
     /**
-     * @return string|null
+     * @param string|null $marking
+     * @return $this
      */
     public function setMarking(?string $marking): RecalculateResultItemInterface;
+
+    /**
+     * @return RecalculateResultItemInterface[]
+     */
+    public function getChildren(): ?array;
+
+    /**
+     * @param $children RecalculateResultItemInterface[]|null
+     * @return \Mygento\Base\Api\Data\RecalculateResultItemInterface
+     */
+    public function setChildren(?array $children): RecalculateResultItemInterface;
 }

@@ -29,4 +29,36 @@ class Result extends DataObject implements RecalculateResultInterface
     {
         return $this->getData(self::SUM_FIELD_NAME);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function setSum($sum)
+    {
+        return $this->setData(self::SUM_FIELD_NAME, $sum);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getItemById($itemId): ?RecalculateResultItemInterface
+    {
+        $item = $this->getItems()[$itemId]
+            //При разделении позиций первая имеет меньшую цену
+            ?? $this->getItems()[$itemId . '_1']
+            ?? null;
+
+        if ($item) {
+            return $item;
+        }
+
+        //Если не найден - поищем среди дочерних
+        foreach ($this->getItems() as $it) {
+            foreach ((array) $it->getChildren() as $id => $childItem) {
+                if ($id == $itemId) {
+                    return $childItem;
+                }
+            }
+        }
+    }
 }

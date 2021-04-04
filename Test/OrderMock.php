@@ -28,8 +28,10 @@ class OrderMock extends DataObject implements OrderInterface
      */
     public function getAllVisibleItems()
     {
+        $rawItems = $this->getItems() ?? $this->getAllItems();
+
         $items = [];
-        foreach ($this->getItems() as $item) {
+        foreach ($rawItems as $item) {
             if (!$item->isDeleted() && !$item->getParentItemId()) {
                 $items[] = $item;
             }
