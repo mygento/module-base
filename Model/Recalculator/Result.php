@@ -60,5 +60,7 @@ class Result extends DataObject implements RecalculateResultInterface
                 }
             }
         }
+
+        return null;
     }
 }

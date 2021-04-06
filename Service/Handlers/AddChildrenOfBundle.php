@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Mygento Team
  * @copyright 2014-2021 Mygento (https://www.mygento.ru)
@@ -23,7 +24,6 @@ use Mygento\Base\Test\OrderMock;
  * Class AddChildrenOfBundle
  * Этот класс пересчитывает дочерние продукты для бандлов,
  * чтобы их цена тоже соответствовала пересчитанному родителю
- *
  */
 class AddChildrenOfBundle implements RecalculationHandler
 {
@@ -227,7 +227,6 @@ class AddChildrenOfBundle implements RecalculationHandler
         RecalculateResultInterface $recalcOriginalObject,
         RecalculateResultInterface $childrenResultObject
     ): RecalculateResultInterface {
-
         $parentRecalculateItem = $recalcOriginalObject->getItemById($parentItem->getItemId());
         $children = $childrenResultObject->getItems();
         unset($children['shipping']);
