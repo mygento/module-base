@@ -127,7 +127,6 @@ class AddChildrenOfBundle implements RecalculationHandler
         $grandTotal = $parentItemRecalculated->getSum();
 
         $st = 0.00;
-        $discountOfBundle = 0.00;
         /** @var \Magento\Sales\Api\Data\OrderItemInterface $child */
         foreach ($parentItem->getChildrenItems() as $child) {
             $item = new OrderItemMock();
@@ -140,8 +139,6 @@ class AddChildrenOfBundle implements RecalculationHandler
             $item->setData('tax_percent', $child->getTaxPercent());
             $item->setData('tax_amount', $child->getTaxAmount());
             $this->addItem($order, $item);
-
-            $discountOfBundle += $child->getDiscountAmount();
 
             $st += $item->getRowTotalInclTax();
         }
