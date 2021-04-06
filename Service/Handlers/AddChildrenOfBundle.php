@@ -8,9 +8,11 @@
 namespace Mygento\Base\Service\Handlers;
 
 use Magento\Bundle\Model\Product\Type;
+use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderInterface as Order;
 use Magento\Sales\Api\Data\OrderItemInterface;
 use Mygento\Base\Api\Data\RecalculateResultInterface;
+use Mygento\Base\Api\DiscountHelperInterface;
 use Mygento\Base\Api\DiscountHelperInterfaceFactory;
 use Mygento\Base\Api\RecalculationHandler;
 use Mygento\Base\Model\Recalculator\ResultFactory;
@@ -35,6 +37,10 @@ class AddChildrenOfBundle implements RecalculationHandler
      */
     private $recalculateResultFactory;
 
+    /**
+     * @param \Mygento\Base\Api\DiscountHelperInterfaceFactory $discountHelperFactory
+     * @param \Mygento\Base\Model\Recalculator\ResultFactory $recalculateResultFactory
+     */
     public function __construct(
         DiscountHelperInterfaceFactory $discountHelperFactory,
         ResultFactory $recalculateResultFactory
@@ -72,6 +78,7 @@ class AddChildrenOfBundle implements RecalculationHandler
             $this->updateParentItem($item, $recalcOriginal, $childrenResult);
             $this->updateSum($recalcOriginal);
             $this->updateShippingAmount($recalcOriginal, $childrenResult);
+            $this->updateExtraDiscountsOfChildren($item, $recalcOriginal, $dummyOrder);
         }
 
         return $recalcOriginal;
@@ -80,6 +87,7 @@ class AddChildrenOfBundle implements RecalculationHandler
     /**
      * @param \Magento\Sales\Api\Data\OrderItemInterface $parentItem
      * @param RecalculateResultInterface $recalcOriginal
+     * @throws \Exception
      * @return \Magento\Sales\Api\Data\OrderInterface
      */
     private function getDummyOrderBasedOnBundle($parentItem, $recalcOriginal)
@@ -109,6 +117,7 @@ class AddChildrenOfBundle implements RecalculationHandler
         $order = new OrderMock([]);
         $gt = 0.00;
         $discountOfBundle = 0.00;
+
         /** @var \Magento\Sales\Api\Data\OrderItemInterface $child */
         foreach ($parentItem->getChildrenItems() as $child) {
             $item = new OrderItemMock();
@@ -141,6 +150,7 @@ class AddChildrenOfBundle implements RecalculationHandler
      *
      * @param \Magento\Sales\Api\Data\OrderItemInterface $parentItem
      * @param \Mygento\Base\Api\Data\RecalculateResultInterface $recalcOriginal
+     * @throws \Exception
      * @return \Magento\Sales\Api\Data\OrderInterface
      */
     private function getDummyOrderWithoutDynamicPrice($parentItem, $recalcOriginal)
@@ -149,23 +159,27 @@ class AddChildrenOfBundle implements RecalculationHandler
         $subtotal = 0.00;
 
         $parentItemRecalculated = $recalcOriginal->getItemById($parentItem->getItemId());
+        if ($parentItemRecalculated === null) {
+            throw new \Exception("Parent bundle with id {$parentItem->getItemId()} not recalculated");
+        }
 
-        $grandTotal = $parentItemRecalculated
-            ? $parentItemRecalculated->getPrice()
-            : bcsub($parentItem->getPriceInclTax(), $parentItem->getDiscountAmount(), 4);
+        //Эта сумма должна быть распределена между дочерними позициями
+        $grandTotal = $parentItemRecalculated->getPrice();
 
         //Кол-во бандла в заказе может быть > 1
         $parentQty = $parentItem->getQtyOrdered();
+        $numberChildren = count($parentItem->getChildrenItems());
 
         /** @var \Magento\Sales\Api\Data\OrderItemInterface $child */
         foreach ($parentItem->getChildrenItems() as $child) {
             $item = new OrderItemMock();
+            $qty = $child->getQtyOrdered() / $parentQty;
 
             //Считаем виртуальные цены и виртуальный subtotal
             /** @var \Magento\Catalog\Api\Data\ProductInterface $product */
-            $product = $child->getProduct();
-            $price = $product->getFinalPrice();
-            $qty = $child->getQtyOrdered() / $parentQty;
+            $price = $child->getProduct()
+                ? $child->getProduct()->getFinalPrice()
+                : $grandTotal / ($numberChildren * $qty);
 
             $item->setData('id', $child->getItemId());
             $item->setData('name', $child->getName());
@@ -180,6 +194,7 @@ class AddChildrenOfBundle implements RecalculationHandler
         $order->setSubtotalInclTax($subtotal);
         $order->setSubtotal($subtotal);
         $order->setGrandTotal($grandTotal);
+
         //Скидка на весь виртуальный заказ
         $discountAmount = bcsub($order->getSubtotalInclTax(), $order->getGrandTotal(), 4);
         $order->setData('discount_amount_incl_tax', $discountAmount);
@@ -187,7 +202,11 @@ class AddChildrenOfBundle implements RecalculationHandler
         return $order;
     }
 
-    private function addItem($order, $item)
+    /**
+     * @param OrderInterface $order
+     * @param OrderItemInterface $item
+     */
+    private function addItem($order, $item): void
     {
         $items = (array) $order->getData('all_items');
         $items[] = $item;
@@ -255,5 +274,47 @@ class AddChildrenOfBundle implements RecalculationHandler
         $newShippingAmount = bcadd($masterShipping->getPrice(), $childShipping->getPrice(), 4);
         $masterShipping->setPrice($newShippingAmount);
         $masterShipping->setSum($newShippingAmount);
+    }
+
+    /**
+     * @param \Magento\Sales\Api\Data\OrderItemInterface $parentItem
+     * @param \Mygento\Base\Api\Data\RecalculateResultInterface $recalcOriginalObject
+     * @param \Magento\Sales\Api\Data\OrderInterface $dummyOrder
+     */
+    private function updateExtraDiscountsOfChildren(
+        OrderItemInterface $parentItem,
+        RecalculateResultInterface $recalcOriginalObject,
+        OrderInterface $dummyOrder
+    ) {
+        $recalculatedItem = $recalcOriginalObject->getItemById($parentItem->getItemId());
+        $freshDiscountHelper = $this->discountHelperFactory->create();
+        $freshDiscountHelper->setSpreadDiscOnAllUnits(true);
+
+        $extraAmounts = [
+            'reward_currency_amount',
+            'gift_cards_amount',
+            'customer_balance_amount',
+        ];
+
+        foreach ($extraAmounts as $extraAmountKey) {
+            $extraAmount = $recalculatedItem->getData($extraAmountKey);
+
+            //Do nothing if $extraAmount === 0
+            if (bccomp((string) $extraAmount, '0.00', 2) === 0) {
+                continue;
+            }
+            $dummyOrder->setData($extraAmountKey, $extraAmount);
+
+            $freshDiscountHelper->applyDiscount($dummyOrder, (float) $extraAmount);
+
+            $sum = 0;
+            foreach ($dummyOrder->getAllItems() as $item) {
+                $amount = $item->getData(DiscountHelperInterface::NAME_ROW_AMOUNT_TO_SPREAD);
+                $sum += $amount;
+                $recalcOriginalObject->getItemById($item->getId())[$extraAmountKey] = $amount;
+            }
+
+            $recalculatedItem->setData($extraAmountKey, $sum);
+        }
     }
 }
