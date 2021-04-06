@@ -164,16 +164,14 @@ class AddChildrenOfBundle implements RecalculationHandler
         }
 
         //Эта сумма должна быть распределена между дочерними позициями
-        $grandTotal = $parentItemRecalculated->getPrice();
+        $grandTotal = $parentItemRecalculated->getSum();
 
-        //Кол-во бандла в заказе может быть > 1
-        $parentQty = $parentItem->getQtyOrdered();
         $numberChildren = count($parentItem->getChildrenItems());
 
         /** @var \Magento\Sales\Api\Data\OrderItemInterface $child */
         foreach ($parentItem->getChildrenItems() as $child) {
             $item = new OrderItemMock();
-            $qty = $child->getQtyOrdered() / $parentQty;
+            $qty = $child->getQtyOrdered();
 
             //Считаем виртуальные цены и виртуальный subtotal
             /** @var \Magento\Catalog\Api\Data\ProductInterface $product */
@@ -231,8 +229,8 @@ class AddChildrenOfBundle implements RecalculationHandler
         $children = $childrenResultObject->getItems();
         unset($children['shipping']);
 
-        $newParentPrice = $childrenResultObject->getSum();
-        $newParentSum = $childrenResultObject->getSum() * $parentRecalculateItem->getQuantity();
+        $newParentPrice = $childrenResultObject->getSum() / $parentRecalculateItem->getQuantity();
+        $newParentSum = $childrenResultObject->getSum();
 
         $parentRecalculateItem->setChildren($children);
         $parentRecalculateItem->setPrice($newParentPrice);
