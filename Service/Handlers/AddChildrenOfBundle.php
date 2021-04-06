@@ -98,7 +98,7 @@ class AddChildrenOfBundle implements RecalculationHandler
         $isDynamicPriceEnabled = $parentItem->isChildrenCalculated();
 
         if ($isDynamicPriceEnabled) {
-            return $this->getDummyOrderWithDynamicPrice($parentItem);
+            return $this->getDummyOrderWithDynamicPrice($parentItem, $recalcOriginal);
         }
 
         //DynamicPrice Disabled - в этом случае чайлды пусты.
@@ -110,14 +110,24 @@ class AddChildrenOfBundle implements RecalculationHandler
      * Вот это всё для случая когда `$isDynamicPriceEnabled === TRUE`
      *
      * @param \Magento\Sales\Api\Data\OrderItemInterface $parentItem
+     * @param \Mygento\Base\Api\Data\RecalculateResultInterface $recalcOriginal
+     * @throws \Exception
      * @return \Magento\Sales\Api\Data\OrderInterface
      */
-    private function getDummyOrderWithDynamicPrice($parentItem)
+    private function getDummyOrderWithDynamicPrice($parentItem, $recalcOriginal)
     {
         $order = new OrderMock([]);
-        $gt = 0.00;
-        $discountOfBundle = 0.00;
 
+        $parentItemRecalculated = $recalcOriginal->getItemById($parentItem->getItemId());
+        if ($parentItemRecalculated === null) {
+            throw new \Exception("Parent bundle with id {$parentItem->getItemId()} not recalculated");
+        }
+
+        //Эта сумма должна быть распределена между дочерними позициями
+        $grandTotal = $parentItemRecalculated->getSum();
+
+        $st = 0.00;
+        $discountOfBundle = 0.00;
         /** @var \Magento\Sales\Api\Data\OrderItemInterface $child */
         foreach ($parentItem->getChildrenItems() as $child) {
             $item = new OrderItemMock();
@@ -133,13 +143,17 @@ class AddChildrenOfBundle implements RecalculationHandler
 
             $discountOfBundle += $child->getDiscountAmount();
 
-            $gt += $item->getRowTotalInclTax();
+            $st += $item->getRowTotalInclTax();
         }
 
-        $order->setData('subtotal_incl_tax', $gt);
-        $order->setData('grand_total', bcsub($gt, $discountOfBundle, 4));
+        $order->setData('subtotal_incl_tax', $st);
+        $order->setData('grand_total', $grandTotal);
         $order->setData('shipping_incl_tax', 0.00);
         $order->setData('discount_amount', 0.00);
+
+        //Скидка на весь виртуальный заказ
+        $discountAmount = bcsub($order->getSubtotalInclTax(), $order->getGrandTotal(), 4);
+        $order->setData(DiscountHelperInterface::DA_INCL_TAX, $discountAmount);
 
         return $order;
     }
@@ -195,7 +209,7 @@ class AddChildrenOfBundle implements RecalculationHandler
 
         //Скидка на весь виртуальный заказ
         $discountAmount = bcsub($order->getSubtotalInclTax(), $order->getGrandTotal(), 4);
-        $order->setData('discount_amount_incl_tax', $discountAmount);
+        $order->setData(DiscountHelperInterface::DA_INCL_TAX, $discountAmount);
 
         return $order;
     }
@@ -247,7 +261,7 @@ class AddChildrenOfBundle implements RecalculationHandler
         $newSum = array_sum(
             array_map(
                 static function ($item, $key) {
-                    return $key !== 'shipping' ? $item->getPrice() : 0;
+                    return $key !== 'shipping' ? $item->getSum() : 0;
                 },
                 $recalcOriginal->getItems(),
                 array_keys($recalcOriginal->getItems())
