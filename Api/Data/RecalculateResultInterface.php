@@ -27,4 +27,16 @@ interface RecalculateResultInterface
      * @return float|string
      */
     public function getSum();
+
+    /**
+     * @param float|string $sum
+     * @return RecalculateResultInterface
+     */
+    public function setSum($sum);
+
+    /**
+     * @param int|string $itemId
+     * @return RecalculateResultItemInterface|null
+     */
+    public function getItemById($itemId);
 }
