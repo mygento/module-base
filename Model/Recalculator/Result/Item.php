@@ -174,4 +174,22 @@ class Item extends DataObject implements RecalculateResultItemInterface
 
         return $this;
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function getChildren(): array
+    {
+        return (array) $this->getData(self::CHILDREN);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setChildren(?array $children): RecalculateResultItemInterface
+    {
+        $this->setData(self::CHILDREN, $children);
+
+        return $this;
+    }
 }

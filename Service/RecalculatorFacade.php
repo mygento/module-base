@@ -40,6 +40,7 @@ class RecalculatorFacade implements RecalculatorFacadeInterface
     /**
      * @param \Mygento\Base\Api\DiscountHelperInterface $discountHelper
      * @param \Mygento\Base\Model\Recalculator\ResultFactory $recalculateResultFactory
+     * @param array $handlers
      */
     public function __construct(
         Discount $discountHelper,
@@ -151,6 +152,7 @@ class RecalculatorFacade implements RecalculatorFacadeInterface
     /**
      * @param Creditmemo|Invoice|Order $entity
      * @param mixed $args
+     * @throws \Exception
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @return \Mygento\Base\Api\Data\RecalculateResultInterface
