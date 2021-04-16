@@ -9,6 +9,7 @@
 namespace Mygento\Base\Test\Unit;
 
 use Mygento\Base\Api\DiscountHelperInterface;
+use Mygento\Base\Test\OrderMockBuilder;
 
 class DiscountSplitItemsTest extends DiscountGeneralTestCase
 {
@@ -85,7 +86,7 @@ class DiscountSplitItemsTest extends DiscountGeneralTestCase
         $final = [];
 
         // #1 rowDiff = 2 kop. qty = 3. qtyUpdate = 3
-        $item = $this->getItem(0, 0, 0, 3);
+        $item = OrderMockBuilder::getItem(0, 0, 0, 3);
         $item->setData(DiscountHelperInterface::NAME_ROW_DIFF, 2);
         $item->setData(DiscountHelperInterface::NAME_UNIT_PRICE, 10.59);
 
@@ -106,7 +107,7 @@ class DiscountSplitItemsTest extends DiscountGeneralTestCase
         $final['#case 1. 2 копейки распределить по 3м товарам.'] = [$item, $expected];
 
         // #2 rowDiff = 150 kop. qty = 30. qtyUpdate = 0
-        $item2 = $this->getItem(0, 0, 0, 30);
+        $item2 = OrderMockBuilder::getItem(0, 0, 0, 30);
         $item2->setData(DiscountHelperInterface::NAME_ROW_DIFF, 150);
         $item2->setData(DiscountHelperInterface::NAME_UNIT_PRICE, 10);
 
@@ -120,7 +121,7 @@ class DiscountSplitItemsTest extends DiscountGeneralTestCase
         $final['#case 2. 150 копеек распределить по 30 товарам.'] = [$item2, $expected2];
 
         // #3 rowDiff = 5 kop. qty = 3. qtyUpdate = 2
-        $item3 = $this->getItem(0, 0, 0, 3);
+        $item3 = OrderMockBuilder::getItem(0, 0, 0, 3);
         $item3->setData(DiscountHelperInterface::NAME_ROW_DIFF, 5);
         $item3->setData(DiscountHelperInterface::NAME_UNIT_PRICE, 10);
 

@@ -9,6 +9,7 @@
 namespace Mygento\Base\Test\Unit;
 
 use Mygento\Base\Api\DiscountHelperInterface;
+use Mygento\Base\Test\OrderMockBuilder;
 
 /**
  * Class DiscountMarkingItemsTest
@@ -56,7 +57,8 @@ class DiscountMarkingItemsTest extends DiscountSplitItemsTest
         $recalcQty = 0;
         foreach ($recalcItems as $recalcItem) {
             if ($recalcItem['name'] !== 'test_shipping') {
-                $this->assertContains('SOME_MARK_', $recalcItem['marking'], 'Marking of item failed');
+                $markingOfItem = $recalcItem['marking'] ?? '';
+                $this->assertContains('SOME_MARK_', $markingOfItem, 'Marking of item failed');
             }
 
             $this->assertEquals(1, $recalcItem['quantity']);
@@ -78,7 +80,7 @@ class DiscountMarkingItemsTest extends DiscountSplitItemsTest
         $taxPercent = 0,
         $taxAmount = 0
     ) {
-        $item = parent::getItem($rowTotalInclTax, $priceInclTax, $discountAmount, $qty, $taxPercent, $taxAmount);
+        $item = OrderMockBuilder::getItem($rowTotalInclTax, $priceInclTax, $discountAmount, $qty, $taxPercent, $taxAmount);
 
         if (empty($this->markings)) {
             $markings = [];
