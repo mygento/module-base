@@ -1,14 +1,18 @@
 <?php
 
+/**
+ * @author Mygento Team
+ * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @package Mygento_Base
+ */
+
 namespace Mygento\Base\Test\Extra;
 
-require_once (__DIR__ . '/../../vendor/generate/generated/code/Mygento/Base/Api/Data/RecalculateResultInterfaceFactory.php') ;
-require_once (__DIR__ . '/../../vendor/generate/generated/code/Mygento/Base/Api/Data/RecalculateResultItemInterfaceFactory.php') ;
+require_once __DIR__ . '/../../vendor/generate/generated/code/Mygento/Base/Api/Data/RecalculateResultInterfaceFactory.php';
+require_once __DIR__ . '/../../vendor/generate/generated/code/Mygento/Base/Api/Data/RecalculateResultItemInterfaceFactory.php';
 
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Mygento\Base\Model\Recalculator\ResultFactory;
-use Mygento\Base\Test\Extra\RecalculateResultInterfaceFactory;
-use Mygento\Base\Test\Extra\RecalculateResultItemInterfaceFactory;
 
 class GetRecalculateResultFactory
 {

@@ -92,7 +92,6 @@ class OrderMockBuilder
         $order->setData('all_items', $items);
     }
 
-
     public static function getRandomString($len, $chars = null)
     {
         if (is_null($chars)) {

@@ -62,31 +62,6 @@ class AddChildrenOfBundleHandlerTest extends TestCase
     }
 
     /**
-     * @param \Mygento\Base\Api\Data\RecalculateResultInterface $recalcOriginal
-     */
-    protected function dumpExpected($recalcOriginal)
-    {
-        $items = [];
-        foreach ($recalcOriginal->getItems() as $itemId => $item) {
-            $itemArray = $item->toArray();
-            foreach ($item->getChildren() as $key => $child) {
-                $itemArray['children'][$key] = $child->toArray();
-            }
-
-            $items[$itemId] = $itemArray;
-        }
-        $recalcOriginal->setItems($items);
-
-        echo "\033[1;33m"; // yellow
-        $storedValue = ini_get('serialize_precision');
-        ini_set('serialize_precision', 12);
-        var_export($recalcOriginal->toArray());
-        ini_set('serialize_precision', $storedValue);
-        echo "\033[0m"; // reset color
-        exit();
-    }
-
-    /**
      * @return \Mygento\Base\Service\RecalculatorFacade
      */
     public function getFacadeInstance()
@@ -114,7 +89,7 @@ class AddChildrenOfBundleHandlerTest extends TestCase
             [
                 'discountHelper' => $discountHelper,
                 'recalculateResultFactory' => $resultFactory,
-                'handlers' => [$addChildrenOfBundleHandler]
+                'handlers' => [$addChildrenOfBundleHandler],
             ]
         );
     }
@@ -131,6 +106,32 @@ class AddChildrenOfBundleHandlerTest extends TestCase
         }
 
         return $this->objectMan;
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.ExitExpression)
+     * @param \Mygento\Base\Api\Data\RecalculateResultInterface $recalcOriginal
+     */
+    protected function dumpExpected($recalcOriginal)
+    {
+        $items = [];
+        foreach ($recalcOriginal->getItems() as $itemId => $item) {
+            $itemArray = $item->toArray();
+            foreach ($item->getChildren() as $key => $child) {
+                $itemArray['children'][$key] = $child->toArray();
+            }
+
+            $items[$itemId] = $itemArray;
+        }
+        $recalcOriginal->setItems($items);
+
+        echo "\033[1;33m"; // yellow
+        $storedValue = ini_get('serialize_precision');
+        ini_set('serialize_precision', 12);
+        var_export($recalcOriginal->toArray());
+        ini_set('serialize_precision', $storedValue);
+        echo "\033[0m"; // reset color
+        exit();
     }
 
     /**

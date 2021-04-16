@@ -8,8 +8,8 @@
 
 namespace Mygento\Base\Test\Unit;
 
-use PHPUnit\Framework\TestCase;
 use Mygento\Base\Test\OrderMockBuilder;
+use PHPUnit\Framework\TestCase;
 
 class DiscountGeneralTestCase extends TestCase
 {

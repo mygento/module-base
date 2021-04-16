@@ -35,42 +35,35 @@ class BundlesDataProvider
         $expected = [
             'sum' => 1200.0,
             'origGrandTotal' => 1230.0,
-            'items' =>
-                [
-                    100501 =>
-                        [
-                            'price' => 600.0,
+            'items' => [
+                100501 => [
+                    'price' => 600.0,
+                    'quantity' => 2.0,
+                    'sum' => 1200.0,
+                    'children' => [
+                        100502 => [
+                            'price' => 200.0,
                             'quantity' => 2.0,
-                            'sum' => 1200.0,
-                            'children' =>
-                                [
-                                    100502 =>
-                                        [
-                                            'price' => 200.0,
-                                            'quantity' => 2.0,
-                                            'sum' => 400.0,
-                                        ],
-                                    100503 =>
-                                        [
-                                            'price' => 200.0,
-                                            'quantity' => 2.0,
-                                            'sum' => 400.0,
-                                        ],
-                                    100504 =>
-                                        [
-                                            'price' => 200.0,
-                                            'quantity' => 2.0,
-                                            'sum' => 400.0,
-                                        ],
-                                ],
+                            'sum' => 400.0,
                         ],
-                    'shipping' =>
-                        [
-                            'price' => 30.0,
-                            'quantity' => 1.0,
-                            'sum' => 30.0,
+                        100503 => [
+                            'price' => 200.0,
+                            'quantity' => 2.0,
+                            'sum' => 400.0,
                         ],
+                        100504 => [
+                            'price' => 200.0,
+                            'quantity' => 2.0,
+                            'sum' => 400.0,
+                        ],
+                    ],
                 ],
+                'shipping' => [
+                    'price' => 30.0,
+                    'quantity' => 1.0,
+                    'sum' => 30.0,
+                ],
+            ],
         ];
 
         $final['1. Заказ с 1 бандлом DynamicPrice = Disabled'] = [$order, $expected];
@@ -90,43 +83,36 @@ class BundlesDataProvider
         $expected = [
             'sum' => 866.0,
             'origGrandTotal' => 881.0,
-            'items' =>
-                [
-                    100513 =>
-                        [
-                            'price' => 866.0,
+            'items' => [
+                100513 => [
+                    'price' => 866.0,
+                    'quantity' => 1.0,
+                    'sum' => 866.0,
+                    'children' => [
+                        100514 => [
+                            'price' => 90.0,
                             'quantity' => 1.0,
-                            'sum' => 866.0,
-                            'children' =>
-                                [
-                                    100514 =>
-                                        [
-                                            'price' => 90.0,
-                                            'quantity' => 1.0,
-                                            'sum' => 90.0,
-                                            'tax' => '',
-                                        ],
-                                    100515 =>
-                                        [
-                                            'price' => 110.0,
-                                            'quantity' => 1.0,
-                                            'sum' => 110.0,
-                                        ],
-                                    100516 =>
-                                        [
-                                            'price' => 666.0,
-                                            'quantity' => 1.0,
-                                            'sum' => 666.0,
-                                        ],
-                                ],
+                            'sum' => 90.0,
+                            'tax' => '',
                         ],
-                    'shipping' =>
-                        [
-                            'price' => 15.0,
+                        100515 => [
+                            'price' => 110.0,
                             'quantity' => 1.0,
-                            'sum' => 15.0,
+                            'sum' => 110.0,
                         ],
+                        100516 => [
+                            'price' => 666.0,
+                            'quantity' => 1.0,
+                            'sum' => 666.0,
+                        ],
+                    ],
                 ],
+                'shipping' => [
+                    'price' => 15.0,
+                    'quantity' => 1.0,
+                    'sum' => 15.0,
+                ],
+            ],
         ];
 
         $final['2. Заказ с 1 бандлом DynamicPrice = Disabled. Цены дочерних берутся из продуктов'] = [$order, $expected];
@@ -145,42 +131,35 @@ class BundlesDataProvider
         $expected = [
             'sum' => 864.99,
             'origGrandTotal' => 880.0,
-            'items' =>
-                [
-                    100505 =>
-                        [
-                            'price' => 864.99,
+            'items' => [
+                100505 => [
+                    'price' => 864.99,
+                    'quantity' => 1.0,
+                    'sum' => 864.99,
+                    'children' => [
+                        100506 => [
+                            'price' => 99.88,
                             'quantity' => 1.0,
-                            'sum' => 864.99,
-                            'children' =>
-                                [
-                                    100506 =>
-                                        [
-                                            'price' => 99.88,
-                                            'quantity' => 1.0,
-                                            'sum' => 99.88,
-                                        ],
-                                    100507 =>
-                                        [
-                                            'price' => 99.88,
-                                            'quantity' => 1.0,
-                                            'sum' => 99.88,
-                                        ],
-                                    100508 =>
-                                        [
-                                            'price' => 665.23,
-                                            'quantity' => 1.0,
-                                            'sum' => 665.23,
-                                        ],
-                                ],
+                            'sum' => 99.88,
                         ],
-                    'shipping' =>
-                        [
-                            'price' => 15.01,
+                        100507 => [
+                            'price' => 99.88,
                             'quantity' => 1.0,
-                            'sum' => 15.01,
+                            'sum' => 99.88,
                         ],
+                        100508 => [
+                            'price' => 665.23,
+                            'quantity' => 1.0,
+                            'sum' => 665.23,
+                        ],
+                    ],
                 ],
+                'shipping' => [
+                    'price' => 15.01,
+                    'quantity' => 1.0,
+                    'sum' => 15.01,
+                ],
+            ],
         ];
         $final['3. Заказ с 1 бандлом DynamicPrice = Enabled и скидкой'] = [$order, $expected];
 
