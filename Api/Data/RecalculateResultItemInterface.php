@@ -123,7 +123,7 @@ interface RecalculateResultItemInterface
     /**
      * @return RecalculateResultItemInterface[]
      */
-    public function getChildren(): ?array;
+    public function getChildren(): array;
 
     /**
      * @param $children RecalculateResultItemInterface[]|null

@@ -178,9 +178,9 @@ class Item extends DataObject implements RecalculateResultItemInterface
     /**
      * @inheritdoc
      */
-    public function getChildren(): ?array
+    public function getChildren(): array
     {
-        return $this->getData(self::CHILDREN);
+        return (array) $this->getData(self::CHILDREN);
     }
 
     /**
