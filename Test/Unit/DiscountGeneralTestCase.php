@@ -41,6 +41,8 @@ class DiscountGeneralTestCase extends TestCase
     const TEST_CASE_NAME_26 = '#case 26. Баг с отрицательной стоимостью товара если есть Reward Points';
     public const TEST_CASE_NAME_27 = '#case 27. Баг с отрицательной стоимостью товара если есть Gift Card + позиция со скидкой';
     public const TEST_CASE_NAME_28 = '#case 28. Division by zero';
+    public const TEST_CASE_NAME_29 = '#case 29. Bug with taxes. Скидка на доставку содержит предварительно рассчитанный налог';
+    public const TEST_CASE_NAME_30 = '#case 30. Bug with taxes. Скидка на доставку не содержит предварительно посчитанного налога';
 
     private const CHARS_LOWERS = 'abcdefghijklmnopqrstuvwxyz';
     private const CHARS_UPPERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -451,6 +453,28 @@ class DiscountGeneralTestCase extends TestCase
         $order = $this->getNewOrderInstance(0.0000, 100.0000, 100, 0);
         $this->addItem($order, $this->getItem(0.0000, 0.0000, 0.0000, 1, 20, 0));
         $final[self::TEST_CASE_NAME_28] = $order;
+
+        //Shipping discount amount включает налог.
+        $order = $this->getNewOrderInstance(1200.0000, 1320.0000, 150.0000, 0, -30.0000);
+        $order->setShippingDiscountAmount(30.0000);//Уже с налогом
+        $order->setShippingAmount(125.0000);
+        $order->setShippingTaxAmount(25.0000);
+        $item1 = $this->getItem(1200.0000, 1200.0000, 0.0000, 1, 20)
+            ->setRowTotal(1000.0000)
+            ->setTaxAmount(200.0000);
+        $this->addItem($order, $item1);
+        $final[self::TEST_CASE_NAME_29] = $order;
+
+        //Shipping discount amount не включает налог. Налог на скидку доставки считается отдельно.
+        $order = $this->getNewOrderInstance(1200.0000, 1314.0000, 150.0000, 0, -30.0000);
+        $order->setShippingDiscountAmount(30.0000);//Без налога
+        $order->setShippingAmount(125.0000);
+        $order->setShippingTaxAmount(19.0000);
+        $item1 = $this->getItem(1200.0000, 1200.0000, 0.0000, 1, 20)
+            ->setRowTotal(1000.0000)
+            ->setTaxAmount(200.0000);
+        $this->addItem($order, $item1);
+        $final[self::TEST_CASE_NAME_30] = $order;
 
         return $final;
     }
