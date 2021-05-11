@@ -925,7 +925,21 @@ class Discount implements DiscountHelperInterface
             $shippingDiscount = $entity->getOrder()->getShippingDiscountAmount();
         }
 
-        $entity->setData(self::SHIPPING_DA_INCL_TAX, $shippingDiscount * $ratio);
+        //При различных настройках налогов Magento - налог на скидку доставки либо уже применен либо нет.
+        //Если ShTA === (ShAmount - DiscShip) * 20% - то налог должен быть посчитан на скидку доставки
+        //Если ShTA === ShAmount * 20% - то налог уже включен в скидку и доп расчет не нужен
+        //где ShTA - shipping_tax_amount, ShAmount - shipping_amount, DiscShip - shipping_discount_amount
+        $hasTaxInShippingDiscount = bccomp(
+            $entity->getShippingTaxAmount(),
+            $entity->getShippingAmount() * ($ratio - 1),
+            2
+        ) === 0;
+
+        $shippingDiscountWithTax = $hasTaxInShippingDiscount
+            ? $shippingDiscount
+            : $shippingDiscount * $ratio;
+
+        $entity->setData(self::SHIPPING_DA_INCL_TAX, $shippingDiscountWithTax);
 
         return $entity->getData(self::SHIPPING_DA_INCL_TAX);
     }
