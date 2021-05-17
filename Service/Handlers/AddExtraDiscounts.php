@@ -9,6 +9,7 @@
 namespace Mygento\Base\Service\Handlers;
 
 use Magento\Sales\Api\Data\OrderInterface as Order;
+use Mygento\Base\Api\Data\PaymentInterface;
 use Mygento\Base\Api\Data\RecalculateResultInterface;
 use Mygento\Base\Api\DiscountHelperInterface;
 use Mygento\Base\Api\DiscountHelperInterfaceFactory;
@@ -58,6 +59,8 @@ class AddExtraDiscounts implements RecalculationHandler
 
         $discountHelper->setSpreadDiscOnAllUnits(true);
 
+        $isRecalculated = $order->getPayment()->getAdditionalInformation(PaymentInterface::RECALCULATED_FLAG);
+
         foreach ($extraAmounts as $extraAmountKey) {
             $extraAmount = $order->getData($extraAmountKey);
 
@@ -69,12 +72,13 @@ class AddExtraDiscounts implements RecalculationHandler
             //Clean up the order
             $this->orderRepository->reloadOrder($order->getId());
 
-            $discountHelper->applyDiscount($order, (float) $extraAmount);
+            if (!$isRecalculated) {
+                $discountHelper->applyDiscount($order, (float) $extraAmount);
+            }
 
+            $sourceAmountKey = $isRecalculated ? $extraAmountKey : DiscountHelperInterface::NAME_ROW_AMOUNT_TO_SPREAD;
             foreach ($order->getAllVisibleItems() as $item) {
-                $recalcOriginal->getItemById($item->getId())[$extraAmountKey] = $item->getData(
-                    DiscountHelperInterface::NAME_ROW_AMOUNT_TO_SPREAD
-                );
+                $recalcOriginal->getItemById($item->getId())[$extraAmountKey] = $item->getData($sourceAmountKey);
             }
         }
 

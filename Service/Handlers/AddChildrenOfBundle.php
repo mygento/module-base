@@ -12,7 +12,9 @@ use Magento\Bundle\Model\Product\Type;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderInterface as Order;
 use Magento\Sales\Api\Data\OrderItemInterface;
+use Mygento\Base\Api\Data\PaymentInterface;
 use Mygento\Base\Api\Data\RecalculateResultInterface;
+use Mygento\Base\Api\Data\RecalculateResultItemInterfaceFactory;
 use Mygento\Base\Api\DiscountHelperInterface;
 use Mygento\Base\Api\DiscountHelperInterfaceFactory;
 use Mygento\Base\Api\RecalculationHandler;
@@ -38,15 +40,22 @@ class AddChildrenOfBundle implements RecalculationHandler
     private $recalculateResultFactory;
 
     /**
+     * @var \Mygento\Base\Api\Data\RecalculateResultItemInterfaceFactory
+     */
+    private $recalculateResultItemFactory;
+
+    /**
      * @param \Mygento\Base\Api\DiscountHelperInterfaceFactory $discountHelperFactory
      * @param \Mygento\Base\Model\Recalculator\ResultFactory $recalculateResultFactory
      */
     public function __construct(
         DiscountHelperInterfaceFactory $discountHelperFactory,
-        ResultFactory $recalculateResultFactory
+        ResultFactory $recalculateResultFactory,
+        RecalculateResultItemInterfaceFactory $recalculateResultItemFactory
     ) {
         $this->discountHelperFactory = $discountHelperFactory;
         $this->recalculateResultFactory = $recalculateResultFactory;
+        $this->recalculateResultItemFactory = $recalculateResultItemFactory;
     }
 
     /**
@@ -58,6 +67,8 @@ class AddChildrenOfBundle implements RecalculationHandler
      */
     public function handle(Order $order, RecalculateResultInterface $recalcOriginal): RecalculateResultInterface
     {
+        $isRecalculated = $order->getPayment()->getAdditionalInformation(PaymentInterface::RECALCULATED_FLAG);
+
         $items = $order->getAllVisibleItems() ?? $order->getAllItems();
 
         /** @var \Magento\Sales\Api\Data\OrderItemInterface $item */
@@ -65,6 +76,27 @@ class AddChildrenOfBundle implements RecalculationHandler
             //Look for the bundle
             if ($item->getProductType() !== Type::TYPE_CODE) {
                 continue;
+            }
+            if ($isRecalculated) {
+                $children = $item->getChildrenItems();
+                $resultChildren = [];
+                foreach ($children as $child) {
+                    $resultChild = $this->recalculateResultItemFactory->create();
+                    $resultChild->setName($child->getName());
+                    $resultChild->setPrice($child->getPrice());
+                    $resultChild->setQuantity($child->getQtyOrdered());
+                    $resultChild->setSum($child->getRowTotalInclTax());
+                    $resultChild->setTax($child->getPriceInclTax());
+                    $resultChild->setRewardCurrencyAmount($child->getData('reward_currency_amount'));
+                    $resultChild->setGiftCardAmount($child->getData('gift_cards_amount'));
+                    $resultChild->setCustomerBalanceAmount($child->getData('customer_balance_amount'));
+                    $resultChild->setChildren($child->getChildren());
+
+                    $resultChildren[$child->getItemId()] = $resultChild;
+                }
+                $recalcOriginal->getItemById($item->getItemId())->setChildren($resultChildren);
+
+                return $recalcOriginal;
             }
 
             $dummyOrder = $this->getDummyOrderBasedOnBundle($item, $recalcOriginal);
