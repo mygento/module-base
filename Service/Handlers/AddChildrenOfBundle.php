@@ -368,7 +368,6 @@ class AddChildrenOfBundle implements RecalculationHandler
             $resultChild->setPrice($child->getPriceInclTax());
             $resultChild->setQuantity($child->getQtyOrdered());
             $resultChild->setSum($child->getRowTotalInclTax());
-            $resultChild->setTax($child->getTaxAmount());
             $resultChild->setRewardCurrencyAmount($child->getData('reward_currency_amount'));
             $resultChild->setGiftCardAmount($child->getData('gift_cards_amount'));
             $resultChild->setCustomerBalanceAmount($child->getData('customer_balance_amount'));
