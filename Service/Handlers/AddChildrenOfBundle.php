@@ -14,6 +14,7 @@ use Magento\Sales\Api\Data\OrderInterface as Order;
 use Magento\Sales\Api\Data\OrderItemInterface;
 use Mygento\Base\Api\Data\PaymentInterface;
 use Mygento\Base\Api\Data\RecalculateResultInterface;
+use Mygento\Base\Api\Data\RecalculateResultItemInterface;
 use Mygento\Base\Api\Data\RecalculateResultItemInterfaceFactory;
 use Mygento\Base\Api\DiscountHelperInterface;
 use Mygento\Base\Api\DiscountHelperInterfaceFactory;
@@ -79,7 +80,8 @@ class AddChildrenOfBundle implements RecalculationHandler
             }
             if ($isRecalculated) {
                 $resultChildren = $this->getResultChildrenFromOrder($item);
-                $recalcOriginal->getItemById($item->getItemId())->setChildren($resultChildren);
+                $parentItemRecalculated = $this->getRecalculatedItemById($item->getItemId(), $recalcOriginal);
+                $parentItemRecalculated->setChildren($resultChildren);
 
                 return $recalcOriginal;
             }
@@ -135,10 +137,7 @@ class AddChildrenOfBundle implements RecalculationHandler
     {
         $order = new OrderMock([]);
 
-        $parentItemRecalculated = $recalcOriginal->getItemById($parentItem->getItemId());
-        if ($parentItemRecalculated === null) {
-            throw new \Exception("Parent bundle with id {$parentItem->getItemId()} not recalculated");
-        }
+        $parentItemRecalculated = $this->getRecalculatedItemById($parentItem->getItemId(), $recalcOriginal);
 
         //Эта сумма должна быть распределена между дочерними позициями
         $grandTotal = $parentItemRecalculated->getSum();
@@ -186,10 +185,7 @@ class AddChildrenOfBundle implements RecalculationHandler
         $order = new OrderMock([]);
         $subtotal = 0.00;
 
-        $parentItemRecalculated = $recalcOriginal->getItemById($parentItem->getItemId());
-        if ($parentItemRecalculated === null) {
-            throw new \Exception("Parent bundle with id {$parentItem->getItemId()} not recalculated");
-        }
+        $parentItemRecalculated = $this->getRecalculatedItemById($parentItem, $recalcOriginal);
 
         //Эта сумма должна быть распределена между дочерними позициями
         $grandTotal = $parentItemRecalculated->getSum();
@@ -344,6 +340,21 @@ class AddChildrenOfBundle implements RecalculationHandler
     }
 
     /**
+     * @param int|string $id
+     * @param RecalculateResultInterface $recalcOriginalObject
+     * @return RecalculateResultItemInterface
+     * @throws \Exception
+     */
+    private function getRecalculatedItemById(int $id, RecalculateResultInterface $recalcOriginalObject): RecalculateResultItemInterface
+    {
+        $recalculatedItem = $recalcOriginalObject->getItemById($id);
+        if ($recalculatedItem === null) {
+            throw new \Exception("Parent bundle with id {$id} not recalculated");
+        }
+        return $recalculatedItem;
+    }
+
+    /**
      * @param \Magento\Sales\Api\Data\OrderItemInterface $item
      * @return array
      */
@@ -354,14 +365,13 @@ class AddChildrenOfBundle implements RecalculationHandler
         foreach ($children as $child) {
             $resultChild = $this->recalculateResultItemFactory->create();
             $resultChild->setName($child->getName());
-            $resultChild->setPrice($child->getPrice());
+            $resultChild->setPrice($child->getPriceInclTax());
             $resultChild->setQuantity($child->getQtyOrdered());
             $resultChild->setSum($child->getRowTotalInclTax());
-            $resultChild->setTax($child->getPriceInclTax());
+            $resultChild->setTax($child->getTaxAmount());
             $resultChild->setRewardCurrencyAmount($child->getData('reward_currency_amount'));
             $resultChild->setGiftCardAmount($child->getData('gift_cards_amount'));
             $resultChild->setCustomerBalanceAmount($child->getData('customer_balance_amount'));
-            $resultChild->setChildren($child->getChildren());
 
             $resultChildren[$child->getItemId()] = $resultChild;
         }
