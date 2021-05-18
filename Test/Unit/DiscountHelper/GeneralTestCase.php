@@ -6,40 +6,43 @@
  * @package Mygento_Base
  */
 
-namespace Mygento\Base\Test\Unit;
+namespace Mygento\Base\Test\Unit\DiscountHelper;
 
+use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
+use Mygento\Base\Helper\Discount;
+use Mygento\Base\Test\Extra\ExpectedMaker;
 use Mygento\Base\Test\OrderMockBuilder;
 use PHPUnit\Framework\TestCase;
 
-class DiscountGeneralTestCase extends TestCase
+class GeneralTestCase extends TestCase
 {
     //consts for getRecalculated() method
-    const TEST_CASE_NAME_1 = '#case 1. Скидки только на товары. Все делится нацело. Bug 1 kop. Товары по 1 шт. Два со скидками, а один бесплатный.';
-    const TEST_CASE_NAME_2 = '#case 2. Скидка на весь чек и на отдельный товар. Order 145000128 DemoEE';
-    const TEST_CASE_NAME_3 = '#case 3. Скидка на каждый товар.';
-    const TEST_CASE_NAME_4 = '#case 4. Нет скидок никаких';
-    const TEST_CASE_NAME_5 = '#case 5. Скидки только на товары. Не делятся нацело.';
-    const TEST_CASE_NAME_6 = '#case 6. Есть позиция, на которую НЕ ДОЛЖНА распространиться скидка.';
-    const TEST_CASE_NAME_7 = '#case 7. Bug grandTotal < чем сумма всех позиций. Есть позиция со 100% скидкой.';
-    const TEST_CASE_NAME_8 = '#case 8. Reward points в заказе. 1 товар со скидкой, 1 без';
-    const TEST_CASE_NAME_9 = '#case 9. Reward points в заказе. В заказе только 1 товар и тот без скидки';
-    const TEST_CASE_NAME_10 = '#case 10. Reward points в заказе. На товары нет скидок';
-    const TEST_CASE_NAME_11 = '#case 11. (prd nn) order 100374806';
-    const TEST_CASE_NAME_12 = '#case 12. invoice NN 100057070. Неверно расчитан grandTotal в Magento';
-    const TEST_CASE_NAME_13 = '#case 13. Такой же как и invoice NN 100057070, но без большого продукта. Неверно расчитан grandTotal в Magento';
-    const TEST_CASE_NAME_14 = '#case 14. Тест 1 на мелкие rewardPoints (0.01)';
-    const TEST_CASE_NAME_15 = '#case 15. Тест 2 на мелкие rewardPoints (0.31)';
-    const TEST_CASE_NAME_16 = '#case 16. Тест 1 на мелкие rewardPoints (9.99)';
-    const TEST_CASE_NAME_17 = '#case 17. гипотетическая ситуация с ошибкой расчета Мagento -1 коп.';
-    const TEST_CASE_NAME_18 = '#case 18. Подарочная карта. Полная оплата';
-    const TEST_CASE_NAME_19 = '#case 19. Store Credit. Частичная оплата';
-    const TEST_CASE_NAME_20 = '#case 20. Bug with negative Qty';
-    const TEST_CASE_NAME_21 = '#case 21. Bug with negative Price because of converting float -28.9999999999999 to int  (e.g. invoice 100091106)';
-    const TEST_CASE_NAME_22 = '#case 22. Bug with taxes. Когда настроено налоговое правило и цены в каталоге без налога. Скидка не содержит налог';
-    const TEST_CASE_NAME_23 = '#case 23. Bug with taxes. Есть налоговое правило. Налог применяется до скидки, а скидка применяется на цены, содержащие налог. То есть скидка содержит налог.';
-    const TEST_CASE_NAME_24 = '#case 24. Bug with shipping discount. Доставка со скидкой 100%. Настройки налогов как в #23';
-    const TEST_CASE_NAME_25 = '#case 25. Баг с отрицательной суммой товара (макс. цена в заказе) и отрицательной суммой доставки';
-    const TEST_CASE_NAME_26 = '#case 26. Баг с отрицательной стоимостью товара если есть Reward Points';
+    public const TEST_CASE_NAME_1 = '#case 1. Скидки только на товары. Все делится нацело. Bug 1 kop. Товары по 1 шт. Два со скидками, а один бесплатный.';
+    public const TEST_CASE_NAME_2 = '#case 2. Скидка на весь чек и на отдельный товар. Order 145000128 DemoEE';
+    public const TEST_CASE_NAME_3 = '#case 3. Скидка на каждый товар.';
+    public const TEST_CASE_NAME_4 = '#case 4. Нет скидок никаких';
+    public const TEST_CASE_NAME_5 = '#case 5. Скидки только на товары. Не делятся нацело.';
+    public const TEST_CASE_NAME_6 = '#case 6. Есть позиция, на которую НЕ ДОЛЖНА распространиться скидка.';
+    public const TEST_CASE_NAME_7 = '#case 7. Bug grandTotal < чем сумма всех позиций. Есть позиция со 100% скидкой.';
+    public const TEST_CASE_NAME_8 = '#case 8. Reward points в заказе. 1 товар со скидкой, 1 без';
+    public const TEST_CASE_NAME_9 = '#case 9. Reward points в заказе. В заказе только 1 товар и тот без скидки';
+    public const TEST_CASE_NAME_10 = '#case 10. Reward points в заказе. На товары нет скидок';
+    public const TEST_CASE_NAME_11 = '#case 11. (prd nn) order 100374806';
+    public const TEST_CASE_NAME_12 = '#case 12. invoice NN 100057070. Неверно расчитан grandTotal в Magento';
+    public const TEST_CASE_NAME_13 = '#case 13. Такой же как и invoice NN 100057070, но без большого продукта. Неверно расчитан grandTotal в Magento';
+    public const TEST_CASE_NAME_14 = '#case 14. Тест 1 на мелкие rewardPoints (0.01)';
+    public const TEST_CASE_NAME_15 = '#case 15. Тест 2 на мелкие rewardPoints (0.31)';
+    public const TEST_CASE_NAME_16 = '#case 16. Тест 1 на мелкие rewardPoints (9.99)';
+    public const TEST_CASE_NAME_17 = '#case 17. гипотетическая ситуация с ошибкой расчета Мagento -1 коп.';
+    public const TEST_CASE_NAME_18 = '#case 18. Подарочная карта. Полная оплата';
+    public const TEST_CASE_NAME_19 = '#case 19. Store Credit. Частичная оплата';
+    public const TEST_CASE_NAME_20 = '#case 20. Bug with negative Qty';
+    public const TEST_CASE_NAME_21 = '#case 21. Bug with negative Price because of converting float -28.9999999999999 to int  (e.g. invoice 100091106)';
+    public const TEST_CASE_NAME_22 = '#case 22. Bug with taxes. Когда настроено налоговое правило и цены в каталоге без налога. Скидка не содержит налог';
+    public const TEST_CASE_NAME_23 = '#case 23. Bug with taxes. Есть налоговое правило. Налог применяется до скидки, а скидка применяется на цены, содержащие налог. То есть скидка содержит налог.';
+    public const TEST_CASE_NAME_24 = '#case 24. Bug with shipping discount. Доставка со скидкой 100%. Настройки налогов как в #23';
+    public const TEST_CASE_NAME_25 = '#case 25. Баг с отрицательной суммой товара (макс. цена в заказе) и отрицательной суммой доставки';
+    public const TEST_CASE_NAME_26 = '#case 26. Баг с отрицательной стоимостью товара если есть Reward Points';
     public const TEST_CASE_NAME_27 = '#case 27. Баг с отрицательной стоимостью товара если есть Gift Card + позиция со скидкой';
     public const TEST_CASE_NAME_28 = '#case 28. Division by zero';
     public const TEST_CASE_NAME_29 = '#case 29. Bug with taxes. Скидка на доставку содержит предварительно рассчитанный налог';
@@ -55,7 +58,7 @@ class DiscountGeneralTestCase extends TestCase
      */
     private $objectMan;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->discountHelper = $this->getDiscountHelperInstance();
     }
@@ -63,10 +66,10 @@ class DiscountGeneralTestCase extends TestCase
     /**
      * @return \Magento\Framework\TestFramework\Unit\Helper\ObjectManager
      */
-    public function getObjectManager(): \Magento\Framework\TestFramework\Unit\Helper\ObjectManager
+    public function getObjectManager(): ObjectManager
     {
         if (!$this->objectMan) {
-            $this->objectMan = new \Magento\Framework\TestFramework\Unit\Helper\ObjectManager(
+            $this->objectMan = new ObjectManager(
                 $this
             );
         }
@@ -77,7 +80,7 @@ class DiscountGeneralTestCase extends TestCase
     public function getDiscountHelperInstance()
     {
         $this->discountHelper = $this->getObjectManager()->getObject(
-            \Mygento\Base\Helper\Discount::class
+            Discount::class
         );
 
         return $this->discountHelper;
@@ -92,15 +95,8 @@ class DiscountGeneralTestCase extends TestCase
     {
         //В случае если добавили новый тест и у него еще нет expectedArray - то выводим его с соотв. округлением значений
         if (is_null($expectedArray)) {
-            echo "\033[1;32m"; // green
-            echo $this->getName() . PHP_EOL;
-            echo "\033[1;33m"; // yellow
-            $storedValue = ini_get('serialize_precision');
-            ini_set('serialize_precision', 12);
-            var_export($this->discountHelper->getRecalculated($order, 'vat20'));
-            ini_set('serialize_precision', $storedValue);
-            echo "\033[0m"; // reset color
-            exit();
+            $result = $this->discountHelper->getRecalculated($order, 'vat20');
+            ExpectedMaker::dump($result);
         }
     }
 
@@ -118,7 +114,7 @@ class DiscountGeneralTestCase extends TestCase
         $expected = static::getExpected();
 
         foreach ($orders as $key => $order) {
-            $final[$key] = [$order, $expected[$key]];
+            $final[$key] = [$order, $expected[$key] ?? null];
         }
 
         return $final;
@@ -391,25 +387,25 @@ class DiscountGeneralTestCase extends TestCase
         $final[self::TEST_CASE_NAME_28] = $order;
 
         //Shipping discount amount включает налог.
-        $order = $this->getNewOrderInstance(1200.0000, 1320.0000, 150.0000, 0, -30.0000);
+        $order = OrderMockBuilder::getNewOrderInstance(1200.0000, 1320.0000, 150.0000, 0, -30.0000);
         $order->setShippingDiscountAmount(30.0000);//Уже с налогом
         $order->setShippingAmount(125.0000);
         $order->setShippingTaxAmount(25.0000);
-        $item1 = $this->getItem(1200.0000, 1200.0000, 0.0000, 1, 20)
+        $item1 = OrderMockBuilder::getItem(1200.0000, 1200.0000, 0.0000, 1, 20)
             ->setRowTotal(1000.0000)
             ->setTaxAmount(200.0000);
-        $this->addItem($order, $item1);
+        OrderMockBuilder::addItem($order, $item1);
         $final[self::TEST_CASE_NAME_29] = $order;
 
         //Shipping discount amount не включает налог. Налог на скидку доставки считается отдельно.
-        $order = $this->getNewOrderInstance(1200.0000, 1314.0000, 150.0000, 0, -30.0000);
+        $order = OrderMockBuilder::getNewOrderInstance(1200.0000, 1314.0000, 150.0000, 0, -30.0000);
         $order->setShippingDiscountAmount(30.0000);//Без налога
         $order->setShippingAmount(125.0000);
         $order->setShippingTaxAmount(19.0000);
-        $item1 = $this->getItem(1200.0000, 1200.0000, 0.0000, 1, 20)
+        $item1 = OrderMockBuilder::getItem(1200.0000, 1200.0000, 0.0000, 1, 20)
             ->setRowTotal(1000.0000)
             ->setTaxAmount(200.0000);
-        $this->addItem($order, $item1);
+        OrderMockBuilder::addItem($order, $item1);
         $final[self::TEST_CASE_NAME_30] = $order;
 
         return $final;
@@ -422,7 +418,7 @@ class DiscountGeneralTestCase extends TestCase
     {
     }
 
-    protected function onNotSuccessfulTest(\Throwable $e)
+    protected function onNotSuccessfulTest(\Throwable $e): void
     {
         //beautify output
         echo "\033[1;31m"; // light red

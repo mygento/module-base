@@ -8,8 +8,6 @@
 
 namespace Mygento\Base\Test\Extra;
 
-require_once __DIR__ . '/../../vendor/generate/generated/code/Mygento/Base/Api/Data/RecalculateResultInterfaceFactory.php';
-
 class RecalculateResultInterfaceFactory extends \Mygento\Base\Api\Data\RecalculateResultInterfaceFactory
 {
     /**

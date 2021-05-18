@@ -14,6 +14,7 @@ use Mygento\Base\Model\Recalculator\ResultFactory;
 use Mygento\Base\Service\Handlers\AddChildrenOfBundle;
 use Mygento\Base\Service\RecalculatorFacade;
 use Mygento\Base\Test\Extra\DiscountHelperInterfaceFactory;
+use Mygento\Base\Test\Extra\ExpectedMaker;
 use PHPUnit\Framework\TestCase;
 
 class AddChildrenOfBundleHandlerTest extends TestCase
@@ -36,7 +37,7 @@ class AddChildrenOfBundleHandlerTest extends TestCase
         $result = $facade->execute($order);
 
         if (!$expected) {
-            $this->dumpExpected($result);
+            ExpectedMaker::dump($result);
         }
 
         self::assertEquals($result->getSum(), $expected['sum'], 'Total sum failed');
@@ -106,32 +107,6 @@ class AddChildrenOfBundleHandlerTest extends TestCase
         }
 
         return $this->objectMan;
-    }
-
-    /**
-     * @SuppressWarnings(PHPMD.ExitExpression)
-     * @param \Mygento\Base\Api\Data\RecalculateResultInterface $recalcOriginal
-     */
-    protected function dumpExpected($recalcOriginal)
-    {
-        $items = [];
-        foreach ($recalcOriginal->getItems() as $itemId => $item) {
-            $itemArray = $item->toArray();
-            foreach ($item->getChildren() as $key => $child) {
-                $itemArray['children'][$key] = $child->toArray();
-            }
-
-            $items[$itemId] = $itemArray;
-        }
-        $recalcOriginal->setItems($items);
-
-        echo "\033[1;33m"; // yellow
-        $storedValue = ini_get('serialize_precision');
-        ini_set('serialize_precision', 12);
-        var_export($recalcOriginal->toArray());
-        ini_set('serialize_precision', $storedValue);
-        echo "\033[0m"; // reset color
-        exit();
     }
 
     /**

@@ -8,9 +8,6 @@
 
 namespace Mygento\Base\Test\Extra;
 
-require_once __DIR__ . '/../../vendor/generate/generated/code/Mygento/Base/Api/Data/RecalculateResultInterfaceFactory.php';
-require_once __DIR__ . '/../../vendor/generate/generated/code/Mygento/Base/Api/Data/RecalculateResultItemInterfaceFactory.php';
-
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Mygento\Base\Model\Recalculator\ResultFactory;
 

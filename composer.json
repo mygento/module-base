@@ -28,7 +28,7 @@
     "magento/module-sales": "102.*"
   },
   "require-dev": {
-    "mygento/coding-standard": "~2.13.6-beta1",
+    "mygento/coding-standard": "~2.13.6-beta2",
     "phpunit/phpunit": "~7.5.12"
   },
   "autoload": {

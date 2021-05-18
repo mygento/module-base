@@ -6,68 +6,24 @@
  * @package Mygento_Base
  */
 
-namespace Mygento\Base\Test\Unit;
+namespace Mygento\Base\Test\Unit\DiscountHelper;
 
 use Mygento\Base\Api\DiscountHelperInterface;
 use Mygento\Base\Test\OrderMockBuilder;
 
 /**
- * Class DiscountMarkingItemsTest
+ * class MarkingItemsTest
  * has the same calculation as DiscountSplitItemsTest.
  * Marking-specific features are tested here.
  *
  * @package Mygento\Base\Test\Unit
  */
-class DiscountMarkingItemsTest extends DiscountSplitItemsTest
+class MarkingItemsTest extends SplitItemsTest
 {
     /**
      * @var string
      */
     private $markings = '';
-
-    /**
-     * Attention! Order of items in array is important!
-     * @dataProvider dataProviderOrdersForCheckCalculation
-     * @param mixed $order
-     * @param mixed $expectedArray
-     */
-    public function testCalculation($order, $expectedArray)
-    {
-        DiscountGeneralTestCase::testCalculation($order, $expectedArray);
-
-        $order->setShippingDescription('test_shipping');
-        $this->assertTrue(method_exists($this->discountHelper, 'getRecalculated'));
-
-        $recalculatedData = $this->discountHelper->getRecalculated($order, 'vat20', '', '', 'marking', 'marking_list', 'marking_refund');
-
-        $this->assertEquals($recalculatedData['sum'], $expectedArray['sum'], 'Total sum failed');
-        $this->assertEquals($recalculatedData['origGrandTotal'], $expectedArray['origGrandTotal']);
-
-        $this->assertArrayHasKey('items', $recalculatedData);
-
-        $recalcItems = array_values($recalculatedData['items']);
-        $recalcExpectedItems = array_values($expectedArray['items']);
-
-        $expectedQty = 0;
-
-        foreach ($recalcExpectedItems as $expectedItem) {
-            $expectedQty += $expectedItem['quantity'];
-        }
-
-        $recalcQty = 0;
-        foreach ($recalcItems as $recalcItem) {
-            if ($recalcItem['name'] !== 'test_shipping') {
-                $markingOfItem = $recalcItem['marking'] ?? '';
-                $this->assertContains('SOME_MARK_', $markingOfItem, 'Marking of item failed');
-            }
-
-            $this->assertEquals(1, $recalcItem['quantity']);
-            $this->assertEquals($recalcItem['sum'], $recalcItem['price']);
-            $recalcQty += $recalcItem['quantity'];
-        }
-
-        $this->assertEquals($expectedQty, $recalcQty, 'Items qty is incorrect');
-    }
 
     /**
      * @inheritDoc

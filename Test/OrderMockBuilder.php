@@ -36,6 +36,7 @@ class OrderMockBuilder
         $order->setData('subtotal_incl_tax', $subTotalInclTax);
         $order->setData('grand_total', $grandTotal);
         $order->setData('shipping_incl_tax', $shippingInclTax);
+        $order->setData('reward_currency_amount', $rewardPoints);
         $order->setData(
             'discount_amount',
             $discountAmount ??

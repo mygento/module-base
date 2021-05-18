@@ -163,7 +163,7 @@ class BundlesDataProvider
         ];
         $final['3. Заказ с 1 бандлом DynamicPrice = Enabled и скидкой'] = [$order, $expected];
 
-        //Заказ бесплатного пробника. Клиент оплачивает только доставку
+        //Пересчитанный заказ с 1 бандлом и Gift Card полная оплата.
         $order = OrderMockBuilder::getNewOrderInstance(0.0000, 0.0000, 0, 0);
         $order->setData('gift_cards_amount', 1500);
         $father = OrderMockBuilder::getItem(0.0000, 0.0000, 0.0000, 1, 20, 0);
@@ -177,7 +177,92 @@ class BundlesDataProvider
         $father->setChildrenItems([$child1, $child2, $child3]);
         OrderMockBuilder::addItem($order, $father);
 
-        $final['4. Заказ с 1 бандлом пересчитанным бандлом и Gift Card полная оплата.'] = [$order, []];
+        $expected = [
+            'sum' => 0.0,
+            'origGrandTotal' => 0.0,
+            'items' => [
+                100513 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => '',
+                    'children' => [
+                        100514 => [
+                            'price' => 0.0,
+                            'quantity' => 1.0,
+                            'sum' => 0.0,
+                            'tax' => '',
+                        ],
+                        100515 => [
+                            'price' => 0.0,
+                            'quantity' => 1.0,
+                            'sum' => 0.0,
+                            'tax' => '',
+                        ],
+                        100516 => [
+                            'price' => 0.0,
+                            'quantity' => 1.0,
+                            'sum' => 0.0,
+                            'tax' => '',
+                        ],
+                    ],
+                ],
+                'shipping' => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => '',
+                ],
+            ],
+        ];
+
+        $final['4. Пересчитанный заказ с 1 бандлом и Gift Card полная оплата.'] = [$order, $expected];
+
+        //Повторный пересчет
+        $order = OrderMockBuilder::getNewOrderInstance(749.700, 862.21, 150.0000);
+        $father = OrderMockBuilder::getItem(749.7000, 749.7000, 0, 1);
+        $father->setProductType(Bundle::TYPE_CODE);
+        //Dynamic Price = Enabled
+        $father->setData('isChildrenCalculated', true);
+        $child1 = OrderMockBuilder::getItem(338.10, 338.10, 16.91);
+        $child2 = OrderMockBuilder::getItem(411.60, 411.60, 20.58);
+        $father->setChildrenItems([$child1, $child2]);
+        OrderMockBuilder::addItem($order, $father);
+
+        $expected = [
+            'sum' => 712.2,
+            'origGrandTotal' => 862.21,
+            'items' => [
+                100501 => [
+                    'price' => 712.2,
+                    'quantity' => 1.0,
+                    'sum' => 712.2,
+                    'tax' => '',
+                    'children' => [
+                        100502 => [
+                            'price' => 321.19,
+                            'quantity' => 1.0,
+                            'sum' => 321.19,
+                            'tax' => '',
+                        ],
+                        100503 => [
+                            'price' => 391.01,
+                            'quantity' => 1.0,
+                            'sum' => 391.01,
+                            'tax' => '',
+                        ],
+                    ],
+                ],
+                'shipping' => [
+                    'price' => 150.01,
+                    'quantity' => 1.0,
+                    'sum' => 150.01,
+                    'tax' => '',
+                ],
+            ],
+        ];
+
+        $final['5. Попытка пересчета заказа с бандлом, который был ранее пересчитан'] = [$order, $expected];
 
         return $final;
     }

@@ -14,6 +14,7 @@ use Mygento\Base\Model\Recalculator\ResultFactory;
 use Mygento\Base\Service\Handlers\AddExtraDiscounts;
 use Mygento\Base\Service\RecalculatorFacade;
 use Mygento\Base\Test\Extra\DiscountHelperInterfaceFactory;
+use Mygento\Base\Test\Extra\ExpectedMaker;
 use PHPUnit\Framework\TestCase;
 
 class AddExtraDiscountsHandlerTest extends TestCase
@@ -33,16 +34,10 @@ class AddExtraDiscountsHandlerTest extends TestCase
     {
         $facade = $this->getFacadeInstance();
 
-        try {
-            $result = $facade->execute($order);
-        } catch (\Exception $e) {
-            self::assertEquals($e->getMessage(), 'Division by zero', 'Division by zero Fixed!');
-
-            return;
-        }
+        $result = $facade->execute($order);
 
         if (!$expected) {
-            $this->dumpExpected($result);
+            ExpectedMaker::dump($result);
         }
 
         self::assertEquals($result->getSum(), $expected['sum'], 'Total sum failed');
@@ -65,6 +60,22 @@ class AddExtraDiscountsHandlerTest extends TestCase
                 self::assertEquals($expectedChild['sum'], $child->getSum(), 'Sum of item failed');
             }
         }
+    }
+
+    /**
+     * @dataProvider \Mygento\Base\Test\Unit\Facade\ExtraDiscountsDataProvider::dataProviderDivisionByZero
+     * @param mixed $order
+     * @param array|\Exception $expected
+     * @throws \Exception
+     */
+    public function testDivisionByZero($order, $expected)
+    {
+        if ($expected instanceof \Exception) {
+            $this->expectExceptionObject($expected);
+        }
+
+        $facade = $this->getFacadeInstance();
+        $facade->execute($order);
     }
 
     /**
@@ -111,32 +122,6 @@ class AddExtraDiscountsHandlerTest extends TestCase
         }
 
         return $this->objectMan;
-    }
-
-    /**
-     * @SuppressWarnings(PHPMD.ExitExpression)
-     * @param \Mygento\Base\Api\Data\RecalculateResultInterface $recalcOriginal
-     */
-    protected function dumpExpected($recalcOriginal)
-    {
-        $items = [];
-        foreach ($recalcOriginal->getItems() as $itemId => $item) {
-            $itemArray = $item->toArray();
-            foreach ($item->getChildren() as $key => $child) {
-                $itemArray['children'][$key] = $child->toArray();
-            }
-
-            $items[$itemId] = $itemArray;
-        }
-        $recalcOriginal->setItems($items);
-
-        echo "\033[1;33m"; // yellow
-        $storedValue = ini_get('serialize_precision');
-        ini_set('serialize_precision', 12);
-        var_export($recalcOriginal->toArray());
-        ini_set('serialize_precision', $storedValue);
-        echo "\033[0m"; // reset color
-        exit();
     }
 
     /**
