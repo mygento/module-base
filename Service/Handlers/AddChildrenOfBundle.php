@@ -78,22 +78,7 @@ class AddChildrenOfBundle implements RecalculationHandler
                 continue;
             }
             if ($isRecalculated) {
-                $children = $item->getChildrenItems();
-                $resultChildren = [];
-                foreach ($children as $child) {
-                    $resultChild = $this->recalculateResultItemFactory->create();
-                    $resultChild->setName($child->getName());
-                    $resultChild->setPrice($child->getPrice());
-                    $resultChild->setQuantity($child->getQtyOrdered());
-                    $resultChild->setSum($child->getRowTotalInclTax());
-                    $resultChild->setTax($child->getPriceInclTax());
-                    $resultChild->setRewardCurrencyAmount($child->getData('reward_currency_amount'));
-                    $resultChild->setGiftCardAmount($child->getData('gift_cards_amount'));
-                    $resultChild->setCustomerBalanceAmount($child->getData('customer_balance_amount'));
-                    $resultChild->setChildren($child->getChildren());
-
-                    $resultChildren[$child->getItemId()] = $resultChild;
-                }
+                $resultChildren = $this->getResultChildrenFromOrder($item);
                 $recalcOriginal->getItemById($item->getItemId())->setChildren($resultChildren);
 
                 return $recalcOriginal;
@@ -356,5 +341,31 @@ class AddChildrenOfBundle implements RecalculationHandler
 
             $recalculatedItem->setData($extraAmountKey, $sum);
         }
+    }
+
+    /**
+     * @param \Magento\Sales\Api\Data\OrderItemInterface $item
+     * @return array
+     */
+    private function getResultChildrenFromOrder(OrderItemInterface $item): array
+    {
+        $children = $item->getChildrenItems();
+        $resultChildren = [];
+        foreach ($children as $child) {
+            $resultChild = $this->recalculateResultItemFactory->create();
+            $resultChild->setName($child->getName());
+            $resultChild->setPrice($child->getPrice());
+            $resultChild->setQuantity($child->getQtyOrdered());
+            $resultChild->setSum($child->getRowTotalInclTax());
+            $resultChild->setTax($child->getPriceInclTax());
+            $resultChild->setRewardCurrencyAmount($child->getData('reward_currency_amount'));
+            $resultChild->setGiftCardAmount($child->getData('gift_cards_amount'));
+            $resultChild->setCustomerBalanceAmount($child->getData('customer_balance_amount'));
+            $resultChild->setChildren($child->getChildren());
+
+            $resultChildren[$child->getItemId()] = $resultChild;
+        }
+
+        return $resultChildren;
     }
 }
