@@ -12,7 +12,10 @@ use Magento\Bundle\Model\Product\Type;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderInterface as Order;
 use Magento\Sales\Api\Data\OrderItemInterface;
+use Mygento\Base\Api\Data\PaymentInterface;
 use Mygento\Base\Api\Data\RecalculateResultInterface;
+use Mygento\Base\Api\Data\RecalculateResultItemInterface;
+use Mygento\Base\Api\Data\RecalculateResultItemInterfaceFactory;
 use Mygento\Base\Api\DiscountHelperInterface;
 use Mygento\Base\Api\DiscountHelperInterfaceFactory;
 use Mygento\Base\Api\RecalculationHandler;
@@ -38,15 +41,22 @@ class AddChildrenOfBundle implements RecalculationHandler
     private $recalculateResultFactory;
 
     /**
+     * @var \Mygento\Base\Api\Data\RecalculateResultItemInterfaceFactory
+     */
+    private $recalculateResultItemFactory;
+
+    /**
      * @param \Mygento\Base\Api\DiscountHelperInterfaceFactory $discountHelperFactory
      * @param \Mygento\Base\Model\Recalculator\ResultFactory $recalculateResultFactory
      */
     public function __construct(
         DiscountHelperInterfaceFactory $discountHelperFactory,
-        ResultFactory $recalculateResultFactory
+        ResultFactory $recalculateResultFactory,
+        RecalculateResultItemInterfaceFactory $recalculateResultItemFactory
     ) {
         $this->discountHelperFactory = $discountHelperFactory;
         $this->recalculateResultFactory = $recalculateResultFactory;
+        $this->recalculateResultItemFactory = $recalculateResultItemFactory;
     }
 
     /**
@@ -58,6 +68,8 @@ class AddChildrenOfBundle implements RecalculationHandler
      */
     public function handle(Order $order, RecalculateResultInterface $recalcOriginal): RecalculateResultInterface
     {
+        $isRecalculated = $order->getPayment()->getAdditionalInformation(PaymentInterface::RECALCULATED_FLAG);
+
         $items = $order->getAllVisibleItems() ?? $order->getAllItems();
 
         /** @var \Magento\Sales\Api\Data\OrderItemInterface $item */
@@ -65,6 +77,13 @@ class AddChildrenOfBundle implements RecalculationHandler
             //Look for the bundle
             if ($item->getProductType() !== Type::TYPE_CODE) {
                 continue;
+            }
+            if ($isRecalculated) {
+                $resultChildren = $this->getResultChildrenFromOrder($item);
+                $parentItemRecalculated = $this->getRecalculatedItemById($item->getItemId(), $recalcOriginal);
+                $parentItemRecalculated->setChildren($resultChildren);
+
+                return $recalcOriginal;
             }
 
             $dummyOrder = $this->getDummyOrderBasedOnBundle($item, $recalcOriginal);
@@ -118,10 +137,7 @@ class AddChildrenOfBundle implements RecalculationHandler
     {
         $order = new OrderMock([]);
 
-        $parentItemRecalculated = $recalcOriginal->getItemById($parentItem->getItemId());
-        if ($parentItemRecalculated === null) {
-            throw new \Exception("Parent bundle with id {$parentItem->getItemId()} not recalculated");
-        }
+        $parentItemRecalculated = $this->getRecalculatedItemById($parentItem->getItemId(), $recalcOriginal);
 
         //Эта сумма должна быть распределена между дочерними позициями
         $grandTotal = $parentItemRecalculated->getSum();
@@ -169,10 +185,7 @@ class AddChildrenOfBundle implements RecalculationHandler
         $order = new OrderMock([]);
         $subtotal = 0.00;
 
-        $parentItemRecalculated = $recalcOriginal->getItemById($parentItem->getItemId());
-        if ($parentItemRecalculated === null) {
-            throw new \Exception("Parent bundle with id {$parentItem->getItemId()} not recalculated");
-        }
+        $parentItemRecalculated = $this->getRecalculatedItemById($parentItem, $recalcOriginal);
 
         //Эта сумма должна быть распределена между дочерними позициями
         $grandTotal = $parentItemRecalculated->getSum();
@@ -324,5 +337,44 @@ class AddChildrenOfBundle implements RecalculationHandler
 
             $recalculatedItem->setData($extraAmountKey, $sum);
         }
+    }
+
+    /**
+     * @param int|string $id
+     * @param RecalculateResultInterface $recalcOriginalObject
+     * @return RecalculateResultItemInterface
+     * @throws \Exception
+     */
+    private function getRecalculatedItemById(int $id, RecalculateResultInterface $recalcOriginalObject): RecalculateResultItemInterface
+    {
+        $recalculatedItem = $recalcOriginalObject->getItemById($id);
+        if ($recalculatedItem === null) {
+            throw new \Exception("Parent bundle with id {$id} not recalculated");
+        }
+        return $recalculatedItem;
+    }
+
+    /**
+     * @param \Magento\Sales\Api\Data\OrderItemInterface $item
+     * @return array
+     */
+    private function getResultChildrenFromOrder(OrderItemInterface $item): array
+    {
+        $children = $item->getChildrenItems();
+        $resultChildren = [];
+        foreach ($children as $child) {
+            $resultChild = $this->recalculateResultItemFactory->create();
+            $resultChild->setName($child->getName());
+            $resultChild->setPrice($child->getPriceInclTax());
+            $resultChild->setQuantity($child->getQtyOrdered());
+            $resultChild->setSum($child->getRowTotalInclTax());
+            $resultChild->setRewardCurrencyAmount($child->getData('reward_currency_amount'));
+            $resultChild->setGiftCardAmount($child->getData('gift_cards_amount'));
+            $resultChild->setCustomerBalanceAmount($child->getData('customer_balance_amount'));
+
+            $resultChildren[$child->getItemId()] = $resultChild;
+        }
+
+        return $resultChildren;
     }
 }
