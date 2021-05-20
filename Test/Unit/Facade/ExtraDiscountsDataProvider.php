@@ -21,7 +21,7 @@ class ExtraDiscountsDataProvider
     {
         $final = [];
 
-        //Оплата GiftCard.
+        //Оплата Баллами.
         $order = OrderMockBuilder::getNewOrderInstance(6899.40000, 3471.4000, 0, 2928, -500.00);
 
         $simple1 = OrderMockBuilder::getItem(1429.4000, 1429.4000, 0.0000, 1, 20);
@@ -130,7 +130,7 @@ class ExtraDiscountsDataProvider
             ],
         ];
 
-        $final['2. Заказ с Юникора'] = [$order, $expected];
+        $final['1. Расчет распределения баллов'] = [$order, $expected];
 
         return $final;
     }
