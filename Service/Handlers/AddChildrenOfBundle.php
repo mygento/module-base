@@ -27,6 +27,7 @@ use Mygento\Base\Test\OrderMock;
  * Class AddChildrenOfBundle
  * Этот класс пересчитывает дочерние продукты для бандлов,
  * чтобы их цена тоже соответствовала пересчитанному родителю
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class AddChildrenOfBundle implements RecalculationHandler
 {
@@ -185,7 +186,7 @@ class AddChildrenOfBundle implements RecalculationHandler
         $order = new OrderMock([]);
         $subtotal = 0.00;
 
-        $parentItemRecalculated = $this->getRecalculatedItemById($parentItem, $recalcOriginal);
+        $parentItemRecalculated = $this->getRecalculatedItemById($parentItem->getId(), $recalcOriginal);
 
         //Эта сумма должна быть распределена между дочерними позициями
         $grandTotal = $parentItemRecalculated->getSum();
@@ -342,8 +343,8 @@ class AddChildrenOfBundle implements RecalculationHandler
     /**
      * @param int|string $id
      * @param RecalculateResultInterface $recalcOriginalObject
-     * @return RecalculateResultItemInterface
      * @throws \Exception
+     * @return RecalculateResultItemInterface
      */
     private function getRecalculatedItemById(int $id, RecalculateResultInterface $recalcOriginalObject): RecalculateResultItemInterface
     {
@@ -351,6 +352,7 @@ class AddChildrenOfBundle implements RecalculationHandler
         if ($recalculatedItem === null) {
             throw new \Exception("Parent bundle with id {$id} not recalculated");
         }
+
         return $recalculatedItem;
     }
 
