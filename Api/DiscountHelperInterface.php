@@ -85,4 +85,16 @@ interface DiscountHelperInterface
      * @return $this
      */
     public function setSpreadDiscOnAllUnits(bool $spreadDiscOnAllUnits);
+
+    /**
+     * @param bool $isAddGiftCardToPrice
+     * @return $this
+     */
+    public function setIsAddGiftCardToPrice(bool $isAddGiftCardToPrice);
+
+    /**
+     * @param bool $isAddRewardsToPrice
+     * @return $this
+     */
+    public function setIsAddRewardsToPrice(bool $isAddRewardsToPrice);
 }
