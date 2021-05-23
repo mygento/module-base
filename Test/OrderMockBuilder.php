@@ -32,6 +32,7 @@ class OrderMockBuilder
         $discountAmount = null
     ): OrderInterface {
         $order = new OrderMock();
+        $payment = new OrderPaymentMock();
 
         $order->setData('subtotal_incl_tax', $subTotalInclTax);
         $order->setData('grand_total', $grandTotal);
@@ -42,6 +43,7 @@ class OrderMockBuilder
             $discountAmount ??
             $grandTotal + $rewardPoints - $subTotalInclTax - $shippingInclTax
         );
+        $order->setPayment($payment);
 
         return $order;
     }

@@ -70,12 +70,16 @@ class AddExtraDiscountsHandlerTest extends TestCase
      */
     public function testDivisionByZero($order, $expected)
     {
+        $facade = $this->getFacadeInstance();
+
         if ($expected instanceof \Exception) {
             $this->expectExceptionObject($expected);
+            $facade->execute($order);
+
+            return;
         }
 
-        $facade = $this->getFacadeInstance();
-        $facade->execute($order);
+        $this->testCalculation($order, $expected);
     }
 
     /**

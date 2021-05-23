@@ -9,6 +9,7 @@
 namespace Mygento\Base\Test\Unit\Facade;
 
 use Magento\Bundle\Model\Product\Type as Bundle;
+use Mygento\Base\Api\Data\PaymentInterface;
 use Mygento\Base\Test\OrderMockBuilder;
 
 class ExtraDiscountsDataProvider
@@ -141,7 +142,8 @@ class ExtraDiscountsDataProvider
 
         //Оплата полностью GiftCard.
         //Ранее пересчитанный заказ снова попадает в процесс пересчета.
-        //Bug Division by zero
+        //Error Division by zero
+        //В заказе нет флага о том, что он был пересчитан. Поэтому кейс негативный, проверяем наличие ошибки.
         $order = OrderMockBuilder::getNewOrderInstance(0.0000, 0.0000, 0, 0);
         $order->setData('gift_cards_amount', 1500);
         $father = OrderMockBuilder::getItem(0.0000, 0.0000, 0.0000, 1, 20, 0);
@@ -156,8 +158,89 @@ class ExtraDiscountsDataProvider
         OrderMockBuilder::addItem($order, $father);
 
         $expected = new \PHPUnit\Framework\Exception('Warning: Division by zero', 2);
-
         $final['1. Заказ с 1 пересчитанным бандлом и Gift Card полная оплата. Division by zero.'] = [$order, $expected];
+
+        //Пересчитанный заказ. При повторном пересчете порождает ошибку
+        //Division by zero
+        //Сетим в заказ флаг о том, что он был пересчитан.
+        //Кейс позитивный, ошибка не должна появится.
+        $order = OrderMockBuilder::getNewOrderInstance(0.0000, 0.0000, 0, 0);
+        $order->setData('gift_cards_amount', 3000);
+        $order->setData('reward_points', 724);
+        $order->getPayment()->setAdditionalInformation(PaymentInterface::RECALCULATED_FLAG, true);
+        $item1 = OrderMockBuilder::getItem(0.0000, 0.0000, 0.0000, 1, 20, 0);
+        $item1->setData('gift_cards_amount', 3000.00);
+        $item1->setData('reward_points', 724);
+        OrderMockBuilder::addItem($order, $item1);
+        $item2 = OrderMockBuilder::getItem(0.0000, 0.0000, 0.0000, 1, 20, 0);
+        OrderMockBuilder::addItem($order, $item2);
+        $item3 = OrderMockBuilder::getItem(0.0000, 0.0000, 0.0000, 1, 20, 0);
+        OrderMockBuilder::addItem($order, $item3);
+        $item4 = OrderMockBuilder::getItem(0.0000, 0.0000, 0.0000, 1, 20, 0);
+        OrderMockBuilder::addItem($order, $item4);
+        $item5 = OrderMockBuilder::getItem(0.0000, 0.0000, 0.0000, 1, 20, 0);
+        OrderMockBuilder::addItem($order, $item5);
+        $item6 = OrderMockBuilder::getItem(0.0000, 0.0000, 0.0000, 1, 20, 0);
+        OrderMockBuilder::addItem($order, $item6);
+
+        $expected = [
+            'sum' => '0.00',
+            'origGrandTotal' => 0.0,
+            'items' => [
+                100516 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => '',
+                    'gift_cards_amount' => 3000.0,
+                ],
+                100517 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => '',
+                    'gift_cards_amount' => null,
+                ],
+                100518 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => '',
+                    'gift_cards_amount' => null,
+                ],
+                100519 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => '',
+                    'gift_cards_amount' => null,
+                ],
+                100520 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => '',
+                    'gift_cards_amount' => null,
+                ],
+                100521 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => '',
+                    'gift_cards_amount' => null,
+                ],
+                'shipping' => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => '',
+                ],
+            ],
+        ];
+        $final['2. Заказ с пересчитанными Simple товарами, баллами и Gift Card. Division by zero.'] = [
+            $order,
+            $expected,
+        ];
 
         return $final;
     }
