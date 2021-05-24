@@ -186,7 +186,7 @@ class AddChildrenOfBundle implements RecalculationHandler
         $order = new OrderMock([]);
         $subtotal = 0.00;
 
-        $parentItemRecalculated = $this->getRecalculatedItemById($parentItem->getId(), $recalcOriginal);
+        $parentItemRecalculated = $this->getRecalculatedItemById($parentItem->getItemId(), $recalcOriginal);
 
         //Эта сумма должна быть распределена между дочерними позициями
         $grandTotal = $parentItemRecalculated->getSum();
