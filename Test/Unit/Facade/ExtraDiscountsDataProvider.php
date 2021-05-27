@@ -136,6 +136,9 @@ class ExtraDiscountsDataProvider
         return $final;
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     public static function dataProviderDivisionByZero()
     {
         $final = [];

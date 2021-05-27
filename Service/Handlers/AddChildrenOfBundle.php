@@ -9,7 +9,6 @@
 namespace Mygento\Base\Service\Handlers;
 
 use Magento\Bundle\Model\Product\Type;
-use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderInterface as Order;
 use Magento\Sales\Api\Data\OrderItemInterface;
 use Mygento\Base\Api\Data\PaymentInterface;
@@ -225,7 +224,7 @@ class AddChildrenOfBundle implements RecalculationHandler
     }
 
     /**
-     * @param OrderInterface $order
+     * @param Order $order
      * @param OrderItemInterface $item
      */
     private function addItem($order, $item): void
@@ -305,7 +304,7 @@ class AddChildrenOfBundle implements RecalculationHandler
     private function updateExtraDiscountsOfChildren(
         OrderItemInterface $parentItem,
         RecalculateResultInterface $recalcOriginalObject,
-        OrderInterface $dummyOrder
+        Order $dummyOrder
     ) {
         $recalculatedItem = $recalcOriginalObject->getItemById($parentItem->getItemId());
         $freshDiscountHelper = $this->discountHelperFactory->create();
@@ -342,8 +341,8 @@ class AddChildrenOfBundle implements RecalculationHandler
     /**
      * @param int|string $id
      * @param RecalculateResultInterface $recalcOriginalObject
-     * @return RecalculateResultItemInterface
      * @throws \Exception
+     * @return RecalculateResultItemInterface
      */
     private function getRecalculatedItemById(int $id, RecalculateResultInterface $recalcOriginalObject): RecalculateResultItemInterface
     {
@@ -351,6 +350,7 @@ class AddChildrenOfBundle implements RecalculationHandler
         if ($recalculatedItem === null) {
             throw new \Exception("Parent bundle with id {$id} not recalculated");
         }
+
         return $recalculatedItem;
     }
 
