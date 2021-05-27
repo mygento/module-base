@@ -10,7 +10,7 @@ namespace Mygento\Base\Api;
 
 interface ProductAttributeHelperInterface
 {
-    const CONFIG_PATH_DEFAULT_SUFFIX = '_default';
+    public const CONFIG_PATH_DEFAULT_SUFFIX = '_default';
 
     /**
      * Fetch attribute code from $pathToParam and then get it from product.

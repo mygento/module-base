@@ -10,7 +10,7 @@ namespace Mygento\Base\Ui\Component\Listing;
 
 class Thumbnail extends \Magento\Ui\Component\Listing\Columns\Column
 {
-    const ALT_FIELD = 'name';
+    public const ALT_FIELD = 'name';
 
     /** @var string */
     protected $baseUrl = '';
