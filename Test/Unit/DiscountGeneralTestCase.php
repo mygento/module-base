@@ -43,6 +43,7 @@ class DiscountGeneralTestCase extends TestCase
     public const TEST_CASE_NAME_28 = '#case 28. Division by zero';
     public const TEST_CASE_NAME_29 = '#case 29. Bug with taxes. Скидка на доставку содержит предварительно рассчитанный налог';
     public const TEST_CASE_NAME_30 = '#case 30. Bug with taxes. Скидка на доставку не содержит предварительно посчитанного налога';
+    public const TEST_CASE_NAME_31 = '#case 31. Bug with discount bigger than subtotal';
 
     private const CHARS_LOWERS = 'abcdefghijklmnopqrstuvwxyz';
     private const CHARS_UPPERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -475,6 +476,17 @@ class DiscountGeneralTestCase extends TestCase
             ->setTaxAmount(200.0000);
         $this->addItem($order, $item1);
         $final[self::TEST_CASE_NAME_30] = $order;
+        $final = [];
+        //Shipping discount amount не включает налог. Налог на скидку доставки считается отдельно.
+        $order = $this->getNewOrderInstance(1200.0000, 0, 100.0000, 0, -1200.0000);
+        $order->setShippingDiscountAmount(120.0000);//Без налога
+        $order->setShippingAmount(100.0000);
+        $order->setShippingTaxAmount(20.0000);
+        $item1 = $this->getItem(1200.0000, 1200.0000, 0.0000, 1, 20)
+            ->setRowTotal(1000.0000)
+            ->setTaxAmount(200.0000);
+        $this->addItem($order, $item1);
+        $final[self::TEST_CASE_NAME_31] = $order;
 
         return $final;
     }

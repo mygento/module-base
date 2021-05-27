@@ -1276,6 +1276,25 @@ class DiscountAffectsShippingTest extends DiscountGeneralTestCase
             ],
         ];
 
+        $actualData[parent::TEST_CASE_NAME_31] = [
+            'sum' => '0.00',
+            'origGrandTotal' => 0.0,
+            'items' => [
+                100634 => [
+                    'price' => 1200.0,
+                    'quantity' => 1.0,
+                    'sum' => 1200.0,
+                    'tax' => 'vat20',
+                ],
+                'shipping' => [
+                    'price' => 120.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat20',
+                ],
+            ],
+        ];
+
         return $actualData;
     }
 }

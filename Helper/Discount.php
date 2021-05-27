@@ -293,8 +293,14 @@ class Discount implements DiscountHelperInterface
                 $rowDiscount = 0;
             }
 
+            //One more fuck#ing case
+            $rowGrandDiscount =  $rowPercentage * $grandDiscount;
+            if (abs($rowGrandDiscount) > $rowTotal) {
+                $rowGrandDiscount = (-1) * $rowTotal;
+            }
+
             $discountPerUnit = Math::slyCeil(
-                bcadd($rowDiscount, $rowPercentage * $grandDiscount, 4) / $qty
+                bcadd($rowDiscount, $rowGrandDiscount, 4) / $qty
             );
 
             //Set посчитанная на ряд $amountToSpread. Округленная вверх.
@@ -308,7 +314,7 @@ class Discount implements DiscountHelperInterface
 
             $rowTotalNew = round($priceWithDiscount * $qty, 2);
 
-            $rowDiscountNew = $rowDiscount + round($rowPercentage * $grandDiscount, 2);
+            $rowDiscountNew = $rowDiscount + round($rowGrandDiscount, 2);
 
             $rowDiff = round($rowTotal + $rowDiscountNew - $rowTotalNew, 2) * 100;
 
