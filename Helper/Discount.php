@@ -322,9 +322,12 @@ class Discount implements DiscountHelperInterface
                 $rowDiscount = 0;
             }
 
-            $discountPerUnit = Math::slyCeil(
-                bcadd($rowDiscount, $rowPercentage * $grandDiscount, 4) / $qty
-            );
+            $discountPerUnitRaw = bcadd($rowDiscount, $rowPercentage * $grandDiscount, 4) / $qty;
+
+            //Если это наценка - то мы должны иначе округлять. Не вверх, а вниз. Из-за отличия в знаке.
+            $discountPerUnit = $grandDiscount > 0
+                ? Math::slyFloor($discountPerUnitRaw)
+                : Math::slyCeil($discountPerUnitRaw);
 
             //Set посчитанная на ряд $amountToSpread. Округленная вверх.
             $amountToSpreadPerUnit = Math::slyCeil($rowPercentage * $amountToSpread / $qty);

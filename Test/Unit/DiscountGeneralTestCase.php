@@ -43,6 +43,7 @@ class DiscountGeneralTestCase extends TestCase
     public const TEST_CASE_NAME_28 = '#case 28. Division by zero';
     public const TEST_CASE_NAME_29 = '#case 29. Bug with taxes. Скидка на доставку содержит предварительно рассчитанный налог';
     public const TEST_CASE_NAME_30 = '#case 30. Bug with taxes. Скидка на доставку не содержит предварительно посчитанного налога';
+    public const TEST_CASE_NAME_31 = '#case 31. Bug Стоимость заказа увеличивается после пересчета';
 
     private const CHARS_LOWERS = 'abcdefghijklmnopqrstuvwxyz';
     private const CHARS_UPPERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -475,6 +476,14 @@ class DiscountGeneralTestCase extends TestCase
             ->setTaxAmount(200.0000);
         $this->addItem($order, $item1);
         $final[self::TEST_CASE_NAME_30] = $order;
+
+        //Это OrderMock, созданный из бандла.
+        //Баг: стоимость заказа увеличивалась после пересчета
+        $order = $this->getNewOrderInstance(866.0000, 1200.0000, 0, 0);
+        $this->addItem($order, $this->getItem(100.0000, 100.0000, 0.0000, 1, 20));
+        $this->addItem($order, $this->getItem(100.0000, 100.0000, 0.0000, 1, 20));
+        $this->addItem($order, $this->getItem(666.0000, 666.0000, 0.0000, 1, 20));
+        $final[self::TEST_CASE_NAME_31] = $order;
 
         return $final;
     }
