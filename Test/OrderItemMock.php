@@ -998,4 +998,9 @@ class OrderItemMock extends DataObject implements OrderItemInterface
     {
         return parent::setExtensionAttributes($extensionAttributes);
     }
+
+    public function isChildrenCalculated()
+    {
+        return (bool) $this->getData('isChildrenCalculated');
+    }
 }

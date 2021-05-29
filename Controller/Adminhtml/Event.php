@@ -15,7 +15,7 @@ abstract class Event extends \Magento\Backend\App\Action
      *
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Mygento_Base::base_event';
+    public const ADMIN_RESOURCE = 'Mygento_Base::base_event';
 
     /**
      * Core registry

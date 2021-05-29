@@ -6,11 +6,11 @@
  * @package Mygento_Base
  */
 
-namespace Mygento\Base\Test\Unit;
+namespace Mygento\Base\Test\Unit\DiscountHelper;
 
-class DiscountSpreadOnAllItemsTest extends DiscountGeneralTestCase
+class SpreadOnAllItemsTest extends GeneralTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->discountHelper = $this->getDiscountHelperInstance();
         $this->discountHelper->setSpreadDiscOnAllUnits(true);

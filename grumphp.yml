@@ -18,7 +18,7 @@ parameters:
         phpunit:
           testsuite: 'Test'
         phpcs:
-            warning_severity: null
+            warning_severity: 0
         xmllint:
         phpstan:
           autoload_file: 'vendor/mygento/coding-standard/stan/autoload.php'
