@@ -1254,7 +1254,7 @@ class SpreadAndSplitTest extends GeneralTestCase
         ];
 
         $actualData[parent::TEST_CASE_NAME_20] = [
-            'sum' => '14671.60',
+            'sum' => 14671.60,
             'origGrandTotal' => 14671.6,
             'items' => [
                 '100585_1' => [
@@ -1843,7 +1843,7 @@ class SpreadAndSplitTest extends GeneralTestCase
         ];
 
         $actualData[parent::TEST_CASE_NAME_29] = [
-            'sum' => '1200.00',
+            'sum' => 1200.00,
             'origGrandTotal' => 1320.0,
             'items' => [
                 100633 => [
@@ -1862,7 +1862,7 @@ class SpreadAndSplitTest extends GeneralTestCase
         ];
 
         $actualData[parent::TEST_CASE_NAME_30] = [
-            'sum' => '1200.00',
+            'sum' => 1200.00,
             'origGrandTotal' => 1314.0,
             'items' => [
                 100634 => [
@@ -1881,7 +1881,7 @@ class SpreadAndSplitTest extends GeneralTestCase
         ];
 
         $actualData[parent::TEST_CASE_NAME_31] = [
-            'sum' => '1200.00',
+            'sum' => 1200.00,
             'origGrandTotal' => 1200.0,
             'items' => [
                 100635 => [
