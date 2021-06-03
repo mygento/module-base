@@ -1268,6 +1268,75 @@ class WithoutCalcTest extends GeneralTestCase
             ],
         ];
 
+        $actualData[parent::TEST_CASE_NAME_32] = [
+            'sum' => '0.00',
+            'origGrandTotal' => 0.0,
+            'items' => [
+                100635 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat20',
+                ],
+                'shipping' => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat20',
+                ],
+            ],
+        ];
+
+        $actualData[parent::TEST_CASE_NAME_33] = [
+            'sum' => '0.00',
+            'origGrandTotal' => 5.0,
+            'items' => [
+                100636 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat20',
+                ],
+                'shipping' => [
+                    'price' => 5.0,
+                    'quantity' => 1.0,
+                    'sum' => 5.0,
+                    'tax' => 'vat20',
+                ],
+            ],
+        ];
+
+        $actualData[parent::TEST_CASE_NAME_34] = [
+            'sum' => '0.00',
+            'origGrandTotal' => 0.0,
+            'items' => [
+                100637 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat20',
+                ],
+                100638 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat20',
+                ],
+                100639 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat20',
+                ],
+                'shipping' => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat20',
+                ],
+            ],
+        ];
+
         return $actualData;
     }
 }

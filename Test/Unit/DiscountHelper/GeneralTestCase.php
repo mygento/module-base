@@ -48,6 +48,9 @@ class GeneralTestCase extends TestCase
     public const TEST_CASE_NAME_29 = '#case 29. Bug with taxes. Скидка на доставку содержит предварительно рассчитанный налог';
     public const TEST_CASE_NAME_30 = '#case 30. Bug with taxes. Скидка на доставку не содержит предварительно посчитанного налога';
     public const TEST_CASE_NAME_31 = '#case 31. Bug с расчетом Наценки. Стоимость заказа увеличивается после пересчета на 1 коп.';
+    public const TEST_CASE_NAME_32 = '#case 32. Bug with discount bigger than subtotal. Кейс с одним айтемом и скидкой, полностью покрывающей доставку';
+    public const TEST_CASE_NAME_33 = '#case 33. Bug with discount bigger than subtotal. Кейс с одним айтемом и скидкой, частично покрывающей доставку';
+    public const TEST_CASE_NAME_34 = '#case 34. Bug with discount bigger than subtotal. Кейс с несколькими айтемами и скидкой, полностью покрывающей доставку';
 
     /**
      * @var \Mygento\Base\Helper\Discount
@@ -416,6 +419,31 @@ class GeneralTestCase extends TestCase
         OrderMockBuilder::addItem($order, OrderMockBuilder::getItem(100.0000, 100.0000, 0.0000, 1, 20));
         OrderMockBuilder::addItem($order, OrderMockBuilder::getItem(666.0000, 666.0000, 0.0000, 1, 20));
         $final[self::TEST_CASE_NAME_31] = $order;
+
+        //Gift Card - полная оплата
+        $order = OrderMockBuilder::getNewOrderInstance(1000.0000, 0.0000, 200.0000);
+        $order->setData('discount_amount', 0);
+        $order->setData('gift_cards_amount', 1200);
+        OrderMockBuilder::addItem(
+            $order,
+            OrderMockBuilder::getItem(1000.0000, 1000.0000, 0, 1, 20)->setRowTotal(1000.0000)->setTaxAmount(200.0000)
+        );
+        $final[self::TEST_CASE_NAME_32] = $order;
+
+        //Gift Card - оплата с частичным покрытием доставки
+        $order = OrderMockBuilder::getNewOrderInstance(1000.0000, 5.0000, 200.0000);
+        $order->setData('discount_amount', 0);
+        $order->setData('gift_cards_amount', 1195);
+        OrderMockBuilder::addItem($order, OrderMockBuilder::getItem(1000.0000, 1000.0000, 0, 1, 20));
+        $final[self::TEST_CASE_NAME_33] = $order;
+
+        $order = OrderMockBuilder::getNewOrderInstance(3000.0000, 0.0000, 200.0000);
+        $order->setData('discount_amount', 0);
+        $order->setData('gift_cards_amount', 3200);
+        OrderMockBuilder::addItem($order, OrderMockBuilder::getItem(1000.0000, 1000.0000, 0, 1, 20));
+        OrderMockBuilder::addItem($order, OrderMockBuilder::getItem(1000.0000, 1000.0000, 0, 1, 20));
+        OrderMockBuilder::addItem($order, OrderMockBuilder::getItem(1000.0000, 1000.0000, 0, 1, 20));
+        $final[self::TEST_CASE_NAME_34] = $order;
 
         return $final;
     }
