@@ -26,6 +26,7 @@ use Mygento\Base\Test\OrderMock;
  * Class AddChildrenOfBundle
  * Этот класс пересчитывает дочерние продукты для бандлов,
  * чтобы их цена тоже соответствовала пересчитанному родителю
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class AddChildrenOfBundle implements RecalculationHandler
 {

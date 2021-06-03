@@ -1254,49 +1254,44 @@ class SpreadAndSplitTest extends GeneralTestCase
         ];
 
         $actualData[parent::TEST_CASE_NAME_20] = [
-            'sum' => 14671.6,
+            'sum' => 14671.60,
             'origGrandTotal' => 14671.6,
             'items' => [
-                '100586_1' => [
+                '100585_1' => [
+                    'price' => 1144.57,
+                    'quantity' => 3.0,
+                    'sum' => 3433.71,
+                    'tax' => 'vat20',
+                ],
+                '100585_2' => [
                     'price' => 1144.58,
-                    'name' => 'gDghRkvg',
                     'quantity' => 2,
                     'sum' => 2289.16,
                     'tax' => 'vat20',
                 ],
-                '100586_2' => [
-                    'price' => 1144.57,
-                    'name' => 'gDghRkvg',
-                    'quantity' => 3,
-                    'sum' => 3433.71,
+                '100586_1' => [
+                    'price' => 2801.85,
+                    'name' => 'nNm1wcl2',
+                    'quantity' => 1.0,
+                    'sum' => 2801.85,
                     'tax' => 'vat20',
                 ],
-                '100587_1' => [
+                '100586_2' => [
                     'price' => 2801.86,
-                    'name' => '9WgjLFHY',
                     'quantity' => 2,
                     'sum' => 5603.72,
                     'tax' => 'vat20',
                 ],
-                '100587_2' => [
-                    'price' => 2801.85,
-                    'name' => '9WgjLFHY',
-                    'quantity' => 1,
-                    'sum' => 2801.85,
-                    'tax' => 'vat20',
-                ],
-                0 => [
+                100587 => [
                     'price' => 543.16,
-                    'name' => '5b3e0rfX',
-                    'quantity' => 1,
+                    'quantity' => 1.0,
                     'sum' => 543.16,
                     'tax' => 'vat20',
                 ],
                 'shipping' => [
-                    'name' => '',
-                    'price' => 0,
-                    'quantity' => 1,
-                    'sum' => 0,
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
                     'tax' => '',
                 ],
             ],
@@ -1848,7 +1843,7 @@ class SpreadAndSplitTest extends GeneralTestCase
         ];
 
         $actualData[parent::TEST_CASE_NAME_29] = [
-            'sum' => '1200.00',
+            'sum' => 1200.00,
             'origGrandTotal' => 1320.0,
             'items' => [
                 100633 => [
@@ -1867,7 +1862,7 @@ class SpreadAndSplitTest extends GeneralTestCase
         ];
 
         $actualData[parent::TEST_CASE_NAME_30] = [
-            'sum' => '1200.00',
+            'sum' => 1200.00,
             'origGrandTotal' => 1314.0,
             'items' => [
                 100634 => [
@@ -1880,6 +1875,37 @@ class SpreadAndSplitTest extends GeneralTestCase
                     'price' => 114.0,
                     'quantity' => 1.0,
                     'sum' => 114.0,
+                    'tax' => '',
+                ],
+            ],
+        ];
+
+        $actualData[parent::TEST_CASE_NAME_31] = [
+            'sum' => 1200.00,
+            'origGrandTotal' => 1200.0,
+            'items' => [
+                100635 => [
+                    'price' => 138.57,
+                    'quantity' => 1,
+                    'sum' => 138.57,
+                    'tax' => 'vat20',
+                ],
+                100636 => [
+                    'price' => 138.57,
+                    'quantity' => 1,
+                    'sum' => 138.57,
+                    'tax' => 'vat20',
+                ],
+                100637 => [
+                    'price' => 922.86,
+                    'quantity' => 1.0,
+                    'sum' => 922.86,
+                    'tax' => 'vat20',
+                ],
+                'shipping' => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
                     'tax' => '',
                 ],
             ],

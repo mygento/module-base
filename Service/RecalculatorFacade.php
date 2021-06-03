@@ -21,6 +21,8 @@ class RecalculatorFacade implements RecalculatorFacadeInterface
     private const DO_CALCULATION_DEFAULT_VALUE = true;
     private const IS_SPLIT_ALLOWED_DEFAULT_VALUE = false;
     private const SPREAD_DISC_ON_ALL_UNITS_DEFAULT_VALUE = false;
+    private const ADD_GIFT_CARD_TO_PRICE_DEFAULT_VALUE = true;
+    private const ADD_REWARD_POINTS_TO_PRICE_DEFAULT_VALUE = true;
 
     /**
      * @var \Mygento\Base\Api\DiscountHelperInterface
@@ -150,6 +152,64 @@ class RecalculatorFacade implements RecalculatorFacadeInterface
     }
 
     /**
+     * @inheritDoc
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function executeWithoutGiftCardSpreading(
+        $entity,
+        $taxValue = '',
+        $taxAttributeCode = '',
+        $shippingTaxValue = '',
+        $markingAttributeCode = '',
+        $markingListAttributeCode = '',
+        $markingRefundAttributeCode = ''
+    ) {
+        $this->resetHelper();
+        $this->discountHelper->setIsAddGiftCardToPrice(false);
+
+        return $this->recalculate(...func_get_args());
+    }
+
+    /**
+     * @inheritDoc
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function executeWithoutRewardsSpreading(
+        $entity,
+        $taxValue = '',
+        $taxAttributeCode = '',
+        $shippingTaxValue = '',
+        $markingAttributeCode = '',
+        $markingListAttributeCode = '',
+        $markingRefundAttributeCode = ''
+    ) {
+        $this->resetHelper();
+        $this->discountHelper->setIsAddRewardsToPrice(false);
+
+        return $this->recalculate(...func_get_args());
+    }
+
+    /**
+     * @inheritDoc
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function executeWithoutExtraDiscountsSpreading(
+        $entity,
+        $taxValue = '',
+        $taxAttributeCode = '',
+        $shippingTaxValue = '',
+        $markingAttributeCode = '',
+        $markingListAttributeCode = '',
+        $markingRefundAttributeCode = ''
+    ) {
+        $this->resetHelper();
+        $this->discountHelper->setIsAddGiftCardToPrice(false);
+        $this->discountHelper->setIsAddRewardsToPrice(false);
+
+        return $this->recalculate(...func_get_args());
+    }
+
+    /**
      * @param Creditmemo|Invoice|Order $entity
      * @param mixed $args
      * @throws \Exception
@@ -183,5 +243,7 @@ class RecalculatorFacade implements RecalculatorFacadeInterface
         $this->discountHelper->setDoCalculation(self::DO_CALCULATION_DEFAULT_VALUE);
         $this->discountHelper->setIsSplitItemsAllowed(self::IS_SPLIT_ALLOWED_DEFAULT_VALUE);
         $this->discountHelper->setSpreadDiscOnAllUnits(self::SPREAD_DISC_ON_ALL_UNITS_DEFAULT_VALUE);
+        $this->discountHelper->setIsAddGiftCardToPrice(self::ADD_GIFT_CARD_TO_PRICE_DEFAULT_VALUE);
+        $this->discountHelper->setIsAddRewardsToPrice(self::ADD_REWARD_POINTS_TO_PRICE_DEFAULT_VALUE);
     }
 }

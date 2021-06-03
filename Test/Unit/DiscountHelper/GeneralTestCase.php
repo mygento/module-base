@@ -47,6 +47,7 @@ class GeneralTestCase extends TestCase
     public const TEST_CASE_NAME_28 = '#case 28. Division by zero';
     public const TEST_CASE_NAME_29 = '#case 29. Bug with taxes. Скидка на доставку содержит предварительно рассчитанный налог';
     public const TEST_CASE_NAME_30 = '#case 30. Bug with taxes. Скидка на доставку не содержит предварительно посчитанного налога';
+    public const TEST_CASE_NAME_31 = '#case 31. Bug с расчетом Наценки. Стоимость заказа увеличивается после пересчета на 1 коп.';
 
     /**
      * @var \Mygento\Base\Helper\Discount
@@ -407,6 +408,14 @@ class GeneralTestCase extends TestCase
             ->setTaxAmount(200.0000);
         OrderMockBuilder::addItem($order, $item1);
         $final[self::TEST_CASE_NAME_30] = $order;
+
+        //Это OrderMock, созданный из бандла.
+        //Баг: стоимость заказа увеличивалась после пересчета
+        $order = OrderMockBuilder::getNewOrderInstance(866.0000, 1200.0000, 0, 0);
+        OrderMockBuilder::addItem($order, OrderMockBuilder::getItem(100.0000, 100.0000, 0.0000, 1, 20));
+        OrderMockBuilder::addItem($order, OrderMockBuilder::getItem(100.0000, 100.0000, 0.0000, 1, 20));
+        OrderMockBuilder::addItem($order, OrderMockBuilder::getItem(666.0000, 666.0000, 0.0000, 1, 20));
+        $final[self::TEST_CASE_NAME_31] = $order;
 
         return $final;
     }
