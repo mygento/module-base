@@ -435,6 +435,10 @@ class Discount implements DiscountHelperInterface
             $newItemsSum += $rowTotalNew;
         }
 
+        if ($newItemsSum === 0.00) {
+            return 0;
+        }
+
         $lostDiscount = round($grandTotal - $shippingAmount - $newItemsSum + $shippingDiscount, 2);
 
         if ($lostDiscount === 0.00) {
