@@ -9,7 +9,6 @@
 namespace Mygento\Base\Service\Handlers;
 
 use Magento\Bundle\Model\Product\Type;
-use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderInterface as Order;
 use Magento\Sales\Api\Data\OrderItemInterface;
 use Mygento\Base\Api\Data\PaymentInterface;
@@ -186,7 +185,7 @@ class AddChildrenOfBundle implements RecalculationHandler
         $order = new OrderMock([]);
         $subtotal = 0.00;
 
-        $parentItemRecalculated = $this->getRecalculatedItemById($parentItem->getId(), $recalcOriginal);
+        $parentItemRecalculated = $this->getRecalculatedItemById($parentItem->getItemId(), $recalcOriginal);
 
         //Эта сумма должна быть распределена между дочерними позициями
         $grandTotal = $parentItemRecalculated->getSum();
@@ -226,7 +225,7 @@ class AddChildrenOfBundle implements RecalculationHandler
     }
 
     /**
-     * @param OrderInterface $order
+     * @param Order $order
      * @param OrderItemInterface $item
      */
     private function addItem($order, $item): void
@@ -306,7 +305,7 @@ class AddChildrenOfBundle implements RecalculationHandler
     private function updateExtraDiscountsOfChildren(
         OrderItemInterface $parentItem,
         RecalculateResultInterface $recalcOriginalObject,
-        OrderInterface $dummyOrder
+        Order $dummyOrder
     ) {
         $recalculatedItem = $recalcOriginalObject->getItemById($parentItem->getItemId());
         $freshDiscountHelper = $this->discountHelperFactory->create();

@@ -6,11 +6,11 @@
  * @package Mygento_Base
  */
 
-namespace Mygento\Base\Test\Unit;
+namespace Mygento\Base\Test\Unit\DiscountHelper;
 
-class DiscountWithoutCalcTest extends DiscountGeneralTestCase
+class WithoutCalcTest extends GeneralTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->discountHelper = $this->getDiscountHelperInstance();
         $this->discountHelper->setDoCalculation(false);
@@ -798,36 +798,31 @@ class DiscountWithoutCalcTest extends DiscountGeneralTestCase
         ];
 
         $actualData[parent::TEST_CASE_NAME_20] = [
-            'sum' => 14671.65,
+            'sum' => 14671.56,
             'origGrandTotal' => 14671.6,
             'items' => [
-                0 => [
-                    'price' => 1144.58,
-                    'name' => 'gVNPUJl8',
+                100585 => [
+                    'price' => 1144.57,
                     'quantity' => 5,
-                    'sum' => 5722.9,
+                    'sum' => 5722.85,
                     'tax' => 'vat20',
                 ],
-                1 => [
-                    'price' => 2801.86,
-                    'name' => 'xFWbm8aX',
+                100586 => [
+                    'price' => 2801.85,
                     'quantity' => 3,
-                    'sum' => 8405.58,
+                    'sum' => 8405.55,
                     'tax' => 'vat20',
                 ],
-                2 => [
-                    'price' => 543.17,
-                    'name' => 'dgZoOh0z',
+                100587 => [
+                    'price' => 543.16,
                     'quantity' => 1,
-                    'sum' => 543.17,
+                    'sum' => 543.16,
                     'tax' => 'vat20',
                 ],
                 'shipping' => [
-                    'name' => '',
-                    //Accordingly to current algorithms it is expected result
-                    'price' => -0.05,
+                    'price' => 0.04,
                     'quantity' => 1,
-                    'sum' => -0.05,
+                    'sum' => 0.04,
                     'tax' => '',
                 ],
             ],
@@ -1205,7 +1200,7 @@ class DiscountWithoutCalcTest extends DiscountGeneralTestCase
         ];
 
         $actualData[parent::TEST_CASE_NAME_29] = [
-            'sum' => '1200.00',
+            'sum' => 1200.00,
             'origGrandTotal' => 1320.0,
             'items' => [
                 100633 => [
@@ -1224,7 +1219,7 @@ class DiscountWithoutCalcTest extends DiscountGeneralTestCase
         ];
 
         $actualData[parent::TEST_CASE_NAME_30] = [
-            'sum' => '1200.00',
+            'sum' => 1200.00,
             'origGrandTotal' => 1314.0,
             'items' => [
                 100634 => [
@@ -1243,70 +1238,32 @@ class DiscountWithoutCalcTest extends DiscountGeneralTestCase
         ];
 
         $actualData[parent::TEST_CASE_NAME_31] = [
-            'sum' => '0.00',
-            'origGrandTotal' => 0.0,
+            'sum' => 1199.98,
+            'origGrandTotal' => 1200.0,
             'items' => [
                 100635 => [
-                    'price' => 0.0,
+                    'price' => 138.56,
                     'quantity' => 1.0,
-                    'sum' => 0.0,
+                    'sum' => 138.56,
                     'tax' => 'vat20',
                 ],
-                'shipping' => [
-                    'price' => 0.0,
-                    'quantity' => 1.0,
-                    'sum' => 0.0,
-                    'tax' => 'vat20',
-                ],
-            ],
-        ];
-
-        $actualData[parent::TEST_CASE_NAME_32] = [
-            'sum' => '0.00',
-            'origGrandTotal' => 5.0,
-            'items' => [
                 100636 => [
-                    'price' => 0.0,
+                    'price' => 138.56,
                     'quantity' => 1.0,
-                    'sum' => 0.0,
+                    'sum' => 138.56,
                     'tax' => 'vat20',
                 ],
-                'shipping' => [
-                    'price' => 5.0,
-                    'quantity' => 1.0,
-                    'sum' => 5.0,
-                    'tax' => 'vat20',
-                ],
-            ],
-        ];
-
-        $actualData[parent::TEST_CASE_NAME_33] = [
-            'sum' => '0.00',
-            'origGrandTotal' => 0.0,
-            'items' => [
                 100637 => [
-                    'price' => 0.0,
+                    'price' => 922.86,
                     'quantity' => 1.0,
-                    'sum' => 0.0,
-                    'tax' => 'vat20',
-                ],
-                100638 => [
-                    'price' => 0.0,
-                    'quantity' => 1.0,
-                    'sum' => 0.0,
-                    'tax' => 'vat20',
-                ],
-                100639 => [
-                    'price' => 0.0,
-                    'quantity' => 1.0,
-                    'sum' => 0.0,
+                    'sum' => 922.86,
                     'tax' => 'vat20',
                 ],
                 'shipping' => [
-                    'price' => 0.0,
+                    'price' => 0.02,
                     'quantity' => 1.0,
-                    'sum' => 0.0,
-                    'tax' => 'vat20',
+                    'sum' => 0.02,
+                    'tax' => '',
                 ],
             ],
         ];

@@ -1,4 +1,8 @@
-<phpunit colors="true">
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         colors="true"
+         columns="max"
+         bootstrap="./Test/framework/bootstrap.php"
+>
     <testsuites>
         <testsuite name="Test">
             <directory>./Test/Unit</directory>

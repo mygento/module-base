@@ -10,7 +10,7 @@ namespace Mygento\Base\Model\Source;
 
 class Status implements \Magento\Framework\Data\OptionSourceInterface
 {
-    const UNDEFINED_OPTION_LABEL = '-- Please Select --';
+    public const UNDEFINED_OPTION_LABEL = '-- Please Select --';
 
     /**
      * @var \Magento\Sales\Model\Order\Config

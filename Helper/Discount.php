@@ -20,6 +20,7 @@ use Mygento\Base\Helper\Discount\Math;
 /**
  * @inheritDoc
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.TooManyFields)
  */
 class Discount implements DiscountHelperInterface
 {
@@ -37,6 +38,12 @@ class Discount implements DiscountHelperInterface
 
     /** @var bool Размазывать ли скидку по всей позициям? */
     protected $spreadDiscOnAllUnits = false;
+
+    /** @var bool Добавлять ли giftCard в цены позиций? */
+    protected $isAddGiftCardToPrice = true;
+
+    /** @var bool Добавлять ли баллы в цены позиций? */
+    protected $isAddRewardsToPrice = true;
 
     /**
      * @var \Mygento\Base\Helper\Data
@@ -195,6 +202,28 @@ class Discount implements DiscountHelperInterface
     }
 
     /**
+     * @param bool $isAddGiftCardToPrice
+     * @return $this
+     */
+    public function setIsAddGiftCardToPrice(bool $isAddGiftCardToPrice)
+    {
+        $this->isAddGiftCardToPrice = $isAddGiftCardToPrice;
+
+        return $this;
+    }
+
+    /**
+     * @param bool $isAddRewardsToPrice
+     * @return $this
+     */
+    public function setIsAddRewardsToPrice(bool $isAddRewardsToPrice)
+    {
+        $this->isAddRewardsToPrice = $isAddRewardsToPrice;
+
+        return $this;
+    }
+
+    /**
      * @inheritdoc
      */
     public function setSpreadDiscOnAllUnits(bool $spreadDiscOnAllUnits)
@@ -294,14 +323,17 @@ class Discount implements DiscountHelperInterface
             }
 
             //One more fuck#ing case
-            $rowGrandDiscount =  $rowPercentage * $grandDiscount;
+            $rowGrandDiscount = $rowPercentage * $grandDiscount;
             if (abs($rowGrandDiscount) > $rowTotal) {
                 $rowGrandDiscount = (-1) * $rowTotal;
             }
 
-            $discountPerUnit = Math::slyCeil(
-                bcadd($rowDiscount, $rowGrandDiscount, 4) / $qty
-            );
+            $discountPerUnitRaw = bcadd($rowDiscount, $rowGrandDiscount, 4) / $qty;
+
+            //Если это наценка - то мы должны иначе округлять. Не вверх, а вниз. Из-за отличия в знаке.
+            $discountPerUnit = $grandDiscount > 0
+                ? Math::slyFloor($discountPerUnitRaw)
+                : Math::slyCeil($discountPerUnitRaw);
 
             //Set посчитанная на ряд $amountToSpread. Округленная вверх.
             $amountToSpreadPerUnit = Math::slyCeil($rowPercentage * $amountToSpread / $qty);
@@ -345,8 +377,9 @@ class Discount implements DiscountHelperInterface
         $shippingAmount = $this->entity->getShippingInclTax() ?? 0.00;
         $grandTotal = $this->getGrandTotal();
         $discount = $this->getEntityDiscountAmountInclTax($this->entity);
+        $excludedDiscounts = $this->getExcludedDiscounts();
 
-        return round($grandTotal - $shippingAmount - $totalItemsSum - $discount, 2);
+        return round($grandTotal - $shippingAmount - $totalItemsSum - $discount + $excludedDiscounts, 2);
     }
 
     /**
@@ -487,7 +520,10 @@ class Discount implements DiscountHelperInterface
         ];
 
         $shippingAmount = $this->entity->getShippingInclTax() ?? 0.00;
-        $itemsSumDiff = round(Math::slyFloor($grandTotal - $itemsSum - $shippingAmount, 3), 2);
+
+        //GiftCard, баллы могут не участвовать в расчетах
+        $excludedDiscounts = $this->getExcludedDiscounts();
+        $itemsSumDiff = round(Math::slyFloor($grandTotal - $itemsSum - $shippingAmount + $excludedDiscounts, 3), 2);
 
         $this->generalHelper->debug("Items sum: {$itemsSum}. Shipping increase: {$itemsSumDiff}");
 
@@ -1037,5 +1073,24 @@ class Discount implements DiscountHelperInterface
         return $this->markingAttributeCode
             && $this->markingListAttributeCode
             && $this->markingRefundAttributeCode;
+    }
+
+    /**
+     * Accordingly to settings gift_card_amount, reward_currency_amount, customer_balance_amount
+     * might be excluded from item prices calculation
+     * @return float
+     */
+    private function getExcludedDiscounts(): float
+    {
+        $excludedDiscounts = 0.00;
+        if (!$this->isAddGiftCardToPrice) {
+            $excludedDiscounts += $this->entity->getData('gift_cards_amount');
+        }
+
+        if (!$this->isAddRewardsToPrice) {
+            $excludedDiscounts += $this->entity->getData('reward_currency_amount');
+        }
+
+        return $excludedDiscounts;
     }
 }
