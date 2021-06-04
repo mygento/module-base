@@ -322,8 +322,10 @@ class Discount implements DiscountHelperInterface
                 $rowDiscount = 0;
             }
 
-            //One more fuck#ing case
             $rowGrandDiscount = $rowPercentage * $grandDiscount;
+
+            //Проверяем, не превышает ли скидка ряда его тотал.
+            // Если да - делаем скидку равной тоталу, чтобы тот не ушел в минус.
             if (abs($rowGrandDiscount) > $rowTotal) {
                 $rowGrandDiscount = (-1) * $rowTotal;
             }
