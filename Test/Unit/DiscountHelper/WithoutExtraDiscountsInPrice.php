@@ -62,7 +62,7 @@ class WithoutExtraDiscountsInPrice extends GeneralTestCase
         OrderMockBuilder::addItem($order, OrderMockBuilder::getItem(500.0000, 250.0000, 0, 2));
 
         $expected = [
-            'sum' => '1500.00',
+            'sum' => 1500.00,
             'origGrandTotal' => 0.0,
             'items' => [
                 100501 => [
@@ -93,7 +93,7 @@ class WithoutExtraDiscountsInPrice extends GeneralTestCase
         OrderMockBuilder::addItem($order, OrderMockBuilder::getItem(20.0000, 20.0000, 0.0000, 1));
 
         $expected = [
-            'sum' => '11711.00',
+            'sum' => 11711.00,
             'origGrandTotal' => 11611.0,
             'items' => [
                 100503 => [

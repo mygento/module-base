@@ -322,7 +322,15 @@ class Discount implements DiscountHelperInterface
                 $rowDiscount = 0;
             }
 
-            $discountPerUnitRaw = bcadd($rowDiscount, $rowPercentage * $grandDiscount, 4) / $qty;
+            $rowGrandDiscount = $rowPercentage * $grandDiscount;
+
+            //Проверяем, не превышает ли скидка ряда его тотал.
+            // Если да - делаем скидку равной тоталу, чтобы тот не ушел в минус.
+            if (abs($rowGrandDiscount) > $rowTotal) {
+                $rowGrandDiscount = (-1) * $rowTotal;
+            }
+
+            $discountPerUnitRaw = bcadd($rowDiscount, $rowGrandDiscount, 4) / $qty;
 
             //Если это наценка - то мы должны иначе округлять. Не вверх, а вниз. Из-за отличия в знаке.
             $discountPerUnit = $grandDiscount > 0
@@ -340,7 +348,7 @@ class Discount implements DiscountHelperInterface
 
             $rowTotalNew = round($priceWithDiscount * $qty, 2);
 
-            $rowDiscountNew = $rowDiscount + round($rowPercentage * $grandDiscount, 2);
+            $rowDiscountNew = $rowDiscount + round($rowGrandDiscount, 2);
 
             $rowDiff = round($rowTotal + $rowDiscountNew - $rowTotalNew, 2) * 100;
 
@@ -427,6 +435,10 @@ class Discount implements DiscountHelperInterface
             $rowTotalNew = $item->getData(self::NAME_UNIT_PRICE) * $qty
                 + ($item->getData(self::NAME_ROW_DIFF) / 100);
             $newItemsSum += $rowTotalNew;
+        }
+
+        if ($newItemsSum === 0.00) {
+            return 0;
         }
 
         $lostDiscount = round($grandTotal - $shippingAmount - $newItemsSum + $shippingDiscount, 2);

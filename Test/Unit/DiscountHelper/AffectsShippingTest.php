@@ -807,7 +807,7 @@ class AffectsShippingTest extends GeneralTestCase
         ];
 
         $actualData[parent::TEST_CASE_NAME_19] = [
-            'sum' => '999.98',
+            'sum' => 999.98,
             'origGrandTotal' => 1000.0,
             'items' => [
                 0 => [
@@ -1164,7 +1164,7 @@ class AffectsShippingTest extends GeneralTestCase
         ];
 
         $actualData[parent::TEST_CASE_NAME_26] = [
-            'sum' => '10307.32',
+            'sum' => 10307.32,
             'origGrandTotal' => 10307.32,
             'items' => [
                 100624 => [
@@ -1215,7 +1215,7 @@ class AffectsShippingTest extends GeneralTestCase
         $actualData[parent::TEST_CASE_NAME_27] = $actualData[parent::TEST_CASE_NAME_18];
 
         $actualData[parent::TEST_CASE_NAME_28] = [
-            'sum' => '0.00',
+            'sum' => 0.00,
             'origGrandTotal' => 100.0,
             'items' => [
                 100630 => [
@@ -1298,6 +1298,75 @@ class AffectsShippingTest extends GeneralTestCase
                     'quantity' => 1.0,
                     'sum' => 0.02,
                     'tax' => '',
+                ],
+            ],
+        ];
+
+        $actualData[parent::TEST_CASE_NAME_32] = [
+            'sum' => 0.00,
+            'origGrandTotal' => 0.0,
+            'items' => [
+                100635 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat20',
+                ],
+                'shipping' => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat20',
+                ],
+            ],
+        ];
+
+        $actualData[parent::TEST_CASE_NAME_33] = [
+            'sum' => 0.00,
+            'origGrandTotal' => 5.0,
+            'items' => [
+                100636 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat20',
+                ],
+                'shipping' => [
+                    'price' => 5.0,
+                    'quantity' => 1.0,
+                    'sum' => 5.0,
+                    'tax' => 'vat20',
+                ],
+            ],
+        ];
+
+        $actualData[parent::TEST_CASE_NAME_34] = [
+            'sum' => 0.00,
+            'origGrandTotal' => 0.0,
+            'items' => [
+                100637 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat20',
+                ],
+                100638 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat20',
+                ],
+                100639 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat20',
+                ],
+                'shipping' => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat20',
                 ],
             ],
         ];
