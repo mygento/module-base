@@ -28,10 +28,14 @@
 
     <type name="Mygento\Base\Service\RecalculatorFacade">
         <arguments>
-            <argument name="handlers" xsi:type="array">
+            <argument name="preHandlers" xsi:type="array">
+                <item name="skip_items_from_recalculation" xsi:type="object">Mygento\Base\Service\PreHandlers\SkipItems</item>
+            </argument>
+            <argument name="postHandlers" xsi:type="array">
                 <!--Order is important-->
-                <item name="add_extra_discounts_like_rewards" xsi:type="object">Mygento\Base\Service\Handlers\AddExtraDiscounts</item>
-                <item name="add_bundle_children" xsi:type="object">Mygento\Base\Service\Handlers\AddChildrenOfBundle</item>
+                <item name="add_extra_discounts_like_rewards" xsi:type="object">Mygento\Base\Service\PostHandlers\AddExtraDiscounts</item>
+                <item name="add_bundle_children" xsi:type="object">Mygento\Base\Service\PostHandlers\AddChildrenOfBundle</item>
+                <item name="restore_skipped_items" xsi:type="object">Mygento\Base\Service\PostHandlers\RestoreSkippedItems</item>
             </argument>
         </arguments>
     </type>

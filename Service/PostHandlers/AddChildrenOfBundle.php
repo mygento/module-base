@@ -6,7 +6,7 @@
  * @package Mygento_Base
  */
 
-namespace Mygento\Base\Service\Handlers;
+namespace Mygento\Base\Service\PostHandlers;
 
 use Magento\Bundle\Model\Product\Type;
 use Magento\Sales\Api\Data\OrderInterface as Order;
@@ -17,7 +17,7 @@ use Mygento\Base\Api\Data\RecalculateResultItemInterface;
 use Mygento\Base\Api\Data\RecalculateResultItemInterfaceFactory;
 use Mygento\Base\Api\DiscountHelperInterface;
 use Mygento\Base\Api\DiscountHelperInterfaceFactory;
-use Mygento\Base\Api\RecalculationHandler;
+use Mygento\Base\Api\RecalculationPostHandlerInterface;
 use Mygento\Base\Model\Recalculator\ResultFactory;
 use Mygento\Base\Test\OrderItemMock;
 use Mygento\Base\Test\OrderMock;
@@ -28,7 +28,7 @@ use Mygento\Base\Test\OrderMock;
  * чтобы их цена тоже соответствовала пересчитанному родителю
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class AddChildrenOfBundle implements RecalculationHandler
+class AddChildrenOfBundle implements RecalculationPostHandlerInterface
 {
     /**
      * @var \Mygento\Base\Api\DiscountHelperInterfaceFactory
@@ -61,8 +61,7 @@ class AddChildrenOfBundle implements RecalculationHandler
 
     /**
      * @param Order $order
-     * @param RecalculateResultInterface $recalcOriginal
-     * @throws \Mygento\Base\Model\Recalculator\RecalculationException
+     * @param RecalculateResultInterface|null $recalcOriginal
      * @throws \Exception
      * @return RecalculateResultInterface
      */
