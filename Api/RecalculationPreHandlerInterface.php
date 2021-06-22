@@ -9,22 +9,20 @@
 namespace Mygento\Base\Api;
 
 use Magento\Sales\Api\Data\OrderInterface;
-use Magento\Sales\Api\Data\InvoiceInterface;
-use Magento\Sales\Api\Data\CreditmemoInterface;
 
 interface RecalculationPreHandlerInterface
 {
     /**
-     * @param OrderInterface|InvoiceInterface|CreditmemoInterface $entity
+     * @param OrderInterface $entity
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @return OrderInterface|InvoiceInterface|CreditmemoInterface
+     * @return OrderInterface
      */
-    public function handle($entity);
+    public function handle(OrderInterface $entity): OrderInterface;
 
     /**
-     * @param OrderInterface|InvoiceInterface|CreditmemoInterface $entity
+     * @param OrderInterface $entity
      * @return bool
      */
-    public function isShouldBeApplied($entity): bool;
+    public function isShouldBeApplied(OrderInterface $entity): bool;
 }

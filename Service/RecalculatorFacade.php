@@ -232,12 +232,14 @@ class RecalculatorFacade implements RecalculatorFacadeInterface
         //and execute them via Magento Plugins for this method
 
         //Make some auxiliary actions before recalculation
-        foreach ($this->preHandlers as $preHandler) {
-            if (!$preHandler->isShouldBeApplied($entity)) {
-                continue;
-            }
+        if ($entity instanceof Order) {
+            foreach ($this->preHandlers as $preHandler) {
+                if (!$preHandler->isShouldBeApplied($entity)) {
+                    continue;
+                }
 
-            $entity = $preHandler->handle($entity);
+                $entity = $preHandler->handle($entity);
+            }
         }
 
         $res = $this->discountHelper->getRecalculated($entity, ...$args);

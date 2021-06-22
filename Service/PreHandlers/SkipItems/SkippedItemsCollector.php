@@ -43,12 +43,27 @@ class SkippedItemsCollector
         foreach ($this->skippers as $skipper) {
             foreach ($items as $item) {
                 if ($skipper->isShouldBeSkipped($item)) {
-                    continue;
+                    $itemsToSkip[] = $item;
                 }
-                $itemsToSkip[] = $item;
             }
         }
 
         return $itemsToSkip;
+    }
+
+    /**
+     * @param OrderInterface|InvoiceInterface|CreditmemoInterface $entity
+     * @return int[]
+     */
+    public function getItemIdsToSkip($entity): array
+    {
+        $items = $this->getItemsToSkip($entity);
+
+        return array_map(
+            static function ($item) {
+                return (int) $item->getId();
+            },
+            $items
+        );
     }
 }
