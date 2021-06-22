@@ -8,16 +8,15 @@
 
 namespace Mygento\Base\Service\PreHandlers\SkipItems;
 
-use Magento\Sales\Api\Data\CreditmemoInterface;
-use Magento\Sales\Api\Data\InvoiceInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 
 class SkippedItemsCollector
 {
-    /**
-     * @var \Mygento\Base\Api\ItemSkipper[]
-     */
+    /** @var \Mygento\Base\Api\ItemSkipper[] */
     private $skippers;
+
+    /** @var array */
+    private $skippedItems = [];
 
     /**
      * @param \Mygento\Base\Api\ItemSkipper[] $skippers
@@ -28,36 +27,38 @@ class SkippedItemsCollector
     }
 
     /**
-     * @param OrderInterface|InvoiceInterface|CreditmemoInterface $entity
-     * @return array
+     * @param OrderInterface $order
+     * @return \Magento\Sales\Api\Data\OrderItemInterface[]
      */
-    public function getItemsToSkip($entity): array
+    public function getItemsToSkip(OrderInterface $order): array
     {
-        $items = $entity->getAllVisibleItems() ?? $entity->getAllItems();
-        $itemsToSkip = [];
-
         if (empty($this->skippers)) {
-            return $itemsToSkip;
+            return [];
         }
 
+        if (isset($this->skippedItems[$order->getEntityId()])) {
+            return $this->skippedItems[$order->getEntityId()];
+        }
+
+        $this->skippedItems[$order->getEntityId()] = [];
         foreach ($this->skippers as $skipper) {
-            foreach ($items as $item) {
+            foreach ($order->getAllVisibleItems() as $item) {
                 if ($skipper->isShouldBeSkipped($item)) {
-                    $itemsToSkip[] = $item;
+                    $this->skippedItems[$order->getEntityId()][] = $item;
                 }
             }
         }
 
-        return $itemsToSkip;
+        return $this->skippedItems[$order->getEntityId()];
     }
 
     /**
-     * @param OrderInterface|InvoiceInterface|CreditmemoInterface $entity
+     * @param OrderInterface $order
      * @return int[]
      */
-    public function getItemIdsToSkip($entity): array
+    public function getItemIdsToSkip(OrderInterface $order): array
     {
-        $items = $this->getItemsToSkip($entity);
+        $items = $this->getItemsToSkip($order);
 
         return array_map(
             static function ($item) {
