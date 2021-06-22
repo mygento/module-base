@@ -8,22 +8,75 @@
 
 namespace Mygento\Base\Service\PostHandlers;
 
-use Magento\Sales\Api\Data\OrderInterface as Order;
+use Magento\Sales\Api\Data\OrderInterface;
 use Mygento\Base\Api\Data\RecalculateResultInterface;
 use Mygento\Base\Api\RecalculationPostHandlerInterface;
+use Mygento\Base\Service\PreHandlers\SkipItems\SkippedItemFixer;
+use Mygento\Base\Service\PreHandlers\SkipItems\SkippedItemsCollector;
 
 class RestoreSkippedItems implements RecalculationPostHandlerInterface
 {
     /**
-     * @param Order $order
+     * @var \Mygento\Base\Service\PreHandlers\SkipItems\SkippedItemFixer
+     */
+    private $skippedItemFixer;
+
+    /**
+     * @var \Mygento\Base\Service\PreHandlers\SkipItems\SkippedItemsCollector
+     */
+    private $skippedItemsCollector;
+
+    public function __construct(
+        SkippedItemsCollector $skippedItemsCollector,
+        SkippedItemFixer $skippedItemFixer
+    ) {
+        $this->skippedItemFixer = $skippedItemFixer;
+        $this->skippedItemsCollector = $skippedItemsCollector;
+    }
+
+    /**
+     * @param OrderInterface $order
      * @param RecalculateResultInterface|null $recalcOriginal
      * @throws \Exception
      * @return RecalculateResultInterface
      */
-    public function handle(Order $order, RecalculateResultInterface $recalcOriginal): RecalculateResultInterface
+    public function handle(OrderInterface $order, RecalculateResultInterface $recalcOriginal): RecalculateResultInterface
     {
-        /* TODO: Implement it */
+        $itemsToSkip = $this->skippedItemsCollector->getItemsToSkip($order);
+
+        if (empty($itemsToSkip)) {
+            return $recalcOriginal;
+        }
+
+        $recalculatedItems = [];
+        foreach ($itemsToSkip as $item) {
+            $skippedRecalculatedItem = $this->skippedItemFixer->execute($item);
+            $recalculatedItems[$item->getItemId()] = $skippedRecalculatedItem;
+        }
+
+        //Add fixed skipped items to main result
+        $this->reassembleRecalculateResult($recalcOriginal, $recalculatedItems);
 
         return $recalcOriginal;
+    }
+
+    private function reassembleRecalculateResult(RecalculateResultInterface $recalcOriginal, array $recalculatedItems): void
+    {
+        $items = $recalcOriginal->getItems();
+        $items += $recalculatedItems;
+        $recalcOriginal->setItems($items);
+
+        /** @see \Mygento\Base\Service\PostHandlers\AddChildrenOfBundle::updateSum */
+        $newSum = array_sum(
+            array_map(
+                static function ($item, $key) {
+                    return $key !== 'shipping' ? $item->getSum() : 0;
+                },
+                $recalcOriginal->getItems(),
+                array_keys($recalcOriginal->getItems())
+            )
+        );
+
+        $recalcOriginal->setSum($newSum);
     }
 }
