@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * @author Mygento Team
+ * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @package Mygento_Base
+ */
+
 namespace Mygento\Base\Service\PreHandlers\SkipItems;
 
 use Magento\Sales\Api\Data\CreditmemoItemInterface;
@@ -17,6 +23,7 @@ class SkippedItemFixer
      * @var \Mygento\Base\Api\DiscountHelperInterface
      */
     private $discountHelper;
+
     /**
      * @var \Mygento\Base\Model\Recalculator\ResultFactory
      */
@@ -31,7 +38,7 @@ class SkippedItemFixer
     }
 
     /**
-     * @param OrderItemInterface|InvoiceItemInterface|CreditmemoItemInterface $item
+     * @param CreditmemoItemInterface|InvoiceItemInterface|OrderItemInterface $item
      * @throws \Exception
      * @return RecalculateResultItemInterface
      */
@@ -46,7 +53,7 @@ class SkippedItemFixer
     }
 
     /**
-     * @param OrderItemInterface|InvoiceItemInterface|CreditmemoItemInterface $sourceItem
+     * @param CreditmemoItemInterface|InvoiceItemInterface|OrderItemInterface $sourceItem
      * @throws \Exception
      * @return \Magento\Sales\Api\Data\OrderInterface
      */
@@ -109,7 +116,7 @@ class SkippedItemFixer
         //выражение не всегда справедливо:
         //RowTotalInclTax === RowTotal + TaxAmount
 
-        /* $discountTaxAmount = $rowTotalInclTax - $rowTotal -$taxAmount; */
+        // $discountTaxAmount = $rowTotalInclTax - $rowTotal -$taxAmount;
         $discountTaxAmount = bcsub(bcsub($item->getRowTotalInclTax(), $item->getRowTotal(), 4), $taxAmount, 4);
 
         $isTaxCalculationNeeded = $taxPercent && $taxAmount && $discountTaxAmount &&

@@ -8,7 +8,7 @@
 
 namespace Mygento\Base\Api;
 
-use \Magento\Sales\Api\Data\OrderItemInterface;
+use Magento\Sales\Api\Data\OrderItemInterface;
 
 /**
  * Interface ItemSkipper
