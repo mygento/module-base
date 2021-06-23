@@ -9,19 +9,17 @@
 namespace Mygento\Base\Api;
 
 use \Magento\Sales\Api\Data\OrderItemInterface;
-use \Magento\Sales\Api\Data\InvoiceItemInterface;
-use \Magento\Sales\Api\Data\CreditmemoItemInterface;
 
 /**
  * Interface ItemSkipper
- * Check is OrderItem (InvoiceItem, CreditmemoItem) should be skipped
+ * Check is OrderItem should be skipped
  * from recalculation
  */
 interface ItemSkipper
 {
     /**
-     * @param OrderItemInterface|InvoiceItemInterface|CreditmemoItemInterface $item
+     * @param OrderItemInterface $item
      * @return bool
      */
-    public function isShouldBeSkipped($item): bool;
+    public function isShouldBeSkipped(OrderItemInterface $item): bool;
 }
