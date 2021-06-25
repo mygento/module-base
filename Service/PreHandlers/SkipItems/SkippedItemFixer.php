@@ -14,6 +14,7 @@ use Magento\Sales\Api\Data\OrderItemInterface;
 use Magento\Sales\Api\Data\OrderItemInterface as OrderItem;
 use Mygento\Base\Api\Data\RecalculateResultItemInterface;
 use Mygento\Base\Api\DiscountHelperInterface as Discount;
+use Mygento\Base\Helper\Discount\Tax;
 use Mygento\Base\Model\Recalculator\ResultFactory;
 use Mygento\Base\Test\OrderMockBuilder;
 
@@ -67,7 +68,7 @@ class SkippedItemFixer
             ? $sourceItem->getTaxPercent()
             : $sourceItem->getOrderItem()->getTaxPercent();
 
-        $discountAmountInclTax = $this->getDiscountAmountInclTax($sourceItem);
+        $discountAmountInclTax = Tax::getDiscountAmountInclTax($sourceItem);
 
         $subTotal = $rowTotalInclTax;
         $grandTotal = bcsub($subTotal, $discountAmountInclTax, 4);
@@ -94,38 +95,5 @@ class SkippedItemFixer
         OrderMockBuilder::addItem($order, $item);
 
         return $order;
-    }
-
-    /**
-     * @param $item
-     * @return string
-     * @see Discount::getItemDiscountAmountInclTax
-     */
-    private function getDiscountAmountInclTax($item)
-    {
-        $discAmountInclTax = $item->getDiscountAmount();
-
-        $taxAmount = $item instanceof OrderItem
-            ? $item->getTaxAmount()
-            : $item->getOrderItem()->getTaxAmount();
-        $taxPercent = $item instanceof OrderItem
-            ? $item->getTaxPercent()
-            : $item->getOrderItem()->getTaxPercent();
-
-        //В зависимости от настроек скидка может применятся до вычисления налога, а может и после
-        //выражение не всегда справедливо:
-        //RowTotalInclTax === RowTotal + TaxAmount
-
-        // $discountTaxAmount = $rowTotalInclTax - $rowTotal -$taxAmount;
-        $discountTaxAmount = bcsub(bcsub($item->getRowTotalInclTax(), $item->getRowTotal(), 4), $taxAmount, 4);
-
-        $isTaxCalculationNeeded = $taxPercent && $taxAmount && $discountTaxAmount &&
-            $item->getRowTotal() !== $item->getRowTotalInclTax();
-
-        if ($isTaxCalculationNeeded) {
-            $discAmountInclTax = round((1 + $taxPercent / 100) * $item->getDiscountAmount(), 2);
-        }
-
-        return $discAmountInclTax;
     }
 }

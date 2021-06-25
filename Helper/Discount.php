@@ -16,6 +16,7 @@ use Magento\Sales\Api\Data\OrderInterface as Order;
 use Magento\Sales\Api\Data\OrderItemInterface as OrderItem;
 use Mygento\Base\Api\DiscountHelperInterface;
 use Mygento\Base\Helper\Discount\Math;
+use Mygento\Base\Helper\Discount\Tax;
 
 /**
  * @inheritDoc
@@ -279,7 +280,7 @@ class Discount implements DiscountHelperInterface
             $price = $item->getData('price_incl_tax');
             $qty = $item->getQty() ?: $item->getQtyOrdered();
             $rowTotal = $item->getData('row_total_incl_tax');
-            $rowDiscount = (-1.00) * $this->getItemDiscountAmountInclTax($item);
+            $rowDiscount = (-1.00) * Tax::getDiscountAmountInclTax($item);
 
             // ==== Start Calculate Percentage. The heart of logic. ====
 
@@ -401,7 +402,7 @@ class Discount implements DiscountHelperInterface
         while ($i > 0) {
             $item = current($items);
 
-            $itDisc = $this->getItemDiscountAmountInclTax($item);
+            $itDisc = Tax::getDiscountAmountInclTax($item);
             $itTotal = $item->getData('row_total_incl_tax');
 
             $inc = Math::getDiscountIncrement($sign * $i, $count, $itTotal, $itDisc);
@@ -488,7 +489,7 @@ class Discount implements DiscountHelperInterface
 
             $qty = $item->getQty() ?: $item->getQtyOrdered();
             $rowTotal = $item->getData('row_total_incl_tax');
-            $discountAmountInclTax = $this->getItemDiscountAmountInclTax($item);
+            $discountAmountInclTax = Tax::getDiscountAmountInclTax($item);
 
             $priceWithDiscount = ($rowTotal - $discountAmountInclTax) / $qty;
             $item->setData(self::NAME_UNIT_PRICE, $priceWithDiscount);
@@ -582,7 +583,7 @@ class Discount implements DiscountHelperInterface
         ];
 
         if (!$this->doCalculation) {
-            $discountAmountInclTax = $this->getItemDiscountAmountInclTax($item);
+            $discountAmountInclTax = Tax::getDiscountAmountInclTax($item);
 
             $entityItem[self::SUM] = round(
                 $item->getData('row_total_incl_tax') - $discountAmountInclTax,
@@ -831,7 +832,7 @@ class Discount implements DiscountHelperInterface
         $discountSum = 0;
         foreach ($items as $item) {
             $qty = $item->getQty() ?: $item->getQtyOrdered();
-            $discountAmountInclTax = $this->getItemDiscountAmountInclTax($item);
+            $discountAmountInclTax = Tax::getDiscountAmountInclTax($item);
 
             $rowPrice = $item->getData('row_total_incl_tax') - $discountAmountInclTax;
 
@@ -896,30 +897,6 @@ class Discount implements DiscountHelperInterface
     }
 
     /**
-     * @param CreditmemoItem|InvoiceItem|OrderItem $item
-     * @return float
-     */
-    private function getItemDiscountAmountInclTax($item)
-    {
-        if ($item->getData(self::DA_INCL_TAX)) {
-            return $item->getData(self::DA_INCL_TAX);
-        }
-        $taxPercent = $this->getItemTaxPercent($item);
-
-        if ($this->isTaxCalculationNeeded($item)) {
-            $discAmountInclTax = (1 + $taxPercent / 100) * $item->getDiscountAmount();
-            $discAmountInclTax = round($discAmountInclTax, 2);
-            $item->setData(self::DA_INCL_TAX, $discAmountInclTax);
-
-            return $item->getData(self::DA_INCL_TAX);
-        }
-
-        $item->setData(self::DA_INCL_TAX, (float) $item->getDiscountAmount());
-
-        return $item->getData(self::DA_INCL_TAX);
-    }
-
-    /**
      * @param Creditmemo|Invoice|Order $entity
      * @return float
      */
@@ -933,7 +910,7 @@ class Discount implements DiscountHelperInterface
 
         $discountAmountInclTax = 0.00;
         foreach ($items as $item) {
-            $discountAmountInclTax += $this->getItemDiscountAmountInclTax($item);
+            $discountAmountInclTax += Tax::getDiscountAmountInclTax($item);
         }
         //Учет налога в скидке на  доставку
         $shippingDiscount = $this->getShippingDiscountAmountInclTax($entity);
@@ -990,23 +967,6 @@ class Discount implements DiscountHelperInterface
         $entity->setData(self::SHIPPING_DA_INCL_TAX, $shippingDiscountWithTax);
 
         return $entity->getData(self::SHIPPING_DA_INCL_TAX);
-    }
-
-    /**
-     * @param CreditmemoItem|InvoiceItem|OrderItem $item
-     * @return bool
-     */
-    private function isTaxCalculationNeeded($item)
-    {
-        $taxPercent = $this->getItemTaxPercent($item);
-        $taxAmount = $this->getItemTaxAmount($item);
-
-        return $taxPercent &&
-            //bccomp returns 0 if operands are equal
-            bccomp($taxAmount, '0.00', 2) === 0 &&
-            $item->getRowTotal() !== $item->getRowTotalInclTax() &&
-            //Bug NN-3475 Проверка остатка стоимости с налогом за вычетом скидки
-            bccomp(($item->getRowTotalInclTax() - $item->getDiscountAmount()), '0.00', 2) != 0;
     }
 
     /**
