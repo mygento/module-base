@@ -11,7 +11,7 @@ namespace Mygento\Base\Test\Unit\Facade;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Mygento\Base\Api\Data\RecalculateResultItemInterface;
 use Mygento\Base\Model\Recalculator\ResultFactory;
-use Mygento\Base\Service\Handlers\AddExtraDiscounts;
+use Mygento\Base\Service\PostHandlers\AddExtraDiscounts;
 use Mygento\Base\Service\RecalculatorFacade;
 use Mygento\Base\Test\Extra\DiscountHelperInterfaceFactory;
 use Mygento\Base\Test\Extra\ExpectedMaker;
@@ -40,7 +40,7 @@ class AddExtraDiscountsHandlerTest extends TestCase
             ExpectedMaker::dump($result);
         }
 
-        self::assertEquals($result->getSum(), $expected['sum'], 'Total sum failed');
+        self::assertEquals($expected['sum'], $result->getSum(), 'Total sum failed');
 
         $expectedItems = $expected['items'];
 
@@ -109,7 +109,7 @@ class AddExtraDiscountsHandlerTest extends TestCase
             [
                 'discountHelper' => $discountHelper,
                 'recalculateResultFactory' => $resultFactory,
-                'handlers' => [$addExtraDiscountsHandler],
+                'postHandlers' => [$addExtraDiscountsHandler],
             ]
         );
     }
