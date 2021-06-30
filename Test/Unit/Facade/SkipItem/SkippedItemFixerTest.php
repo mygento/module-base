@@ -6,12 +6,14 @@
  * @package Mygento_Base
  */
 
-namespace Mygento\Base\Test\Unit;
+namespace Mygento\Base\Test\Unit\Facade\SkipItem;
 
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Mygento\Base\Model\Recalculator\ResultFactory;
+use Mygento\Base\Service\PreHandlers\SkipItems\SkippedItemFixer;
 use Mygento\Base\Test\Extra\DiscountHelperInterfaceFactory;
 use Mygento\Base\Test\Extra\ExpectedMaker;
+use Mygento\Base\Test\Extra\GetRecalculateResultFactory;
 use PHPUnit\Framework\TestCase;
 
 class SkippedItemFixerTest extends TestCase
@@ -22,7 +24,7 @@ class SkippedItemFixerTest extends TestCase
     private $objectMan;
 
     /**
-     * @dataProvider \Mygento\Base\Test\Unit\SkippedItemFixerDataProvider::dataProviderItemsToSkip
+     * @dataProvider \Mygento\Base\Test\Unit\Facade\SkipItem\SkippedItemFixerDataProvider::dataProviderItemsToSkip
      * @param mixed $item
      * @param mixed $expected
      * @throws \Exception
@@ -69,7 +71,7 @@ class SkippedItemFixerTest extends TestCase
         $resultFactory = $this->getRecalculateResultFactory();
 
         return $this->getObjectManager()->getObject(
-            \Mygento\Base\Service\PreHandlers\SkipItems\SkippedItemFixer::class,
+            SkippedItemFixer::class,
             [
                 'discountHelperFactory' => $discountHelperFactory,
                 'recalculateResultFactory' => $resultFactory,
@@ -84,7 +86,7 @@ class SkippedItemFixerTest extends TestCase
     {
         /** @var \Mygento\Base\Test\Extra\GetRecalculateResultFactory $recalculateResultFactory */
         $recalculateResultFactory = $this->getObjectManager()->getObject(
-            \Mygento\Base\Test\Extra\GetRecalculateResultFactory::class
+            GetRecalculateResultFactory::class
         );
 
         return $recalculateResultFactory->get($this);

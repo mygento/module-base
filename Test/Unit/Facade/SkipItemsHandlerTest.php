@@ -8,15 +8,16 @@
 
 namespace Mygento\Base\Test\Unit\Facade;
 
-use Mygento\Base\Api\Data\RecalculateResultItemInterface;
-use Mygento\Base\Service\PostHandlers\AddExtraDiscounts;
+use Mygento\Base\Service\PreHandlers\SkipItems;
+use Mygento\Base\Service\PreHandlers\SkipItems\SkippedItemsCollector;
 use Mygento\Base\Service\RecalculatorFacade;
 use Mygento\Base\Test\Extra\ExpectedMaker;
+use Mygento\Base\Test\Extra\TestItemSkipper;
 
-class AddExtraDiscountsHandlerTest extends AbstractFacadeTest
+class SkipItemsHandlerTest extends AbstractFacadeTest
 {
     /**
-     * @dataProvider \Mygento\Base\Test\Unit\Facade\ExtraDiscountsDataProvider::dataProvider
+     * @dataProvider \Mygento\Base\Test\Unit\Facade\SkipItem\HandlerDataProvider::dataProvider()
      * @param mixed $order
      * @param mixed $expected
      * @throws \Exception
@@ -41,36 +42,7 @@ class AddExtraDiscountsHandlerTest extends AbstractFacadeTest
             self::assertEquals($expectedItem['price'], $recalcItem->getPrice(), 'Price of item failed');
             self::assertEquals($expectedItem['quantity'], $recalcItem->getQuantity());
             self::assertEquals($expectedItem['sum'], $recalcItem->getSum(), 'Sum of item failed');
-
-            foreach ($recalcItem->getChildren() as $child) {
-                self::assertArrayHasKey(RecalculateResultItemInterface::CHILDREN, $expectedItem);
-                $expectedChild = array_shift($expectedItem[RecalculateResultItemInterface::CHILDREN]);
-
-                self::assertEquals($expectedChild['price'], $child->getPrice(), 'Price of item failed');
-                self::assertEquals($expectedChild['quantity'], $child->getQuantity());
-                self::assertEquals($expectedChild['sum'], $child->getSum(), 'Sum of item failed');
-            }
         }
-    }
-
-    /**
-     * @dataProvider \Mygento\Base\Test\Unit\Facade\ExtraDiscountsDataProvider::dataProviderDivisionByZero
-     * @param mixed $order
-     * @param array|\Exception $expected
-     * @throws \Exception
-     */
-    public function testDivisionByZero($order, $expected)
-    {
-        $facade = $this->getFacadeInstance();
-
-        if ($expected instanceof \Exception) {
-            $this->expectExceptionObject($expected);
-            $facade->execute($order);
-
-            return;
-        }
-
-        $this->testCalculation($order, $expected);
     }
 
     /**
@@ -80,10 +52,21 @@ class AddExtraDiscountsHandlerTest extends AbstractFacadeTest
     {
         $discountHelperFactory = $this->getDiscountHelperFactory();
 
-        $addExtraDiscountsHandler = $this->getObjectManager()->getObject(
-            AddExtraDiscounts::class,
+        $testItemSkipper = $this->getObjectManager()->getObject(
+            TestItemSkipper::class
+        );
+
+        $skippedItemsCollector = $this->getObjectManager()->getObject(
+            SkippedItemsCollector::class,
             [
-                'discountHelperFactory' => $discountHelperFactory,
+                'skippers' => [$testItemSkipper],
+            ]
+        );
+
+        $skipItemsPreHandler = $this->getObjectManager()->getObject(
+            SkipItems::class,
+            [
+                'skippedItemsCollector' => $skippedItemsCollector,
             ]
         );
 
@@ -92,7 +75,7 @@ class AddExtraDiscountsHandlerTest extends AbstractFacadeTest
             [
                 'discountHelper' => $discountHelperFactory->create(),
                 'recalculateResultFactory' => $this->getRecalculateResultFactory(),
-                'postHandlers' => [$addExtraDiscountsHandler],
+                'preHandlers' => [$skipItemsPreHandler],
             ]
         );
     }

@@ -6,7 +6,7 @@
  * @package Mygento_Base
  */
 
-namespace Mygento\Base\Test\Unit;
+namespace Mygento\Base\Test\Unit\Facade\SkipItem;
 
 use Mygento\Base\Test\OrderMockBuilder;
 
