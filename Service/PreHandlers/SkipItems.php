@@ -91,7 +91,7 @@ class SkipItems implements RecalculationPreHandlerInterface
      * @param OrderInterface $entity
      * @return bool
      */
-    public function isShouldBeApplied(OrderInterface $entity): bool
+    public function shouldBeApplied(OrderInterface $entity): bool
     {
         $itemsToSkip = $this->skippedItemsCollector->getItemsToSkip($entity);
 

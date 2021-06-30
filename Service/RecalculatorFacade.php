@@ -234,7 +234,7 @@ class RecalculatorFacade implements RecalculatorFacadeInterface
         //Make some auxiliary actions before recalculation
         if ($entity instanceof Order) {
             foreach ($this->preHandlers as $preHandler) {
-                if (!$preHandler->isShouldBeApplied($entity)) {
+                if (!$preHandler->shouldBeApplied($entity)) {
                     continue;
                 }
 
