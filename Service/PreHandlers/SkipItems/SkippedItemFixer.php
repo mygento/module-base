@@ -13,7 +13,7 @@ use Magento\Sales\Api\Data\InvoiceItemInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderItemInterface;
 use Mygento\Base\Api\Data\RecalculateResultItemInterface;
-use Mygento\Base\Api\DiscountHelperInterface as Discount;
+use Mygento\Base\Api\DiscountHelperInterfaceFactory;
 use Mygento\Base\Helper\Discount\Tax;
 use Mygento\Base\Model\Recalculator\ResultFactory;
 use Mygento\Base\Test\OrderMockBuilder;
@@ -21,9 +21,9 @@ use Mygento\Base\Test\OrderMockBuilder;
 class SkippedItemFixer
 {
     /**
-     * @var \Mygento\Base\Api\DiscountHelperInterface
+     * @var \Mygento\Base\Api\DiscountHelperInterfaceFactory
      */
-    private $discountHelper;
+    private $discountHelperFactory;
 
     /**
      * @var \Mygento\Base\Model\Recalculator\ResultFactory
@@ -31,10 +31,10 @@ class SkippedItemFixer
     private $recalculateResultFactory;
 
     public function __construct(
-        Discount $discountHelper,
+        DiscountHelperInterfaceFactory $discountHelperFactory,
         ResultFactory $recalculateResultFactory
     ) {
-        $this->discountHelper = $discountHelper;
+        $this->discountHelperFactory = $discountHelperFactory;
         $this->recalculateResultFactory = $recalculateResultFactory;
     }
 
@@ -47,7 +47,8 @@ class SkippedItemFixer
     {
         $orderMock = $this->getDummyOrder($item);
 
-        $rawResult = $this->discountHelper->getRecalculated($orderMock);
+        $freshDiscountHelper = $this->discountHelperFactory->create();
+        $rawResult = $freshDiscountHelper->getRecalculated($orderMock);
         $result = $this->recalculateResultFactory->create($rawResult);
 
         return $result->getItemById($item->getId());
