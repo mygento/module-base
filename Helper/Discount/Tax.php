@@ -104,9 +104,15 @@ class Tax
         $taxAmount = self::getItemTaxAmount($item);
         $taxPercent = self::getItemTaxPercent($item);
 
+        //В зависимости от настроек скидка может применятся до вычисления налога, а может и после
+        //выражение не всегда справедливо:
+        //RowTotalInclTax === RowTotal + TaxAmount
+
+        // $discountTaxAmount = $rowTotalInclTax - $rowTotal -$taxAmount;
+        $discountTaxAmount = bcsub(bcsub($item->getRowTotalInclTax(), $item->getRowTotal(), 4), $taxAmount, 4);
+
         return $taxPercent &&
-            //bccomp returns 0 if operands are equal
-            bccomp($taxAmount, '0.00', 2) === 0 &&
+            (bccomp($taxAmount, '0.00', 2) === 0 || $discountTaxAmount) &&
             $item->getRowTotal() !== $item->getRowTotalInclTax() &&
             //Bug NN-3475 Проверка остатка стоимости с налогом за вычетом скидки
             bccomp(($item->getRowTotalInclTax() - $item->getDiscountAmount()), '0.00', 2) != 0;

@@ -10,6 +10,7 @@ namespace Mygento\Base\Service\PreHandlers\SkipItems;
 
 use Magento\Sales\Api\Data\CreditmemoItemInterface;
 use Magento\Sales\Api\Data\InvoiceItemInterface;
+use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderItemInterface;
 use Mygento\Base\Api\Data\RecalculateResultItemInterface;
 use Mygento\Base\Api\DiscountHelperInterface as Discount;
@@ -57,7 +58,7 @@ class SkippedItemFixer
      * @throws \Exception
      * @return \Magento\Sales\Api\Data\OrderInterface
      */
-    private function getDummyOrder($sourceItem)
+    private function getDummyOrder($sourceItem): OrderInterface
     {
         $rowTotalInclTax = $sourceItem->getRowTotalInclTax();
         $taxAmount = Tax::getItemTaxAmount($sourceItem);
