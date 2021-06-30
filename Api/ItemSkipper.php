@@ -12,7 +12,7 @@ use Magento\Sales\Api\Data\OrderItemInterface;
 
 /**
  * Interface ItemSkipper
- * Check is OrderItem should be skipped
+ * Check should OrderItem be skipped
  * from recalculation
  */
 interface ItemSkipper
@@ -21,5 +21,5 @@ interface ItemSkipper
      * @param OrderItemInterface $item
      * @return bool
      */
-    public function isShouldBeSkipped(OrderItemInterface $item): bool;
+    public function shouldBeSkipped(OrderItemInterface $item): bool;
 }
