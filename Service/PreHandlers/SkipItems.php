@@ -66,7 +66,6 @@ class SkipItems implements RecalculationPreHandlerInterface
         $orderSkippedLess->setData($entity->getData());
         $orderSkippedLess->setSubtotalInclTax($newSubTotalInclTax);
         $orderSkippedLess->setGrandTotal($newGrandTotal);
-        $orderSkippedLess->setGrandTotal($newGrandTotal);
         $orderSkippedLess->setDiscountAmount($newDiscountAmount);
         $orderSkippedLess->setTaxAmount($newTaxAmount);
         $orderSkippedLess->setItems([]);

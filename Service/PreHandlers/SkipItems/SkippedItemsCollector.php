@@ -42,7 +42,7 @@ class SkippedItemsCollector
 
         $this->skippedItems[$order->getEntityId()] = [];
         foreach ($this->skippers as $skipper) {
-            foreach ($order->getAllVisibleItems() as $item) {
+            foreach ($order->getItems() as $item) {
                 if ($skipper->shouldBeSkipped($item)) {
                     $this->skippedItems[$order->getEntityId()][] = $item;
                 }

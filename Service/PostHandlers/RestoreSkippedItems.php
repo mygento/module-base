@@ -60,6 +60,10 @@ class RestoreSkippedItems implements RecalculationPostHandlerInterface
         return $recalcOriginal;
     }
 
+    /**
+     * @param \Mygento\Base\Api\Data\RecalculateResultInterface $recalcOriginal
+     * @param array $recalculatedItems
+     */
     private function reassembleRecalculateResult(RecalculateResultInterface $recalcOriginal, array $recalculatedItems): void
     {
         $items = $recalcOriginal->getItems();
