@@ -16,6 +16,7 @@ use Magento\Sales\Api\Data\OrderInterface as Order;
 use Magento\Sales\Api\Data\OrderItemInterface as OrderItem;
 use Mygento\Base\Api\DiscountHelperInterface;
 use Mygento\Base\Helper\Discount\Math;
+use Mygento\Base\Helper\Discount\Tax;
 
 /**
  * @inheritDoc
@@ -904,17 +905,9 @@ class Discount implements DiscountHelperInterface
         if ($item->getData(self::DA_INCL_TAX)) {
             return $item->getData(self::DA_INCL_TAX);
         }
-        $taxPercent = $this->getItemTaxPercent($item);
 
-        if ($this->isTaxCalculationNeeded($item)) {
-            $discAmountInclTax = (1 + $taxPercent / 100) * $item->getDiscountAmount();
-            $discAmountInclTax = round($discAmountInclTax, 2);
-            $item->setData(self::DA_INCL_TAX, $discAmountInclTax);
-
-            return $item->getData(self::DA_INCL_TAX);
-        }
-
-        $item->setData(self::DA_INCL_TAX, (float) $item->getDiscountAmount());
+        $discAmountInclTax = Tax::getDiscountAmountInclTax($item);
+        $item->setData(self::DA_INCL_TAX, $discAmountInclTax);
 
         return $item->getData(self::DA_INCL_TAX);
     }
@@ -956,71 +949,11 @@ class Discount implements DiscountHelperInterface
             return $entity->getData(self::SHIPPING_DA_INCL_TAX);
         }
 
-        $ratio = 1;
-
-        //bccomp returns 0 if operands are equal
-        $isShippingsEqual = bccomp($entity->getShippingAmount(), $entity->getShippingInclTax(), 2) === 0;
-        $isShippingNotNull = bccomp($entity->getShippingAmount(), 0.00, 2) !== 0;
-
-        if (!$isShippingsEqual && $isShippingNotNull) {
-            $ratio = round($entity->getShippingInclTax() / $entity->getShippingAmount(), 2);
-        }
-
-        $shippingDiscount = $entity->getShippingDiscountAmount();
-
-        $isOrder = $entity instanceof Order;
-        if (!$isOrder) {
-            $shippingDiscount = $entity->getOrder()->getShippingDiscountAmount();
-        }
-
-        //При различных настройках налогов Magento - налог на скидку доставки либо уже применен либо нет.
-        //Если ShTA === (ShAmount - DiscShip) * 20% - то налог должен быть посчитан на скидку доставки
-        //Если ShTA === ShAmount * 20% - то налог уже включен в скидку и доп расчет не нужен
-        //где ShTA - shipping_tax_amount, ShAmount - shipping_amount, DiscShip - shipping_discount_amount
-        $hasTaxInShippingDiscount = bccomp(
-            $entity->getShippingTaxAmount(),
-            $entity->getShippingAmount() * ($ratio - 1),
-            2
-        ) === 0;
-
-        $shippingDiscountWithTax = $hasTaxInShippingDiscount
-            ? $shippingDiscount
-            : $shippingDiscount * $ratio;
+        $shippingDiscountWithTax = Tax::getShippingDiscountAmountInclTax($entity);
 
         $entity->setData(self::SHIPPING_DA_INCL_TAX, $shippingDiscountWithTax);
 
         return $entity->getData(self::SHIPPING_DA_INCL_TAX);
-    }
-
-    /**
-     * @param CreditmemoItem|InvoiceItem|OrderItem $item
-     * @return bool
-     */
-    private function isTaxCalculationNeeded($item)
-    {
-        $taxPercent = $this->getItemTaxPercent($item);
-        $taxAmount = $this->getItemTaxAmount($item);
-
-        return $taxPercent &&
-            //bccomp returns 0 if operands are equal
-            bccomp($taxAmount, '0.00', 2) === 0 &&
-            $item->getRowTotal() !== $item->getRowTotalInclTax() &&
-            //Bug NN-3475 Проверка остатка стоимости с налогом за вычетом скидки
-            bccomp(($item->getRowTotalInclTax() - $item->getDiscountAmount()), '0.00', 2) != 0;
-    }
-
-    /**
-     * @param CreditmemoItem|InvoiceItem|OrderItem $item
-     * @return string
-     */
-    private function getItemTaxPercent($item)
-    {
-        $isOrderItem = $item instanceof OrderItem;
-        if (!$isOrderItem) {
-            return $item->getOrderItem()->getTaxPercent();
-        }
-
-        return $item->getTaxPercent();
     }
 
     /**
@@ -1055,20 +988,6 @@ class Discount implements DiscountHelperInterface
         }
 
         return $item->getData($attr);
-    }
-
-    /**
-     * @param CreditmemoItem|InvoiceItem|OrderItem $item
-     * @return string
-     */
-    private function getItemTaxAmount($item)
-    {
-        $isOrderItem = $item instanceof OrderItem;
-        if (!$isOrderItem) {
-            return $item->getOrderItem()->getTaxAmount();
-        }
-
-        return $item->getTaxAmount();
     }
 
     /**

@@ -35,23 +35,31 @@ class RecalculatorFacade implements RecalculatorFacadeInterface
     private $recalculateResultFactory;
 
     /**
-     * @var \Mygento\Base\Api\RecalculationHandler[]
+     * @var \Mygento\Base\Api\RecalculationPreHandlerInterface[]
      */
-    private $handlers;
+    private $preHandlers;
+
+    /**
+     * @var \Mygento\Base\Api\RecalculationPostHandlerInterface[]
+     */
+    private $postHandlers;
 
     /**
      * @param \Mygento\Base\Api\DiscountHelperInterface $discountHelper
      * @param \Mygento\Base\Model\Recalculator\ResultFactory $recalculateResultFactory
-     * @param array $handlers
+     * @param array $preHandlers
+     * @param array $postHandlers
      */
     public function __construct(
         Discount $discountHelper,
         ResultFactory $recalculateResultFactory,
-        array $handlers = []
+        array $preHandlers = [],
+        array $postHandlers = []
     ) {
         $this->discountHelper = $discountHelper;
         $this->recalculateResultFactory = $recalculateResultFactory;
-        $this->handlers = $handlers;
+        $this->preHandlers = $preHandlers;
+        $this->postHandlers = $postHandlers;
     }
 
     /**
@@ -219,13 +227,28 @@ class RecalculatorFacade implements RecalculatorFacadeInterface
      */
     protected function recalculate($entity, ...$args): RecalculateResultInterface
     {
+        //TODO: Idea for refactoring:
+        //Create separate modules from handlers
+        //and execute them via Magento Plugins for this method
+
+        //Make some auxiliary actions before recalculation
+        if ($entity instanceof Order) {
+            foreach ($this->preHandlers as $preHandler) {
+                if (!$preHandler->shouldBeApplied($entity)) {
+                    continue;
+                }
+
+                $entity = $preHandler->handle($entity);
+            }
+        }
+
         $res = $this->discountHelper->getRecalculated($entity, ...$args);
         $resultObject = $this->recalculateResultFactory->create($res);
 
         //Apply POST Handlers
         if ($entity instanceof Order) {
             //Make some auxiliary actions after recalculation
-            foreach ($this->handlers as $handler) {
+            foreach ($this->postHandlers as $handler) {
                 $handler->handle($entity, $resultObject);
             }
         }

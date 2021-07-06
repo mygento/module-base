@@ -88,7 +88,7 @@ class OrderMockBuilder
 
     public static function addItem($order, $item)
     {
-        $items = (array) $order->getData('all_items');
+        $items = (array) $order->getItems();
         $items[] = $item;
 
         $order->setData('items', $items);

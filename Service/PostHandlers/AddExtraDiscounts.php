@@ -6,17 +6,17 @@
  * @package Mygento_Base
  */
 
-namespace Mygento\Base\Service\Handlers;
+namespace Mygento\Base\Service\PostHandlers;
 
 use Magento\Sales\Api\Data\OrderInterface as Order;
 use Mygento\Base\Api\Data\PaymentInterface;
 use Mygento\Base\Api\Data\RecalculateResultInterface;
 use Mygento\Base\Api\DiscountHelperInterface;
 use Mygento\Base\Api\DiscountHelperInterfaceFactory;
-use Mygento\Base\Api\RecalculationHandler;
+use Mygento\Base\Api\RecalculationPostHandlerInterface;
 use Mygento\Base\Model\OrderRepository;
 
-class AddExtraDiscounts implements RecalculationHandler
+class AddExtraDiscounts implements RecalculationPostHandlerInterface
 {
     /**
      * @var \Mygento\Base\Api\DiscountHelperInterfaceFactory

@@ -11,7 +11,7 @@ namespace Mygento\Base\Api;
 use Magento\Sales\Api\Data\OrderInterface as Order;
 use Mygento\Base\Api\Data\RecalculateResultInterface;
 
-interface RecalculationHandler
+interface RecalculationPostHandlerInterface
 {
     /**
      * @param Order $order
