@@ -47,6 +47,18 @@ class SkippedItemFixerDataProvider
 
         $final['2. Содержит скидку. Не делится нацело.'] = [$item, $expected];
 
+        $item = OrderMockBuilder::getItem(2170.00, 2170.0000, 217.0000, 1)
+            ->setRowTotal(1808.33)
+            ->setTaxPercent(20.00)
+            ->setTaxAmount(361.67);
+        $expected = [
+            'price' => 1953.00,
+            'quantity' => 1.0,
+            'sum' => 1953.00,
+        ];
+
+        $final['3. Делится нацело. Баг с некорректным расчетом налога на скидку.'] = [$item, $expected];
+
         return $final;
     }
 }

@@ -110,11 +110,11 @@ class Tax
 
         // $discountTaxAmount = $rowTotalInclTax - $rowTotal -$taxAmount;
         $discountTaxAmount = bcsub(bcsub($item->getRowTotalInclTax(), $item->getRowTotal(), 4), $taxAmount, 4);
+        $isDiscountTaxAmountExist = $discountTaxAmount !== '0.0000';
 
         return $taxPercent &&
-            (bccomp($taxAmount, '0.00', 2) === 0 || $discountTaxAmount) &&
+            (bccomp($taxAmount, '0.00', 2) === 0 || $isDiscountTaxAmountExist) &&
             $item->getRowTotal() !== $item->getRowTotalInclTax() &&
-            //Bug NN-3475 Проверка остатка стоимости с налогом за вычетом скидки
             bccomp(($item->getRowTotalInclTax() - $item->getDiscountAmount()), '0.00', 2) != 0;
     }
 }
