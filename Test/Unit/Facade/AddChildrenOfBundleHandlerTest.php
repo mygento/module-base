@@ -8,22 +8,13 @@
 
 namespace Mygento\Base\Test\Unit\Facade;
 
-use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Mygento\Base\Api\Data\RecalculateResultItemInterface;
-use Mygento\Base\Model\Recalculator\ResultFactory;
-use Mygento\Base\Service\Handlers\AddChildrenOfBundle;
+use Mygento\Base\Service\PostHandlers\AddChildrenOfBundle;
 use Mygento\Base\Service\RecalculatorFacade;
-use Mygento\Base\Test\Extra\DiscountHelperInterfaceFactory;
 use Mygento\Base\Test\Extra\ExpectedMaker;
-use PHPUnit\Framework\TestCase;
 
-class AddChildrenOfBundleHandlerTest extends TestCase
+class AddChildrenOfBundleHandlerTest extends AbstractFacadeTest
 {
-    /**
-     * @var \Magento\Framework\TestFramework\Unit\Helper\ObjectManager
-     */
-    private $objectMan;
-
     /**
      * @dataProvider \Mygento\Base\Test\Unit\Facade\BundlesDataProvider::dataProviderBundles
      * @param mixed $order
@@ -40,7 +31,7 @@ class AddChildrenOfBundleHandlerTest extends TestCase
             ExpectedMaker::dump($result);
         }
 
-        self::assertEquals($result->getSum(), $expected['sum'], 'Total sum failed');
+        self::assertEquals($expected['sum'], $result->getSum(), 'Total sum failed');
 
         $expectedItems = $expected['items'];
 
@@ -65,16 +56,9 @@ class AddChildrenOfBundleHandlerTest extends TestCase
     /**
      * @return \Mygento\Base\Service\RecalculatorFacade
      */
-    public function getFacadeInstance()
+    protected function getFacadeInstance(): RecalculatorFacade
     {
-        //Вместо моков нам нужны реальные объекты, которые участвуют в рассчете:
-        /** @var \Mygento\Base\Test\Extra\DiscountHelperInterfaceFactory $discountHelperFactory */
-        $discountHelperFactory = $this->getObjectManager()->getObject(
-            DiscountHelperInterfaceFactory::class,
-            ['objectManager' => $this->objectMan]
-        );
-
-        $discountHelper = $discountHelperFactory->create();
+        $discountHelperFactory = $this->getDiscountHelperFactory();
         $resultFactory = $this->getRecalculateResultFactory();
 
         $addChildrenOfBundleHandler = $this->getObjectManager()->getObject(
@@ -88,37 +72,10 @@ class AddChildrenOfBundleHandlerTest extends TestCase
         return $this->getObjectManager()->getObject(
             RecalculatorFacade::class,
             [
-                'discountHelper' => $discountHelper,
+                'discountHelper' => $discountHelperFactory->create(),
                 'recalculateResultFactory' => $resultFactory,
-                'handlers' => [$addChildrenOfBundleHandler],
+                'postHandlers' => [$addChildrenOfBundleHandler],
             ]
         );
-    }
-
-    /**
-     * @return \Magento\Framework\TestFramework\Unit\Helper\ObjectManager
-     */
-    public function getObjectManager(): ObjectManager
-    {
-        if (!$this->objectMan) {
-            $this->objectMan = new ObjectManager(
-                $this
-            );
-        }
-
-        return $this->objectMan;
-    }
-
-    /**
-     * @return ResultFactory
-     */
-    private function getRecalculateResultFactory(): ResultFactory
-    {
-        /** @var \Mygento\Base\Test\Extra\GetRecalculateResultFactory $recalculateResultFactory */
-        $recalculateResultFactory = $this->getObjectManager()->getObject(
-            \Mygento\Base\Test\Extra\GetRecalculateResultFactory::class
-        );
-
-        return $recalculateResultFactory->get($this);
     }
 }

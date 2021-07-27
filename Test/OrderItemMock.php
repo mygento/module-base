@@ -1003,4 +1003,12 @@ class OrderItemMock extends DataObject implements OrderItemInterface
     {
         return (bool) $this->getData('isChildrenCalculated');
     }
+
+    /**
+     * @return bool
+     */
+    public function isDummy()
+    {
+        return false;
+    }
 }
