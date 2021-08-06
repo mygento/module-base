@@ -1337,6 +1337,41 @@ class WithoutCalcTest extends GeneralTestCase
             ],
         ];
 
+        $actualData[parent::TEST_CASE_NAME_35] = [
+            'sum' => 5567.03,
+            'origGrandTotal' => 5567.03,
+            'items' => [
+                101374 => [
+                    'price' => 1,
+                    'name' => 'CmN5KXBT',
+                    'quantity' => 8.0,
+                    'sum' => 4256.03,
+                    'tax' => 'vat20',
+                ],
+                101375 => [
+                    'price' => 1,
+                    'name' => 'g3HsfMEJ',
+                    'quantity' => 2.0,
+                    'sum' => 1311.0,
+                    'tax' => 'vat20',
+                ],
+                101376 => [
+                    'price' => 1,
+                    'name' => 'rwz7hiKf',
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat20',
+                ],
+                'shipping' => [
+                    'name' => '',
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => '',
+                ],
+            ],
+        ];
+
         return $actualData;
     }
 }

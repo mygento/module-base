@@ -55,6 +55,7 @@ class OrderMockBuilder
      * @param int $qty
      * @param int $taxPercent
      * @param float|int $taxAmount
+     * @param float|null $rowTotal
      * @return \Mygento\Base\Test\OrderItemMock
      */
     public static function getItem(
@@ -63,7 +64,8 @@ class OrderMockBuilder
         $discountAmount,
         $qty = 1,
         $taxPercent = 0,
-        $taxAmount = 0
+        $taxAmount = 0,
+        $rowTotal = null
     ): OrderItemMock {
         static $id = 100500;
         $id++;
@@ -82,6 +84,7 @@ class OrderMockBuilder
         $item->setData('name', $name);
         $item->setData('tax_percent', $taxPercent);
         $item->setData('tax_amount', $taxAmount);
+        $item->setData('row_total', $rowTotal === null ? ($rowTotalInclTax - $taxAmount) : $rowTotal);
 
         return $item;
     }
