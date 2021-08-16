@@ -33,6 +33,7 @@ interface DiscountHelperInterface
     public const NAME_MARKING_REFUND = 'marking_refund';
 
     public const ORIG_GRAND_TOTAL = 'origGrandTotal';
+    public const GIFT_CARDS_AMOUNT = 'gift_cards_amount';
     public const ITEMS = 'items';
     public const SHIPPING = 'shipping';
     public const NAME = 'name';

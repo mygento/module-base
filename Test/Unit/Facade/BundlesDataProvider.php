@@ -264,6 +264,47 @@ class BundlesDataProvider
 
         $final['5. Попытка пересчета заказа с бандлом, который был ранее пересчитан'] = [$order, $expected];
 
+        $order = OrderMockBuilder::getNewOrderInstance(1293.6, 0.60, 200.0000, 0, 0);
+        $order->setData('gift_cards_amount', 1493);
+        $father = OrderMockBuilder::getItem(1293.6000, 1293.6000, 0);
+        $father->setData('gift_cards_amount', 1293.6);
+        $father->setProductType(Bundle::TYPE_CODE);
+        $child1 = OrderMockBuilder::getItem(null, null, 0);
+        $child2 = OrderMockBuilder::getItem(null, null, 0);
+        $father->setChildrenItems([$child1, $child2]);
+        OrderMockBuilder::addItem($order, $father);
+
+        $expected = [
+            'sum' => 0,
+            'origGrandTotal' => 0.60,
+            'items' => [
+                100601 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'children' => [
+                        100602 => [
+                            'price' => 0,
+                            'quantity' => 1.0,
+                            'sum' => 0,
+                        ],
+                        100603 => [
+                            'price' => 0.0,
+                            'quantity' => 1.0,
+                            'sum' => 0,
+                        ]
+                    ],
+                ],
+                'shipping' => [
+                    'price' => 0.5999,
+                    'quantity' => 1.0,
+                    'sum' => 0.5999,
+                ],
+            ],
+        ];
+
+        $final['6. Заказ с 1 бандлом DynamicPrice = Disabled. Оплата Gift Card'] = [$order, $expected];
+
         return $final;
     }
 }

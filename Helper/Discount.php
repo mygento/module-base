@@ -504,6 +504,8 @@ class Discount implements DiscountHelperInterface
     {
         $grandTotal = $this->getGrandTotal();
 
+        $giftCardsAmount = $this->getGiftCardsAmount();
+
         $items = $this->getAllItems();
         $itemsFinal = [];
         $itemsSum = 0.00;
@@ -524,6 +526,7 @@ class Discount implements DiscountHelperInterface
         $receipt = [
             self::SUM => $itemsSum,
             self::ORIG_GRAND_TOTAL => $grandTotal,
+            self::GIFT_CARDS_AMOUNT => $giftCardsAmount
         ];
 
         $shippingAmount = $this->entity->getShippingInclTax() ?? 0.00;
@@ -580,6 +583,7 @@ class Discount implements DiscountHelperInterface
             self::QUANTITY => round($qty, 2),
             self::SUM => round($price * $qty, 2),
             self::TAX => $taxValue,
+            self::GIFT_CARDS_AMOUNT => $item->getGiftCardsAmount(),
         ];
 
         if (!$this->doCalculation) {
@@ -894,6 +898,11 @@ class Discount implements DiscountHelperInterface
     {
         /** @psalm-suppress UndefinedMethod */
         return round($this->entity->getGrandTotal(), 2);
+    }
+
+    private function getGiftCardsAmount()
+    {
+        return round($this->entity->getData("gift_cards_amount"), 2);
     }
 
     /**
