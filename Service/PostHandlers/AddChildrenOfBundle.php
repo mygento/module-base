@@ -23,7 +23,6 @@ use Mygento\Base\Test\OrderItemMock;
 use Mygento\Base\Test\OrderMock;
 
 /**
- * Class AddChildrenOfBundle
  * Этот класс пересчитывает дочерние продукты для бандлов,
  * чтобы их цена тоже соответствовала пересчитанному родителю
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -87,6 +86,7 @@ class AddChildrenOfBundle implements RecalculationPostHandlerInterface
 
             $dummyOrder = $this->getDummyOrderBasedOnBundle($item, $recalcOriginal);
 
+            /** @var \Mygento\Base\Api\DiscountHelperInterface $freshDiscountHelper */
             $freshDiscountHelper = $this->discountHelperFactory->create();
             $freshDiscountHelper->setSpreadDiscOnAllUnits(true);
 
@@ -307,6 +307,7 @@ class AddChildrenOfBundle implements RecalculationPostHandlerInterface
         Order $dummyOrder
     ) {
         $recalculatedItem = $recalcOriginalObject->getItemById($parentItem->getItemId());
+        /** @var \Mygento\Base\Api\DiscountHelperInterface $freshDiscountHelper */
         $freshDiscountHelper = $this->discountHelperFactory->create();
         $freshDiscountHelper->setSpreadDiscOnAllUnits(true);
 
