@@ -31,7 +31,6 @@ class AllHandlersTest extends AbstractFacadeTest
         $facade = $this->getFacadeInstance();
 
         $result = $facade->execute($order);
-//        print_r($result);
 
         if (!$expected) {
             ExpectedMaker::dump($result);
@@ -41,20 +40,19 @@ class AllHandlersTest extends AbstractFacadeTest
 
         $expectedItems = $expected['items'];
 
-        foreach ($result->getItems() as $recalcItem) {
+        foreach ($result->getItems() as $key => $recalcItem) {
             $expectedItem = array_shift($expectedItems);
-
-            self::assertEquals($expectedItem['price'], $recalcItem->getPrice(), 'Price of item failed');
+            self::assertEquals($expectedItem['price'], $recalcItem->getPrice(), $key . ' Price of item failed');
             self::assertEquals($expectedItem['quantity'], $recalcItem->getQuantity());
-            self::assertEquals($expectedItem['sum'], $recalcItem->getSum(), 'Sum of item failed');
+            self::assertEquals($expectedItem['sum'], $recalcItem->getSum(), $key . ' Sum of item failed');
 
             foreach ($recalcItem->getChildren() as $child) {
                 self::assertArrayHasKey(RecalculateResultItemInterface::CHILDREN, $expectedItem);
                 $expectedChild = array_shift($expectedItem[RecalculateResultItemInterface::CHILDREN]);
 
-                self::assertEquals($expectedChild['price'], $child->getPrice(), 'Price of item failed');
+                self::assertEquals($expectedChild['price'], $child->getPrice(), $key . ' Price of item failed');
                 self::assertEquals($expectedChild['quantity'], $child->getQuantity());
-                self::assertEquals($expectedChild['sum'], $child->getSum(), 'Sum of item failed');
+                self::assertEquals($expectedChild['sum'], $child->getSum(), $key . ' Sum of item failed');
             }
         }
     }

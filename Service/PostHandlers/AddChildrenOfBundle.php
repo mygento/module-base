@@ -212,6 +212,10 @@ class AddChildrenOfBundle implements RecalculationPostHandlerInterface
             $subtotal += $item->getRowTotalInclTax();
         }
 
+        $subtotal += ($parentItemRecalculated->getGiftCardAmount() ?? 0);
+        $subtotal += ($parentItemRecalculated->getRewardCurrencyAmount() ?? 0);
+        $subtotal += ($parentItemRecalculated->getCustomerBalanceAmount() ?? 0);
+
         $order->setSubtotalInclTax($subtotal);
         $order->setSubtotal($subtotal);
         $order->setGrandTotal($grandTotal);

@@ -534,11 +534,12 @@ class Discount implements DiscountHelperInterface
 
         $this->generalHelper->debug("Items sum: {$itemsSum}. Shipping increase: {$itemsSumDiff}");
 
+        $shippingSum = bcadd($shippingAmount, $itemsSumDiff, 2);
         $shippingItem = [
             self::NAME => $this->getShippingName($this->entity),
-            self::PRICE => $shippingAmount + $itemsSumDiff,
+            self::PRICE => $shippingSum,
             self::QUANTITY => 1.0,
-            self::SUM => $shippingAmount + $itemsSumDiff,
+            self::SUM => $shippingSum,
             self::TAX => $this->shippingTaxValue,
         ];
 
