@@ -340,7 +340,11 @@ class Discount implements DiscountHelperInterface
 
             //Set посчитанная на ряд $amountToSpread. Округленная вверх.
             $amountToSpreadPerUnit = Math::slyCeil($rowPercentage * $amountToSpread / $qty);
-            $item->setData(self::NAME_ROW_AMOUNT_TO_SPREAD, $amountToSpreadPerUnit * $qty);
+            $rowAmountSpreaded = $amountToSpreadPerUnit * $qty;
+            if ($rowAmountSpreaded > $rowTotal) {
+                $rowAmountSpreaded = $rowTotal;
+            }
+            $item->setData(self::NAME_ROW_AMOUNT_TO_SPREAD, $rowAmountSpreaded);
 
             $priceWithDiscount = bcadd($price, (string) $discountPerUnit, 2);
 
