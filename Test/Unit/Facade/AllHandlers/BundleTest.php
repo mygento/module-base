@@ -6,8 +6,9 @@
  * @package Mygento_Base
  */
 
-namespace Mygento\Base\Test\Unit\Facade;
+namespace Mygento\Base\Test\Unit\Facade\AllHandlers;
 
+use Magento\Bundle\Model\Product\Type;
 use Mygento\Base\Api\Data\RecalculateResultItemInterface;
 use Mygento\Base\Service\PostHandlers\AddChildrenOfBundle;
 use Mygento\Base\Service\PostHandlers\AddExtraDiscounts;
@@ -16,31 +17,84 @@ use Mygento\Base\Service\PreHandlers\SkipItems;
 use Mygento\Base\Service\PreHandlers\SkipItems\SkippedItemsCollector;
 use Mygento\Base\Service\RecalculatorFacade;
 use Mygento\Base\Test\Extra\ExpectedMaker;
+use Mygento\Base\Test\Extra\Table;
 use Mygento\Base\Test\Extra\TestItemSkipper;
+use Mygento\Base\Test\Unit\Facade\AbstractFacadeTest;
 
-class AllHandlersTest extends AbstractFacadeTest
+class BundleTest extends AbstractFacadeTest
 {
     /**
-     * @dataProvider \Mygento\Base\Test\Unit\Facade\AllDataProvider::dataProvider
+     * @dataProvider \Mygento\Base\Test\Unit\Facade\AllHandlers\BundleDataProvider::provide
      * @param mixed $order
      * @param mixed $expected
-     * @throws \Exception
      */
     public function testCalculation($order, $expected)
     {
+        //Table::dumpOrder($order, 'init');
         $facade = $this->getFacadeInstance();
 
-        $result = $facade->execute($order);
+        $vanillaResult = $facade->execute($order);
+        //Table::dumpResult($vanillaResult, 'vanilla');
 
         if (!$expected) {
-            ExpectedMaker::dump($result);
+            ExpectedMaker::dump($vanillaResult);
         }
-
-        self::assertEquals($expected['sum'], $result->getSum(), 'Total sum failed');
 
         $expectedItems = $expected['items'];
 
-        foreach ($result->getItems() as $key => $recalcItem) {
+        self::assertEquals($expected['sum'], $vanillaResult->getSum(), 'Vanilla Total sum failed');
+        foreach ($vanillaResult->getItems() as $key => $recalcItem) {
+            $expectedItem = array_shift($expectedItems);
+            self::assertEquals($expectedItem['price'], $recalcItem->getPrice(), $key . ' Price of item failed');
+            self::assertEquals($expectedItem['quantity'], $recalcItem->getQuantity());
+            self::assertEquals($expectedItem['sum'], $recalcItem->getSum(), $key . ' Sum of item failed');
+        }
+
+        /** @var AddExtraDiscounts $addExtraDiscountsHandler */
+        $addExtraDiscountsHandler = $this->getObjectManager()->getObject(
+            AddExtraDiscounts::class,
+            [
+                'discountHelperFactory' => $this->getDiscountHelperFactory(),
+            ]
+        );
+
+        $extraResult = $addExtraDiscountsHandler->handle($order, $vanillaResult);
+        Table::dumpResult($extraResult, 'Extra');
+
+        $expectedItems = $expected['items'];
+        self::assertEquals($expected['sum'], $extraResult->getSum(), 'Extra Total sum failed');
+        foreach ($extraResult->getItems() as $key => $recalcItem) {
+            $expectedItem = array_shift($expectedItems);
+            self::assertEquals($expectedItem['price'], $recalcItem->getPrice(), $key . ' Price of item failed');
+            self::assertEquals($expectedItem['quantity'], $recalcItem->getQuantity());
+            self::assertEquals($expectedItem['sum'], $recalcItem->getSum(), $key . ' Sum of item failed');
+            if (isset($expectedItem['gift_cards_amount'])) {
+                self::assertEquals($expectedItem['gift_cards_amount'], $recalcItem->getGiftCardAmount(), $key . ' GC of item failed');
+            }
+        }
+
+        /** @var AddChildrenOfBundle $addChildrenOfBundleHandler */
+        $addChildrenOfBundleHandler = $this->getObjectManager()->getObject(
+            AddChildrenOfBundle::class,
+            [
+                'discountHelperFactory' => $this->getDiscountHelperFactory(),
+                'recalculateResultFactory' => $this->getRecalculateResultFactory(),
+            ]
+        );
+
+        $orderItems = $order->getAllVisibleItems() ?? $order->getAllItems();
+        foreach ($orderItems as $orderItem) {
+            if ($orderItem->getProductType() !== Type::TYPE_CODE) {
+                continue;
+            }
+            $bundleOrder = $this->invokeMethod($addChildrenOfBundleHandler, 'getDummyOrderBasedOnBundle', [$orderItem, $extraResult]);
+            Table::dumpOrder($bundleOrder, 'child');
+        }
+
+        $childrenResult = $addChildrenOfBundleHandler->handle($order, $extraResult);
+        Table::dumpResult($childrenResult, 'Child');
+        $expectedItems = $expected['items'];
+        foreach ($childrenResult->getItems() as $key => $recalcItem) {
             $expectedItem = array_shift($expectedItems);
             self::assertEquals($expectedItem['price'], $recalcItem->getPrice(), $key . ' Price of item failed');
             self::assertEquals($expectedItem['quantity'], $recalcItem->getQuantity());
@@ -114,11 +168,20 @@ class AllHandlersTest extends AbstractFacadeTest
                 'recalculateResultFactory' => $resultFactory,
                 'preHandlers' => [$skipItemsPreHandler],
                 'postHandlers' => [
-                    $addExtraDiscountsHandler,
-                    $addChildrenOfBundleHandler,
+                    //$addExtraDiscountsHandler,
+                    //$addChildrenOfBundleHandler,
                     //$addRestoreSkipHandler
                 ],
             ]
         );
+    }
+
+    private function invokeMethod(&$object, $methodName, array $parameters = [])
+    {
+        $reflection = new \ReflectionClass(get_class($object));
+        $method = $reflection->getMethod($methodName);
+        $method->setAccessible(true);
+
+        return $method->invokeArgs($object, $parameters);
     }
 }

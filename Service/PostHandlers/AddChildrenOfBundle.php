@@ -186,8 +186,10 @@ class AddChildrenOfBundle implements RecalculationPostHandlerInterface
 
         $parentItemRecalculated = $this->getRecalculatedItemById($parentItem->getItemId(), $recalcOriginal);
 
+        $excluded = $this->getExcludedDiscounts($parentItemRecalculated);
         //Эта сумма должна быть распределена между дочерними позициями
         $grandTotal = $parentItemRecalculated->getSum();
+        $total = $grandTotal + $excluded;
 
         $numberChildren = count($parentItem->getChildrenItems());
 
@@ -200,7 +202,7 @@ class AddChildrenOfBundle implements RecalculationPostHandlerInterface
             /** @var \Magento\Catalog\Api\Data\ProductInterface $product */
             $price = $child->getProduct()
                 ? $child->getProduct()->getFinalPrice()
-                : $grandTotal / ($numberChildren * $qty);
+                : $total / ($numberChildren * $qty);
 
             $item->setData('id', $child->getItemId());
             $item->setData('name', $child->getName());
@@ -212,16 +214,16 @@ class AddChildrenOfBundle implements RecalculationPostHandlerInterface
             $subtotal += $item->getRowTotalInclTax();
         }
 
-        $subtotal += ($parentItemRecalculated->getGiftCardAmount() ?? 0);
-        $subtotal += ($parentItemRecalculated->getRewardCurrencyAmount() ?? 0);
-        $subtotal += ($parentItemRecalculated->getCustomerBalanceAmount() ?? 0);
-
         $order->setSubtotalInclTax($subtotal);
         $order->setSubtotal($subtotal);
         $order->setGrandTotal($grandTotal);
 
         //Скидка на весь виртуальный заказ
-        $discountAmount = bcsub($order->getSubtotalInclTax(), $order->getGrandTotal(), 4);
+        $discountAmount = bcsub(
+            bcsub($order->getSubtotalInclTax(), $excluded, 4),
+            $order->getGrandTotal(),
+            4
+        );
         $order->setData(DiscountHelperInterface::DA_INCL_TAX, $discountAmount);
 
         return $order;
@@ -381,5 +383,19 @@ class AddChildrenOfBundle implements RecalculationPostHandlerInterface
         }
 
         return $resultChildren;
+    }
+
+    /**
+     * @param RecalculateResultItemInterface $parentItemRecalculated
+     * @return float
+     */
+    private function getExcludedDiscounts($parentItemRecalculated): float
+    {
+        $excluded = 0.0;
+        $excluded += ($parentItemRecalculated->getGiftCardAmount() ?? 0);
+        $excluded += ($parentItemRecalculated->getRewardCurrencyAmount() ?? 0);
+        $excluded += ($parentItemRecalculated->getCustomerBalanceAmount() ?? 0);
+
+        return $excluded;
     }
 }
