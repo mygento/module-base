@@ -1980,6 +1980,48 @@ class SpreadAndSplitTest extends GeneralTestCase
             ],
         ];
 
+        $actualData[parent::TEST_CASE_NAME_35] = [
+            'sum' => 5567.03,
+            'origGrandTotal' => 5567.03,
+            'items' => [
+                '101084_1' => [
+                    'price' => 532.0,
+                    'name' => 'dACED3My',
+                    'quantity' => 5,
+                    'sum' => 2660.0,
+                    'tax' => 'vat20',
+                ],
+                '101084_2' => [
+                    'price' => 532.01,
+                    'name' => 'dACED3My',
+                    'quantity' => 3,
+                    'sum' => 1596.03,
+                    'tax' => 'vat20',
+                ],
+                101085 => [
+                    'price' => 655.5,
+                    'name' => 'hHp5BYMJ',
+                    'quantity' => 2.0,
+                    'sum' => 1311.0,
+                    'tax' => 'vat20',
+                ],
+                101086 => [
+                    'price' => 0.0,
+                    'name' => 'RixYYam8',
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat20',
+                ],
+                'shipping' => [
+                    'name' => '',
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => '',
+                ],
+            ],
+        ];
+
         return $actualData;
     }
 }

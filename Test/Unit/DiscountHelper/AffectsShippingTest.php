@@ -1371,6 +1371,41 @@ class AffectsShippingTest extends GeneralTestCase
             ],
         ];
 
+        $actualData[parent::TEST_CASE_NAME_35] = [
+            'sum' => 5567.00,
+            'origGrandTotal' => 5567.03,
+            'items' => [
+                100501 => [
+                    'price' => 532.0,
+                    'name' => 'NRqmmImx',
+                    'quantity' => 8.0,
+                    'sum' => 4256.0,
+                    'tax' => 'vat20',
+                ],
+                100502 => [
+                    'price' => 655.5,
+                    'name' => 'wPtiqmj9',
+                    'quantity' => 2.0,
+                    'sum' => 1311.0,
+                    'tax' => 'vat20',
+                ],
+                100503 => [
+                    'price' => 0.0,
+                    'name' => 'NRgfA8Fx',
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat20',
+                ],
+                'shipping' => [
+                    'name' => '',
+                    'price' => 0.03,
+                    'quantity' => 1.0,
+                    'sum' => 0.03,
+                    'tax' => '',
+                ],
+            ],
+        ];
+
         return $actualData;
     }
 }

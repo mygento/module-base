@@ -46,7 +46,7 @@ class AddExtraDiscountsHandlerTest extends AbstractFacadeTest
                 self::assertArrayHasKey(RecalculateResultItemInterface::CHILDREN, $expectedItem);
                 $expectedChild = array_shift($expectedItem[RecalculateResultItemInterface::CHILDREN]);
 
-                self::assertEquals($expectedChild['price'], $child->getPrice(), 'Price of item failed');
+                self::assertEquals($expectedChild['price'], $child->getPrice(), 'Price of child item failed');
                 self::assertEquals($expectedChild['quantity'], $child->getQuantity());
                 self::assertEquals($expectedChild['sum'], $child->getSum(), 'Sum of item failed');
             }

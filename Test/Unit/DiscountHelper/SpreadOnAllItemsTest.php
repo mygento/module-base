@@ -1324,6 +1324,41 @@ class SpreadOnAllItemsTest extends GeneralTestCase
             ],
         ];
 
+        $actualData[parent::TEST_CASE_NAME_35] = [
+            'sum' => 5566.92,
+            'origGrandTotal' => 5567.03,
+            'items' => [
+                101229 => [
+                    'price' => 531.99,
+                    'name' => 'WlakV4oJ',
+                    'quantity' => 8.0,
+                    'sum' => 4255.92,
+                    'tax' => 'vat20',
+                ],
+                101230 => [
+                    'price' => 655.5,
+                    'name' => 'gd6cAtVr',
+                    'quantity' => 2.0,
+                    'sum' => 1311.0,
+                    'tax' => 'vat20',
+                ],
+                101231 => [
+                    'price' => 0.0,
+                    'name' => 'NqZBJpNy',
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat20',
+                ],
+                'shipping' => [
+                    'name' => '',
+                    'price' => 0.11,
+                    'quantity' => 1.0,
+                    'sum' => 0.11,
+                    'tax' => '',
+                ],
+            ],
+        ];
+
         return $actualData;
     }
 }

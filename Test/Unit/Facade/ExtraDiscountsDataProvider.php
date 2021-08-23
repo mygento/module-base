@@ -55,35 +55,35 @@ class ExtraDiscountsDataProvider
         OrderMockBuilder::addItem($order, $simple8);
 
         $expected = [
-            'sum' => '3471.37',
+            'sum' => 3471.37,
             'origGrandTotal' => 3471.4,
             'items' => [
                 100509 => [
-                    'price' => 1512.95,
+                    'price' => 1489.31,
                     'name' => 'Bundle',
                     'quantity' => 1.0,
-                    'sum' => 1512.95,
+                    'sum' => 1489.31,
                     'tax' => '',
                     'reward_currency_amount' => 1165.15,
                 ],
                 100501 => [
-                    'price' => 787.69,
+                    'price' => 775.38,
                     'quantity' => 1.0,
-                    'sum' => 787.69,
+                    'sum' => 775.38,
                     'tax' => '',
                     'reward_currency_amount' => 606.62,
                 ],
                 100502 => [
-                    'price' => 530.12,
+                    'price' => 576.08,
                     'quantity' => 1.0,
-                    'sum' => 530.12,
+                    'sum' => 576.08,
                     'tax' => '',
                     'reward_currency_amount' => 662.89,
                 ],
                 100503 => [
-                    'price' => 640.61,
+                    'price' => 630.6,
                     'quantity' => 1.0,
-                    'sum' => 640.61,
+                    'sum' => 630.6,
                     'tax' => '',
                     'reward_currency_amount' => 493.35,
                 ],
@@ -187,7 +187,7 @@ class ExtraDiscountsDataProvider
         OrderMockBuilder::addItem($order, $item6);
 
         $expected = [
-            'sum' => '0.00',
+            'sum' => 0.00,
             'origGrandTotal' => 0.0,
             'items' => [
                 100516 => [

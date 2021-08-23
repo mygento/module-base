@@ -51,6 +51,7 @@ class GeneralTestCase extends TestCase
     public const TEST_CASE_NAME_32 = '#case 32. Bug with discount bigger than subtotal. Кейс с одним айтемом и скидкой, полностью покрывающей доставку';
     public const TEST_CASE_NAME_33 = '#case 33. Bug with discount bigger than subtotal. Кейс с одним айтемом и скидкой, частично покрывающей доставку';
     public const TEST_CASE_NAME_34 = '#case 34. Bug with discount bigger than subtotal. Кейс с несколькими айтемами и скидкой, полностью покрывающей доставку';
+    public const TEST_CASE_NAME_35 = '#case 35. Bug with discount tax detection without tax';
 
     /**
      * @var \Mygento\Base\Helper\Discount
@@ -444,6 +445,13 @@ class GeneralTestCase extends TestCase
         OrderMockBuilder::addItem($order, OrderMockBuilder::getItem(1000.0000, 1000.0000, 0, 1, 20));
         OrderMockBuilder::addItem($order, OrderMockBuilder::getItem(1000.0000, 1000.0000, 0, 1, 20));
         $final[self::TEST_CASE_NAME_34] = $order;
+
+        // Normal order with discount with tax
+        $order = OrderMockBuilder::getNewOrderInstance(5860.0300, 5567.03, 0, 0, -500);
+        OrderMockBuilder::addItem($order, OrderMockBuilder::getItem(4480.03, 560.0000, 224.0000, 8, 20, 746.67, 3733.36));
+        OrderMockBuilder::addItem($order, OrderMockBuilder::getItem(1380.0000, 690.0000, 69.0000, 2, 20, 1150.0000, 230.0));
+        OrderMockBuilder::addItem($order, OrderMockBuilder::getItem(0.000, 0.0000, 0.0000, 1, 20, 0.0000, 0.0000));
+        $final[self::TEST_CASE_NAME_35] = $order;
 
         return $final;
     }

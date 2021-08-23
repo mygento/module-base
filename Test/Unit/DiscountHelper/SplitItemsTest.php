@@ -1887,6 +1887,48 @@ class SplitItemsTest extends GeneralTestCase
             ],
         ];
 
+        $actualData[parent::TEST_CASE_NAME_35] = [
+            'sum' => 5567.03,
+            'origGrandTotal' => 5567.03,
+            'items' => [
+                '100791_1' => [
+                    'price' => 532.0,
+                    'name' => 'HoriEgoN',
+                    'quantity' => 5,
+                    'sum' => 2660.0,
+                    'tax' => 'vat20',
+                ],
+                '100791_2' => [
+                    'price' => 532.01,
+                    'name' => 'HoriEgoN',
+                    'quantity' => 3,
+                    'sum' => 1596.03,
+                    'tax' => 'vat20',
+                ],
+                100792 => [
+                    'price' => 655.5,
+                    'name' => 'xGh5zTxT',
+                    'quantity' => 2.0,
+                    'sum' => 1311.0,
+                    'tax' => 'vat20',
+                ],
+                100793 => [
+                    'price' => 0.0,
+                    'name' => 'MiE8D4Fi',
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => 'vat20',
+                ],
+                'shipping' => [
+                    'name' => '',
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'tax' => '',
+                ],
+            ],
+        ];
+
         return $actualData;
     }
 }
