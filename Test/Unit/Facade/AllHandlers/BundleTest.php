@@ -110,6 +110,9 @@ class BundleTest extends AbstractFacadeTest
                 self::assertEquals($expectedChild['price'], $child->getPrice(), $key . ' Price of item failed');
                 self::assertEquals($expectedChild['quantity'], $child->getQuantity());
                 self::assertEquals($expectedChild['sum'], $child->getSum(), $key . ' Sum of item failed');
+                if (isset($expectedChild['gift_cards_amount'])) {
+                    self::assertEquals($expectedChild['gift_cards_amount'], $child->getGiftCardAmount(), $key . ' GC of child item failed');
+                }
             }
         }
     }

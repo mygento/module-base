@@ -30,6 +30,12 @@ class SpreadOnAllItemsTest extends GeneralTestCase
 
         $recalculatedData = $this->discountHelper->getRecalculated($order, 'vat20');
 
+        \Mygento\Base\Test\Extra\Table::dumpOrder($order);
+
+        $result = $this->getRecalculateResultFactory()->create($recalculatedData);
+
+        \Mygento\Base\Test\Extra\Table::dumpResult($result);
+
         $this->assertEquals($recalculatedData['sum'], $expectedArray['sum'], 'Total sum failed');
         $this->assertEquals($recalculatedData['origGrandTotal'], $expectedArray['origGrandTotal']);
 
@@ -1325,14 +1331,14 @@ class SpreadOnAllItemsTest extends GeneralTestCase
         ];
 
         $actualData[parent::TEST_CASE_NAME_35] = [
-            'sum' => 5566.92,
+            'sum' => 5567.00,
             'origGrandTotal' => 5567.03,
             'items' => [
                 101229 => [
-                    'price' => 531.99,
+                    'price' => 532.00,
                     'name' => 'WlakV4oJ',
                     'quantity' => 8.0,
-                    'sum' => 4255.92,
+                    'sum' => 4256,
                     'tax' => 'vat20',
                 ],
                 101230 => [
@@ -1351,9 +1357,9 @@ class SpreadOnAllItemsTest extends GeneralTestCase
                 ],
                 'shipping' => [
                     'name' => '',
-                    'price' => 0.11,
+                    'price' => 0.03,
                     'quantity' => 1.0,
-                    'sum' => 0.11,
+                    'sum' => 0.03,
                     'tax' => '',
                 ],
             ],

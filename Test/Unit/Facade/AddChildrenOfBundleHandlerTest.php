@@ -25,7 +25,11 @@ class AddChildrenOfBundleHandlerTest extends AbstractFacadeTest
     {
         $facade = $this->getFacadeInstance();
 
+        \Mygento\Base\Test\Extra\Table::dumpOrder($order);
+
         $result = $facade->execute($order);
+
+        \Mygento\Base\Test\Extra\Table::dumpResult($result);
 
         if (!$expected) {
             ExpectedMaker::dump($result);

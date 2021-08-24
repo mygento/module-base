@@ -24,6 +24,12 @@ class AffectsShippingTest extends GeneralTestCase
 
         $recalculatedData = $this->discountHelper->getRecalculated($order, 'vat20');
 
+        \Mygento\Base\Test\Extra\Table::dumpOrder($order);
+
+        $result = $this->getRecalculateResultFactory()->create($recalculatedData);
+
+        \Mygento\Base\Test\Extra\Table::dumpResult($result);
+
         $this->assertEquals($recalculatedData['sum'], $expectedArray['sum'], 'Total sum failed');
         $this->assertEquals($recalculatedData['origGrandTotal'], $expectedArray['origGrandTotal']);
 
@@ -866,7 +872,7 @@ class AffectsShippingTest extends GeneralTestCase
         ];
 
         $actualData[parent::TEST_CASE_NAME_21] = [
-            'sum' => 17431.3,
+            'sum' => 17431.00,
             'origGrandTotal' => 17431.01,
             'items' => [
                 100596 => [
@@ -876,9 +882,9 @@ class AffectsShippingTest extends GeneralTestCase
                     'tax' => 'vat20',
                 ],
                 100597 => [
-                    'price' => 29.01,
+                    'price' => 29.00,
                     'quantity' => 30,
-                    'sum' => 870.3,
+                    'sum' => 870.0,
                     'tax' => 'vat20',
                 ],
                 100598 => [
@@ -972,9 +978,9 @@ class AffectsShippingTest extends GeneralTestCase
                     'tax' => 'vat20',
                 ],
                 'shipping' => [
-                    'price' => -0.29,
+                    'price' => 0.01,
                     'quantity' => 1,
-                    'sum' => -0.29,
+                    'sum' => 0.01,
                     'tax' => '',
                 ],
             ],

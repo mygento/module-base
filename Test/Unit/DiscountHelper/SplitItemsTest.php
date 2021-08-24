@@ -1383,15 +1383,15 @@ class SplitItemsTest extends GeneralTestCase
                     'tax' => 'vat20',
                 ],
                 '100597_1' => [
-                    'price' => 29.01,
-                    'quantity' => 1,
-                    'sum' => 29.01,
+                    'price' => 29.00,
+                    'quantity' => 29,
+                    'sum' => 841.00,
                     'tax' => 'vat20',
                 ],
                 '100597_2' => [
-                    'price' => 29,
-                    'quantity' => 29,
-                    'sum' => 841,
+                    'price' => 29.01,
+                    'quantity' => 1,
+                    'sum' => 29.01,
                     'tax' => 'vat20',
                 ],
                 100598 => [
