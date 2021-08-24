@@ -6,7 +6,7 @@
  * @package Mygento_Base
  */
 
-namespace Mygento\Base\Test;
+namespace Mygento\Base\Model\Mock;
 
 use Magento\Sales\Api\Data\OrderInterface;
 
@@ -22,7 +22,7 @@ class OrderMockBuilder
      * @param float $shippingInclTax
      * @param float $rewardPoints
      * @param float|null $discountAmount
-     * @return \Mygento\Base\Test\OrderMock
+     * @return \Mygento\Base\Model\Mock\OrderMock
      */
     public static function getNewOrderInstance(
         $subTotalInclTax,
@@ -56,7 +56,7 @@ class OrderMockBuilder
      * @param int $taxPercent
      * @param float|int $taxAmount
      * @param float|null $rowTotal
-     * @return \Mygento\Base\Test\OrderItemMock
+     * @return \Mygento\Base\Model\Mock\OrderItemMock
      */
     public static function getItem(
         $rowTotalInclTax,
@@ -104,7 +104,7 @@ class OrderMockBuilder
             $chars = self::CHARS_LOWERS . self::CHARS_UPPERS . self::CHARS_DIGITS;
         }
         for ($i = 0, $str = '', $lc = strlen($chars) - 1; $i < $len; $i++) {
-            $str .= $chars[mt_rand(0, $lc)];
+            $str .= $chars[random_int(0, $lc)];
         }
 
         return $str;
