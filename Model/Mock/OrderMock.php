@@ -6,14 +6,13 @@
  * @package Mygento_Base
  */
 
-namespace Mygento\Base\Test;
+namespace Mygento\Base\Model\Mock;
 
 use Magento\Framework\DataObject;
 use Magento\Sales\Api\Data\OrderInterface;
 
 /**
  * Class OrderMock
- * @package Mygento\Base\Test
  *
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
