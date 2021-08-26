@@ -6,7 +6,7 @@
  * @package Mygento_Base
  */
 
-namespace Mygento\Base\Test\Unit\Facade;
+namespace Mygento\Base\Test\Unit\Facade\Handlers\DataProvider;
 
 use Magento\Bundle\Model\Product\Type as Bundle;
 use Magento\Framework\DataObject;

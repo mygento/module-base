@@ -6,11 +6,11 @@
  * @package Mygento_Base
  */
 
-namespace Mygento\Base\Test\Unit\Facade\SkipItem;
+namespace Mygento\Base\Test\Unit\Facade\Handlers\DataProvider;
 
 use Mygento\Base\Test\OrderMockBuilder;
 
-class HandlerDataProvider
+class SkipItemsDataProvider
 {
     /**
      * @return array

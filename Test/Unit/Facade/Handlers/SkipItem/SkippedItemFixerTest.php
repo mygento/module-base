@@ -6,7 +6,7 @@
  * @package Mygento_Base
  */
 
-namespace Mygento\Base\Test\Unit\Facade\SkipItem;
+namespace Mygento\Base\Test\Unit\Facade\Handlers\SkipItem;
 
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Mygento\Base\Model\Recalculator\ResultFactory;
@@ -24,7 +24,7 @@ class SkippedItemFixerTest extends TestCase
     private $objectMan;
 
     /**
-     * @dataProvider \Mygento\Base\Test\Unit\Facade\SkipItem\SkippedItemFixerDataProvider::dataProviderItemsToSkip
+     * @dataProvider \Mygento\Base\Test\Unit\Facade\Handlers\SkipItem\SkippedItemFixerDataProvider::dataProviderItemsToSkip
      * @param mixed $item
      * @param mixed $expected
      * @throws \Exception

@@ -6,17 +6,19 @@
  * @package Mygento_Base
  */
 
-namespace Mygento\Base\Test\Unit\Facade;
+namespace Mygento\Base\Test\Unit\Facade\Handlers;
 
-use Mygento\Base\Api\Data\RecalculateResultItemInterface;
-use Mygento\Base\Service\PostHandlers\AddChildrenOfBundle;
+use Mygento\Base\Service\PreHandlers\SkipItems;
+use Mygento\Base\Service\PreHandlers\SkipItems\SkippedItemsCollector;
 use Mygento\Base\Service\RecalculatorFacade;
 use Mygento\Base\Test\Extra\ExpectedMaker;
+use Mygento\Base\Test\Extra\TestItemSkipper;
+use Mygento\Base\Test\Unit\Facade\AbstractFacadeTest;
 
-class AddChildrenOfBundleHandlerTest extends AbstractFacadeTest
+class SkipItemsHandlerTest extends AbstractFacadeTest
 {
     /**
-     * @dataProvider \Mygento\Base\Test\Unit\Facade\BundlesDataProvider::dataProviderBundles
+     * @dataProvider \Mygento\Base\Test\Unit\Facade\Handlers\DataProvider\SkipItemsDataProvider::dataProvider()
      * @param mixed $order
      * @param mixed $expected
      * @throws \Exception
@@ -25,11 +27,7 @@ class AddChildrenOfBundleHandlerTest extends AbstractFacadeTest
     {
         $facade = $this->getFacadeInstance();
 
-        \Mygento\Base\Test\Extra\Table::dumpOrder($order);
-
         $result = $facade->execute($order);
-
-        \Mygento\Base\Test\Extra\Table::dumpResult($result);
 
         if (!$expected) {
             ExpectedMaker::dump($result);
@@ -45,15 +43,6 @@ class AddChildrenOfBundleHandlerTest extends AbstractFacadeTest
             self::assertEquals($expectedItem['price'], $recalcItem->getPrice(), 'Price of item failed');
             self::assertEquals($expectedItem['quantity'], $recalcItem->getQuantity());
             self::assertEquals($expectedItem['sum'], $recalcItem->getSum(), 'Sum of item failed');
-
-            foreach ($recalcItem->getChildren() as $child) {
-                self::assertArrayHasKey(RecalculateResultItemInterface::CHILDREN, $expectedItem);
-                $expectedChild = array_shift($expectedItem[RecalculateResultItemInterface::CHILDREN]);
-
-                self::assertEquals($expectedChild['price'], $child->getPrice(), 'Price of item failed');
-                self::assertEquals($expectedChild['quantity'], $child->getQuantity());
-                self::assertEquals($expectedChild['sum'], $child->getSum(), 'Sum of item failed');
-            }
         }
     }
 
@@ -63,13 +52,22 @@ class AddChildrenOfBundleHandlerTest extends AbstractFacadeTest
     protected function getFacadeInstance(): RecalculatorFacade
     {
         $discountHelperFactory = $this->getDiscountHelperFactory();
-        $resultFactory = $this->getRecalculateResultFactory();
 
-        $addChildrenOfBundleHandler = $this->getObjectManager()->getObject(
-            AddChildrenOfBundle::class,
+        $testItemSkipper = $this->getObjectManager()->getObject(
+            TestItemSkipper::class
+        );
+
+        $skippedItemsCollector = $this->getObjectManager()->getObject(
+            SkippedItemsCollector::class,
             [
-                'discountHelperFactory' => $discountHelperFactory,
-                'recalculateResultFactory' => $resultFactory,
+                'skippers' => [$testItemSkipper],
+            ]
+        );
+
+        $skipItemsPreHandler = $this->getObjectManager()->getObject(
+            SkipItems::class,
+            [
+                'skippedItemsCollector' => $skippedItemsCollector,
             ]
         );
 
@@ -77,8 +75,8 @@ class AddChildrenOfBundleHandlerTest extends AbstractFacadeTest
             RecalculatorFacade::class,
             [
                 'discountHelper' => $discountHelperFactory->create(),
-                'recalculateResultFactory' => $resultFactory,
-                'postHandlers' => [$addChildrenOfBundleHandler],
+                'recalculateResultFactory' => $this->getRecalculateResultFactory(),
+                'preHandlers' => [$skipItemsPreHandler],
             ]
         );
     }
