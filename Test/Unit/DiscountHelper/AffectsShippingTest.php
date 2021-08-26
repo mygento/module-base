@@ -8,6 +8,8 @@
 
 namespace Mygento\Base\Test\Unit\DiscountHelper;
 
+use Mygento\Base\Test\Extra\TableOutput;
+
 class AffectsShippingTest extends GeneralTestCase
 {
     /**
@@ -24,11 +26,11 @@ class AffectsShippingTest extends GeneralTestCase
 
         $recalculatedData = $this->discountHelper->getRecalculated($order, 'vat20');
 
-        \Mygento\Base\Test\Extra\Table::dumpOrder($order);
+        TableOutput::dumpOrder($order, '1. Incoming');
 
         $result = $this->getRecalculateResultFactory()->create($recalculatedData);
 
-        \Mygento\Base\Test\Extra\Table::dumpResult($result);
+        TableOutput::dumpResult($result, '2. Recalculation');
 
         $this->assertEquals($recalculatedData['sum'], $expectedArray['sum'], 'Total sum failed');
         $this->assertEquals($recalculatedData['origGrandTotal'], $expectedArray['origGrandTotal']);

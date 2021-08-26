@@ -19,7 +19,6 @@ use Mygento\Base\Api\DiscountHelperInterface;
 use Mygento\Base\Api\DiscountHelperInterfaceFactory;
 use Mygento\Base\Api\RecalculationPostHandlerInterface;
 use Mygento\Base\Model\Recalculator\ResultFactory;
-use Mygento\Base\Test\Extra\Table;
 use Mygento\Base\Test\OrderItemMock;
 use Mygento\Base\Test\OrderMock;
 
@@ -98,9 +97,6 @@ class AddChildrenOfBundle implements RecalculationPostHandlerInterface
             $this->updateSum($recalcOriginal);
             $this->updateShippingAmount($recalcOriginal, $childrenResult);
             $this->updateExtraDiscountsOfChildren($item, $recalcOriginal, $dummyOrder);
-
-            Table::dumpResult($recalcOriginal);
-            Table::dumpResult($childrenResult);
         }
 
         return $recalcOriginal;

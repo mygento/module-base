@@ -21,7 +21,7 @@ use Mygento\Base\Test\Extra\TestItemSkipper;
 class AllHandlersTest extends AbstractFacadeTest
 {
     /**
-     * @dataProvider \Mygento\Base\Test\Unit\Facade\AllDataProvider::dataProvider
+     * @dataProvider \Mygento\Base\Test\Unit\Facade\AllHandlersDataProvider::dataProvider
      * @param mixed $order
      * @param mixed $expected
      * @throws \Exception

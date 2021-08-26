@@ -12,7 +12,7 @@ use Magento\Bundle\Model\Product\Type as Bundle;
 use Magento\Framework\DataObject;
 use Mygento\Base\Test\OrderMockBuilder;
 
-class AllDataProvider
+class AllHandlersDataProvider
 {
     /**
      * @return array
@@ -102,14 +102,14 @@ class AllDataProvider
                     ],
                 ],
                 'shipping' => [
-                    'price' => 0.5999, // TODO: WRONG
+                    'price' => 0.6,
                     'quantity' => 1.0,
-                    'sum' => 0.5999, //TODO: WRONG
+                    'sum' => 0.6,
                 ],
             ],
         ];
 
-        // $final['2. Заказ с 1 бандлом DynamicPrice = Enabled. Оплата Gift Card полная вкл доставку'] = [$order, $expected];
+        $final['2. Заказ с 1 бандлом DynamicPrice = Enabled. Оплата Gift Card полная вкл доставку'] = [$order, $expected];
 
         return $final;
     }
