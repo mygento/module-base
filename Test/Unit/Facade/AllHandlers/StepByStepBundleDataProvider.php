@@ -11,7 +11,7 @@ namespace Mygento\Base\Test\Unit\Facade\AllHandlers;
 use Magento\Bundle\Model\Product\Type as Bundle;
 use Mygento\Base\Test\OrderMockBuilder;
 
-class BundleDataProvider
+class StepByStepBundleDataProvider
 {
     public static function provide(): array
     {
@@ -36,6 +36,15 @@ class BundleDataProvider
         $father->setChildrenItems([$child1, $child2]);
         OrderMockBuilder::addItem($order, $father);
 
+        //Virtual order based on bundle product
+        $virtualOrder = OrderMockBuilder::getNewOrderInstance(1293.6, 0, 0);
+        $virtualOrder->setDiscountAmount(0);
+        $virtualOrder->setSubtotal(1293.60);
+        $virtualItem1 = OrderMockBuilder::getItem(646.8, 646.8, 0);
+        $virtualItem2 = OrderMockBuilder::getItem(646.8, 646.8, 0);
+        OrderMockBuilder::addItem($virtualOrder, $virtualItem1);
+        OrderMockBuilder::addItem($virtualOrder, $virtualItem2);
+
         $expected = [
             'sum' => 0.0,
             'origGrandTotal' => 0.6,
@@ -68,7 +77,13 @@ class BundleDataProvider
             ],
         ];
 
-        return [$order, $expected];
+        return [
+            $order,
+            [
+                'expected' => $expected,
+                'virtual_order' => [$virtualOrder],
+            ],
+        ];
     }
 
     private static function test2(): array
@@ -84,6 +99,14 @@ class BundleDataProvider
         $father->setChildrenItems([$child1, $child2]);
         OrderMockBuilder::addItem($order, $father);
 
+        //Virtual order based on bundle product
+        $virtualOrder = OrderMockBuilder::getNewOrderInstance(1293.6, 0, 0);
+        $virtualOrder->setDiscountAmount(0);
+        $virtualItem1 = OrderMockBuilder::getItem(293.6, 293.6, 0);
+        $virtualItem2 = OrderMockBuilder::getItem(1000, 1000, 0);
+        OrderMockBuilder::addItem($virtualOrder, $virtualItem1);
+        OrderMockBuilder::addItem($virtualOrder, $virtualItem2);
+
         $expected = [
             'sum' => 0.0,
             'origGrandTotal' => 0.6,
@@ -116,7 +139,13 @@ class BundleDataProvider
             ],
         ];
 
-        return [$order, $expected];
+        return [
+            $order,
+            [
+                'expected' => $expected,
+                'virtual_order' => [$virtualOrder],
+            ],
+        ];
     }
 
     private static function test3(): array
@@ -131,6 +160,15 @@ class BundleDataProvider
         $child2 = OrderMockBuilder::getItem(null, null, 0);
         $father->setChildrenItems([$child1, $child2]);
         OrderMockBuilder::addItem($order, $father);
+
+        //Virtual order based on bundle product
+        $virtualOrder = OrderMockBuilder::getNewOrderInstance(1293.6, 0, 0);
+        $virtualOrder->setDiscountAmount(0);
+        $virtualOrder->setSubtotal(1293.6);
+        $virtualItem1 = OrderMockBuilder::getItem(646.8, 646.8, 0);
+        $virtualItem2 = OrderMockBuilder::getItem(646.8, 646.8, 0);
+        OrderMockBuilder::addItem($virtualOrder, $virtualItem1);
+        OrderMockBuilder::addItem($virtualOrder, $virtualItem2);
 
         $expected = [
             'sum' => 0.0,
@@ -164,7 +202,13 @@ class BundleDataProvider
             ],
         ];
 
-        return [$order, $expected];
+        return [
+            $order,
+            [
+                'expected' => $expected,
+                'virtual_order' => [$virtualOrder],
+            ],
+        ];
     }
 
     private static function test4(): array
@@ -179,6 +223,14 @@ class BundleDataProvider
         $child2 = OrderMockBuilder::getItem(1000, 1000, 0.1);
         $father->setChildrenItems([$child1, $child2]);
         OrderMockBuilder::addItem($order, $father);
+
+        //Virtual order based on bundle product
+        $virtualOrder = OrderMockBuilder::getNewOrderInstance(1293.6, 0, 0);
+        $virtualOrder->setDiscountAmount(0);
+        $virtualItem1 = OrderMockBuilder::getItem(293.6, 293.6, 0);
+        $virtualItem2 = OrderMockBuilder::getItem(1000, 1000, 0.1);
+        OrderMockBuilder::addItem($virtualOrder, $virtualItem1);
+        OrderMockBuilder::addItem($virtualOrder, $virtualItem2);
 
         $expected = [
             'sum' => 0.0,
@@ -212,6 +264,12 @@ class BundleDataProvider
             ],
         ];
 
-        return [$order, $expected];
+        return [
+            $order,
+            [
+                'expected' => $expected,
+                'virtual_order' => [$virtualOrder],
+            ],
+        ];
     }
 }
