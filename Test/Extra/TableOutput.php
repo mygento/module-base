@@ -17,7 +17,11 @@ use Symfony\Component\Console\Helper\TableCell;
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Output\StreamOutput;
 
-class Table
+/**
+ * Class Table outputting test data in user-friendly way.
+ * Needed for debugging purposes.
+ */
+class TableOutput
 {
     public static function dump($headers, $rows = null)
     {
@@ -66,7 +70,7 @@ class Table
         foreach ($result->getItems() as $key => $item) {
             $r = [
                 $key,
-                $item->getName(),
+                self::cutName($item->getName()),
                 $item->getPrice(),
                 $item->getQuantity(),
                 $item->getSum(),
@@ -81,7 +85,7 @@ class Table
                 foreach ($item->getChildren() as $child) {
                     $rows[] = [
                         '|--',
-                        $child->getName(),
+                        self::cutName($child->getName()),
                         $child->getPrice(),
                         $child->getQuantity(),
                         $child->getSum(),
@@ -104,9 +108,74 @@ class Table
 
     public static function dumpOrder(OrderInterface $order, string $title = null)
     {
+        self::showOrderLegend();
+
         $output = new StreamOutput(fopen('php://stdout', 'w'));
         $table = new SymfonyTable($output);
         $table->setHeaderTitle($title . ' Order' . $order->getEntityId());
+
+        $headers = [
+            'GT',
+            'ST',
+            'ST +tax',
+            'SH',
+            'SH +tax',
+            'DA',
+            'DA +tax',
+            'GC',
+            'RP',
+            'CB',
+            'Tax',
+        ];
+        $table->setHeaders($headers);
+
+        $dataRow = [
+            $order->getGrandTotal(),
+            $order->getSubtotal(),
+            $order->getSubtotalInclTax(),
+            $order->getShippingAmount(),
+            $order->getShippingInclTax(),
+            $order->getDiscountAmount() ?: 0,
+            $order->getData(DiscountHelperInterface::DA_INCL_TAX),
+            $order->getData('gift_cards_amount'),
+            $order->getData('reward_currency_amount'),
+            $order->getData('customer_balance_amount'),
+            $order->getTaxAmount(),
+        ];
+
+        $order->getGrandTotal() - $order->getShippingInclTax() - $order->getSubtotalInclTax() - $order->getDiscountAmount();
+
+        $table->setRows([$dataRow]);
+        $table->render();
+
+        self::dumpOrderItems($order);
+    }
+
+    private static function totalRow($name, $value, $size)
+    {
+        return [$name, new TableCell($value ?? '', ['colspan' => $size - 1])];
+    }
+
+    private static function cutName(string $name): string
+    {
+        $length = 10;
+        if (extension_loaded('mbstring')) {
+            return mb_strlen($name) > $length
+                ? mb_substr($name, 0, $length) . '...'
+                : $name;
+        }
+
+        return strlen($name) > $length
+            ? substr($name, 0, $length) . '...'
+            : $name;
+    }
+
+    private static function dumpOrderItems(OrderInterface $order): void
+    {
+        $output = new StreamOutput(fopen('php://stdout', 'w'));
+        $table = new SymfonyTable($output);
+        $table->setHeaderTitle(' Order Items');
+
         $headers = [
             'ID',
             'Name',
@@ -123,7 +192,6 @@ class Table
             'CB',
         ];
         $table->setHeaders($headers);
-        $cnt = count($headers);
         $items = $order->getAllVisibleItems() ?: $order->getAllItems();
 
         $rows = [];
@@ -131,7 +199,7 @@ class Table
         foreach ($items as $item) {
             $rows[] = [
                 $item->getItemId(),
-                $item->getName(),
+                self::cutName($item->getName()),
                 $item->getProductType(),
                 $item->getPriceInclTax(),
                 $item->getQty(),
@@ -145,34 +213,36 @@ class Table
                 $item->getData('customer_balance_amount'),
             ];
         }
-        $rows[] = new TableSeparator();
-        $rows[] = self::totalRowWithTax('ST', $order->getSubtotal(), $order->getSubtotalInclTax(), $cnt);
-        $rows[] = self::totalRowWithTax('SH', $order->getShippingAmount(), $order->getShippingInclTax(), $cnt);
-        $rows[] = self::totalRowWithTax('DA', $order->getDiscountAmount() ?: 0, $order->getData(DiscountHelperInterface::DA_INCL_TAX), $cnt);
-        $rows[] = self::totalRow('GC', $order->getData('gift_cards_amount'), $cnt);
-        $rows[] = self::totalRow('RP', $order->getData('reward_currency_amount'), $cnt);
-        $rows[] = self::totalRow('CB', $order->getData('customer_balance_amount'), $cnt);
-        $rows[] = self::totalRow('Tax', $order->getTaxAmount(), $cnt);
-        $rows[] = self::totalRow('GT', $order->getGrandTotal(), $cnt);
 
         $table->setRows($rows);
         $table->render();
     }
 
-    private static function totalRow($name, $value, $size)
+    private static function showOrderLegend(): void
     {
-        return [$name, new TableCell($value ?? '', ['colspan' => $size - 1])];
-    }
+        $output = new StreamOutput(fopen('php://stdout', 'w'));
 
-    private static function totalRowWithTax($name, $value, $value2, $size)
-    {
-        $width = ($size - 2) / 2;
+        $output->writeln('<info> === LEGEND === </info>');
+        $output->write('<info>GT - </info>');
+        $output->write('<comment>GrandTotal. </comment>');
+        $output->write('<info>ST - </info>');
+        $output->write('<comment>SubTotal. </comment>');
+        $output->write('<info>ST +tax - </info>');
+        $output->write('<comment>SubTotalInclTax. </comment>');
+        $output->write('<info>SH - </info>');
+        $output->write('<comment>Shipping. </comment>');
+        $output->write('<info>DA - </info>');
+        $output->write('<comment>DiscountAmount. </comment>');
+        $output->write('<info>GC - </info>');
+        $output->write('<comment>GiftCardAmount. </comment>');
+        $output->write('<info>RP - </info>');
+        $output->write('<comment>RewardPointsAmount. </comment>');
+        $output->write('<info>CB - </info>');
+        $output->write('<comment>CustomerBalanceAmount. </comment>');
 
-        return [
-            $name,
-            new TableCell($value ?? '', ['colspan' => $width]),
-            'Tax',
-            new TableCell($value2 ?? '', ['colspan' => $size - $width - 1]),
-        ];
+        $output->write('<info>Px - </info>');
+        $output->write('<comment>PriceInclTax. </comment>');
+        $output->write('<info>RTx - </info>');
+        $output->writeln('<comment>RowTotalInclTax.</comment>');
     }
 }
