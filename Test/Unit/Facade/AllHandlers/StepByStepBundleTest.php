@@ -28,12 +28,10 @@ class StepByStepBundleTest extends AbstractFacadeTest
     /**
      * @dataProvider \Mygento\Base\Test\Unit\Facade\AllHandlers\StepByStepBundleDataProvider::provide
      */
-    public function testCalculation(OrderInterface $order, array $expectedData)
+    public function testCalculation(OrderInterface $order, array $expected, array $virtualOrders)
     {
         //TableOutput::dumpOrder($order, 'init');
         $facade = $this->getFacadeInstance();
-
-        $expected = $expectedData['expected'];
 
         //Step 1. Vanilla
         $vanillaResult = $facade->execute($order);
@@ -66,7 +64,7 @@ class StepByStepBundleTest extends AbstractFacadeTest
         $addChildrenOfBundleHandler = $this->getAddChildrenOfBundleHandler();
 
         //Step 3. Check virtual orders for bundle products
-        $this->assertVirtualOrderForBundles($order, $expectedData, $extraResult);
+        $this->assertVirtualOrderForBundles($order, $virtualOrders, $extraResult);
 
         //Step 4. Apply AddChildrenOfBundleHandler
         $childrenResult = $addChildrenOfBundleHandler->handle($order, $extraResult);
@@ -179,7 +177,7 @@ class StepByStepBundleTest extends AbstractFacadeTest
 
     private function assertVirtualOrderForBundles(
         OrderInterface $order,
-        array $expectedData,
+        array $expectedVirtualOrders,
         RecalculateResultInterface $recalculateResult
     ): void {
         $addChildrenOfBundleHandler = $this->getAddChildrenOfBundleHandler();
@@ -189,7 +187,7 @@ class StepByStepBundleTest extends AbstractFacadeTest
                 continue;
             }
             /** @var \Magento\Sales\Api\Data\OrderInterface $expectedVirtualOrder */
-            $expectedVirtualOrder = array_shift($expectedData['virtual_order']);
+            $expectedVirtualOrder = array_shift($expectedVirtualOrders);
 
             /** @var \Magento\Sales\Api\Data\OrderInterface $bundleOrder */
             $bundleOrder = $this->invokeMethod(

@@ -21,6 +21,15 @@ class AllHandlersDataProvider
     public static function dataProvider()
     {
         $final = [];
+        $final['1. Заказ с 1 бандлом DynamicPrice = Disabled. Оплата Gift Card полная вкл доставку'] = self::test1();
+        $final['2. Заказ с 1 бандлом DynamicPrice = Disabled. Оплата Gift Card частично покрывает доставку'] = self::test2();
+        $final['3. Заказ с 1 бандлом DynamicPrice = Enabled. Оплата Gift Card полная вкл доставку'] = self::test3();
+
+        return $final;
+    }
+
+    private static function test1(): array
+    {
         $order = OrderMockBuilder::getNewOrderInstance(1293.6, 0.60, 200.0000, 0, 0);
         $order->setData('gift_cards_amount', 1493);
 
@@ -63,8 +72,11 @@ class AllHandlersDataProvider
             ],
         ];
 
-        $final['1. Заказ с 1 бандлом DynamicPrice = Disabled. Оплата Gift Card полная вкл доставку'] = [$order, $expected];
+        return [$order, $expected];
+    }
 
+    private static function test2(): array
+    {
         $order = OrderMockBuilder::getNewOrderInstance(1293.6, 0.60, 200.0000, 0, 0);
         $order->setData('gift_cards_amount', 1493);
 
@@ -109,8 +121,54 @@ class AllHandlersDataProvider
             ],
         ];
 
-        $final['2. Заказ с 1 бандлом DynamicPrice = Enabled. Оплата Gift Card полная вкл доставку'] = [$order, $expected];
+        return [$order, $expected];
+    }
 
-        return $final;
+    private static function test3(): array
+    {
+        $order = OrderMockBuilder::getNewOrderInstance(1293.6, 0.60, 200.0000, 0, 0);
+        $order->setData('gift_cards_amount', 1493);
+
+        $father = OrderMockBuilder::getItem(1293.6000, 1293.6000, 0);
+        $father->setProductType(Bundle::TYPE_CODE);
+        $father->setData('isChildrenCalculated', true);
+        $child1 = OrderMockBuilder::getItem(293.60, 293.60, 0);
+        $child2 = OrderMockBuilder::getItem(1000, 1000, 0);
+        $father->setChildrenItems([$child1, $child2]);
+        OrderMockBuilder::addItem($order, $father);
+
+        $expected = [
+            'sum' => 0.0,
+            'origGrandTotal' => 0.6,
+            'items' => [
+                100501 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'gift_cards_amount' => 1293.6,
+                    'children' => [
+                        100502 => [
+                            'price' => 0.0,
+                            'quantity' => 1.0,
+                            'sum' => 0.0,
+                            'gift_cards_amount' => 293.6,
+                        ],
+                        100503 => [
+                            'price' => 0.0,
+                            'quantity' => 1.0,
+                            'sum' => 0.0,
+                            'gift_cards_amount' => 1000,
+                        ],
+                    ],
+                ],
+                'shipping' => [
+                    'price' => 0.6,
+                    'quantity' => 1.0,
+                    'sum' => 0.6,
+                ],
+            ],
+        ];
+
+        return [$order, $expected];
     }
 }

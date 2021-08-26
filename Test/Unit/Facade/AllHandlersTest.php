@@ -11,8 +11,9 @@ namespace Mygento\Base\Test\Unit\Facade;
 use Mygento\Base\Api\Data\RecalculateResultItemInterface;
 use Mygento\Base\Service\PostHandlers\AddChildrenOfBundle;
 use Mygento\Base\Service\PostHandlers\AddExtraDiscounts;
-// use Mygento\Base\Service\PostHandlers\RestoreSkippedItems;
+use Mygento\Base\Service\PostHandlers\RestoreSkippedItems;
 use Mygento\Base\Service\PreHandlers\SkipItems;
+use Mygento\Base\Service\PreHandlers\SkipItems\SkippedItemFixer;
 use Mygento\Base\Service\PreHandlers\SkipItems\SkippedItemsCollector;
 use Mygento\Base\Service\RecalculatorFacade;
 use Mygento\Base\Test\Extra\ExpectedMaker;
@@ -81,13 +82,6 @@ class AllHandlersTest extends AbstractFacadeTest
                 'discountHelperFactory' => $discountHelperFactory,
             ]
         );
-//        $addRestoreSkipHandler = $this->getObjectManager()->getObject(
-//            RestoreSkippedItems::class,
-//            [
-//                'skippedItemsCollector' => $discountHelperFactory,
-//                'skippedItemFixer' => $discountHelperFactory,
-//            ]
-//        );
 
         $testItemSkipper = $this->getObjectManager()->getObject(
             TestItemSkipper::class
@@ -97,6 +91,22 @@ class AllHandlersTest extends AbstractFacadeTest
             SkippedItemsCollector::class,
             [
                 'skippers' => [$testItemSkipper],
+            ]
+        );
+
+        $skippedItemFixer = $this->getObjectManager()->getObject(
+            SkippedItemFixer::class,
+            [
+                'discountHelperFactory' => $discountHelperFactory,
+                'recalculateResultFactory' => $resultFactory,
+            ]
+        );
+
+        $addRestoreSkipHandler = $this->getObjectManager()->getObject(
+            RestoreSkippedItems::class,
+            [
+                'skippedItemsCollector' => $skippedItemsCollector,
+                'skippedItemFixer' => $skippedItemFixer,
             ]
         );
 
@@ -116,7 +126,7 @@ class AllHandlersTest extends AbstractFacadeTest
                 'postHandlers' => [
                     $addExtraDiscountsHandler,
                     $addChildrenOfBundleHandler,
-                    //$addRestoreSkipHandler
+                    $addRestoreSkipHandler,
                 ],
             ]
         );

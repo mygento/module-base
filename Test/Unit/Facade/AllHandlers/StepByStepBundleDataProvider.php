@@ -79,10 +79,8 @@ class StepByStepBundleDataProvider
 
         return [
             $order,
-            [
-                'expected' => $expected,
-                'virtual_order' => [$virtualOrder],
-            ],
+            $expected,
+            [$virtualOrder],
         ];
     }
 
@@ -141,10 +139,8 @@ class StepByStepBundleDataProvider
 
         return [
             $order,
-            [
-                'expected' => $expected,
-                'virtual_order' => [$virtualOrder],
-            ],
+            $expected,
+            [$virtualOrder],
         ];
     }
 
@@ -204,10 +200,8 @@ class StepByStepBundleDataProvider
 
         return [
             $order,
-            [
-                'expected' => $expected,
-                'virtual_order' => [$virtualOrder],
-            ],
+            $expected,
+            [$virtualOrder],
         ];
     }
 
@@ -266,10 +260,8 @@ class StepByStepBundleDataProvider
 
         return [
             $order,
-            [
-                'expected' => $expected,
-                'virtual_order' => [$virtualOrder],
-            ],
+            $expected,
+            [$virtualOrder],
         ];
     }
 }
