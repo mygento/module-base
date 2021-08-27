@@ -881,8 +881,8 @@ class Discount implements DiscountHelperInterface
     private function getAllItems()
     {
         /** @psalm-suppress UndefinedMethod */
-        return (array) ($this->entity->getAllVisibleItems()
-            ?: $this->entity->getAllItems());
+        return ($this->entity->getAllVisibleItems()
+            ?: $this->entity->getAllItems()) ?? [];
     }
 
     /**
