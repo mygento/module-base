@@ -69,6 +69,7 @@ class SkipItems implements RecalculationPreHandlerInterface
         $orderSkippedLess->setDiscountAmount($newDiscountAmount);
         $orderSkippedLess->setTaxAmount($newTaxAmount);
         $orderSkippedLess->setItems([]);
+        $orderSkippedLess->setAllItems([]);
 
         $itemIdsToSkip = $this->skippedItemsCollector->getItemIdsToSkip($entity);
         foreach ($entity->getItems() as $item) {
