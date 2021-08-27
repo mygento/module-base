@@ -25,7 +25,8 @@ class AllHandlersDataProvider
         $final['2. Заказ с 1 бандлом DynamicPrice = Disabled. Оплата Gift Card частично покрывает доставку'] = self::test2();
         $final['3. Заказ с 1 бандлом DynamicPrice = Enabled. Оплата Gift Card полная вкл доставку'] = self::test3();
 
-        return $final;
+        //Add tests for Skipper Handler
+        return array_merge($final, self::testsForSkippedItems());
     }
 
     private static function test1(): array
@@ -170,5 +171,100 @@ class AllHandlersDataProvider
         ];
 
         return [$order, $expected];
+    }
+
+    private static function testsForSkippedItems(): array
+    {
+        $tests = Handlers\DataProvider\SkipItemsDataProvider::dataProvider();
+
+        reset($tests);
+        $key1 = key($tests);
+        $newKey = str_replace('1.', '4. Skipper:', $key1);
+        $tests[$newKey] = $tests[$key1];
+        $expected = [
+            'sum' => 799.2,
+            'origGrandTotal' => 864.2,
+            'items' => [
+                100511 => [
+                    'price' => 739.2,
+                    'quantity' => 1.0,
+                    'sum' => 739.2,
+                    'tax' => '',
+                ],
+                'shipping' => [
+                    'price' => 125.00,
+                    'quantity' => 1.0,
+                    'sum' => 125.00,
+                    'tax' => '',
+                ],
+                100510 => [
+                    'price' => 60.0,
+                    'quantity' => 1.0,
+                    'sum' => 60.0,
+                    'tax' => '',
+                ],
+            ],
+        ];
+
+        $tests[$newKey][1] = $expected;
+
+        next($tests);
+        $key2 = key($tests);
+        $newKey = str_replace('2.', '5. Skipper:', $key2);
+        $tests[$newKey] = $tests[$key2];
+        $expected = [
+            'sum' => 70.0,
+            'origGrandTotal' => 100.0,
+            'items' => [
+                'shipping' => [
+                    'price' => 100.00,
+                    'quantity' => 1.0,
+                    'sum' => 100.00,
+                    'tax' => '',
+                ],
+                100503 => [
+                    'price' => 70.0,
+                    'quantity' => 1.0,
+                    'sum' => 70.0,
+                    'tax' => '',
+                ],
+            ],
+        ];
+        $tests[$newKey][1] = $expected;
+
+        next($tests);
+        $key3 = key($tests);
+        $newKey = str_replace('3.', '6. Skipper:', $key3);
+        $tests[$newKey] = $tests[$key3];
+        $expected = [
+            'sum' => 799.2,
+            'origGrandTotal' => 125.0,
+            'items' => [
+                'shipping' => [
+                    'price' => 125.00,
+                    'quantity' => 1.0,
+                    'sum' => 125.00,
+                    'tax' => '',
+                ],
+                100504 => [
+                    'price' => 60.0,
+                    'quantity' => 1.0,
+                    'sum' => 60.0,
+                    'tax' => '',
+                ],
+                100505 => [
+                    'price' => 739.2,
+                    'quantity' => 1.0,
+                    'sum' => 739.2,
+                    'tax' => '',
+                ],
+            ],
+        ];
+        $tests[$newKey][1] = $expected;
+
+        //Remove tests with old names
+        unset($tests[$key1], $tests[$key2], $tests[$key3]);
+
+        return $tests;
     }
 }

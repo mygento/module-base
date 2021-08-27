@@ -17,6 +17,7 @@ use Mygento\Base\Service\PreHandlers\SkipItems\SkippedItemFixer;
 use Mygento\Base\Service\PreHandlers\SkipItems\SkippedItemsCollector;
 use Mygento\Base\Service\RecalculatorFacade;
 use Mygento\Base\Test\Extra\ExpectedMaker;
+use Mygento\Base\Test\Extra\TableOutput;
 use Mygento\Base\Test\Extra\TestItemSkipper;
 
 class AllHandlersTest extends AbstractFacadeTest
@@ -30,8 +31,10 @@ class AllHandlersTest extends AbstractFacadeTest
     public function testCalculation($order, $expected)
     {
         $facade = $this->getFacadeInstance();
+        TableOutput::dumpOrder($order, '1. Initial');
 
         $result = $facade->execute($order);
+        TableOutput::dumpResult($result, '2.');
 
         if (!$expected) {
             ExpectedMaker::dump($result);
