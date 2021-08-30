@@ -1417,6 +1417,11 @@ class OrderMock extends DataObject implements OrderInterface
         return $this->_getData('entity_id');
     }
 
+    public function getId()
+    {
+        return $this->getEntityId();
+    }
+
     public function setEntityId($entityId)
     {
         return $this->setData('entity_id', $entityId);
