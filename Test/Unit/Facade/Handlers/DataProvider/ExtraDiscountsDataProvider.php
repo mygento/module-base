@@ -10,7 +10,7 @@ namespace Mygento\Base\Test\Unit\Facade\Handlers\DataProvider;
 
 use Magento\Bundle\Model\Product\Type as Bundle;
 use Mygento\Base\Api\Data\PaymentInterface;
-use Mygento\Base\Test\OrderMockBuilder;
+use Mygento\Base\Model\Mock\OrderMockBuilder;
 
 class ExtraDiscountsDataProvider
 {

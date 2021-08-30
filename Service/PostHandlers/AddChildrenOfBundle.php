@@ -18,9 +18,9 @@ use Mygento\Base\Api\Data\RecalculateResultItemInterfaceFactory;
 use Mygento\Base\Api\DiscountHelperInterface;
 use Mygento\Base\Api\DiscountHelperInterfaceFactory;
 use Mygento\Base\Api\RecalculationPostHandlerInterface;
+use Mygento\Base\Model\Mock\OrderItemMock;
+use Mygento\Base\Model\Mock\OrderMock;
 use Mygento\Base\Model\Recalculator\ResultFactory;
-use Mygento\Base\Test\OrderItemMock;
-use Mygento\Base\Test\OrderMock;
 
 /**
  * Этот класс пересчитывает дочерние продукты для бандлов,

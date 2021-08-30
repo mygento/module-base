@@ -15,8 +15,8 @@ use Magento\Sales\Api\Data\OrderItemInterface;
 use Mygento\Base\Api\Data\RecalculateResultItemInterface;
 use Mygento\Base\Api\DiscountHelperInterfaceFactory;
 use Mygento\Base\Helper\Discount\Tax;
+use Mygento\Base\Model\Mock\OrderMockBuilder;
 use Mygento\Base\Model\Recalculator\ResultFactory;
-use Mygento\Base\Test\OrderMockBuilder;
 
 class SkippedItemFixer
 {

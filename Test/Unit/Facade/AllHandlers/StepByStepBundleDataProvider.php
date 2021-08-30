@@ -9,7 +9,7 @@
 namespace Mygento\Base\Test\Unit\Facade\AllHandlers;
 
 use Magento\Bundle\Model\Product\Type as Bundle;
-use Mygento\Base\Test\OrderMockBuilder;
+use Mygento\Base\Model\Mock\OrderMockBuilder;
 
 class StepByStepBundleDataProvider
 {

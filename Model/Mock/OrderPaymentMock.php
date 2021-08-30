@@ -6,7 +6,7 @@
  * @package Mygento_Base
  */
 
-namespace Mygento\Base\Test;
+namespace Mygento\Base\Model\Mock;
 
 use Magento\Framework\Api\ExtensibleDataInterface;
 use Magento\Framework\DataObject;

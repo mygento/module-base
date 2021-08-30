@@ -8,7 +8,7 @@
 
 namespace Mygento\Base\Test\Unit\Facade\Handlers\SkipItem;
 
-use Mygento\Base\Test\OrderMockBuilder;
+use Mygento\Base\Model\Mock\OrderMockBuilder;
 
 class SkippedItemFixerDataProvider
 {

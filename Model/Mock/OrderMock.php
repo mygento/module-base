@@ -6,14 +6,13 @@
  * @package Mygento_Base
  */
 
-namespace Mygento\Base\Test;
+namespace Mygento\Base\Model\Mock;
 
 use Magento\Framework\DataObject;
 use Magento\Sales\Api\Data\OrderInterface;
 
 /**
  * Class OrderMock
- * @package Mygento\Base\Test
  *
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
@@ -1416,6 +1415,11 @@ class OrderMock extends DataObject implements OrderInterface
     public function getEntityId()
     {
         return $this->_getData('entity_id');
+    }
+
+    public function getId()
+    {
+        return $this->getEntityId();
     }
 
     public function setEntityId($entityId)

@@ -10,10 +10,10 @@ namespace Mygento\Base\Test\Unit\DiscountHelper;
 
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Mygento\Base\Helper\Discount;
+use Mygento\Base\Model\Mock\OrderMockBuilder;
 use Mygento\Base\Model\Recalculator\ResultFactory;
 use Mygento\Base\Test\Extra\ExpectedMaker;
 use Mygento\Base\Test\Extra\GetRecalculateResultFactory;
-use Mygento\Base\Test\OrderMockBuilder;
 use PHPUnit\Framework\TestCase;
 
 class GeneralTestCase extends TestCase
@@ -321,7 +321,6 @@ class GeneralTestCase extends TestCase
         OrderMockBuilder::addItem($order, OrderMockBuilder::getItem(920.0000, 46.0000, 0, 20.0000));
         OrderMockBuilder::addItem($order, OrderMockBuilder::getItem(0.0000, 0.0000, 0, 4.0000));
         $final[self::TEST_CASE_NAME_21] = $order;
-//        $final[234] = $order;
 
         //Discount_amount does not contain TAX
         $order = OrderMockBuilder::getNewOrderInstance(5091.7600, 10.0000, 10.0000, 0, -4243.1300);
