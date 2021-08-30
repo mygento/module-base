@@ -6,17 +6,18 @@
  * @package Mygento_Base
  */
 
-namespace Mygento\Base\Test\Unit\Facade;
+namespace Mygento\Base\Test\Unit\Facade\Handlers;
 
 use Mygento\Base\Api\Data\RecalculateResultItemInterface;
 use Mygento\Base\Service\PostHandlers\AddExtraDiscounts;
 use Mygento\Base\Service\RecalculatorFacade;
 use Mygento\Base\Test\Extra\ExpectedMaker;
+use Mygento\Base\Test\Unit\Facade\AbstractFacadeTest;
 
 class AddExtraDiscountsHandlerTest extends AbstractFacadeTest
 {
     /**
-     * @dataProvider \Mygento\Base\Test\Unit\Facade\ExtraDiscountsDataProvider::dataProvider
+     * @dataProvider \Mygento\Base\Test\Unit\Facade\Handlers\DataProvider\ExtraDiscountsDataProvider::dataProvider
      * @param mixed $order
      * @param mixed $expected
      * @throws \Exception
@@ -54,7 +55,7 @@ class AddExtraDiscountsHandlerTest extends AbstractFacadeTest
     }
 
     /**
-     * @dataProvider \Mygento\Base\Test\Unit\Facade\ExtraDiscountsDataProvider::dataProviderDivisionByZero
+     * @dataProvider \Mygento\Base\Test\Unit\Facade\Handlers\DataProvider\ExtraDiscountsDataProvider::dataProviderDivisionByZero
      * @param mixed $order
      * @param array|\Exception $expected
      * @throws \Exception

@@ -327,20 +327,24 @@ class Discount implements DiscountHelperInterface
 
             //Проверяем, не превышает ли скидка ряда его тотал.
             // Если да - делаем скидку равной тоталу, чтобы тот не ушел в минус.
-            if (abs($rowGrandDiscount) > $rowTotal) {
-                $rowGrandDiscount = (-1) * $rowTotal;
+            if (abs($rowGrandDiscount) > ($rowTotal + $rowDiscount)) {
+                $rowGrandDiscount = (-1) * ($rowTotal + $rowDiscount);
             }
 
-            $discountPerUnitRaw = bcadd($rowDiscount, $rowGrandDiscount, 4) / $qty;
+            $discountPerUnitRaw = bcdiv(bcadd($rowDiscount, $rowGrandDiscount, 4), $qty, 4);
 
             //Если это наценка - то мы должны иначе округлять. Не вверх, а вниз. Из-за отличия в знаке.
             $discountPerUnit = $grandDiscount > 0
-                ? Math::slyFloor($discountPerUnitRaw)
-                : Math::slyCeil($discountPerUnitRaw);
+                ? Math::slyFloor($discountPerUnitRaw, 4)
+                : Math::slyCeil($discountPerUnitRaw, 4);
 
             //Set посчитанная на ряд $amountToSpread. Округленная вверх.
             $amountToSpreadPerUnit = Math::slyCeil($rowPercentage * $amountToSpread / $qty);
-            $item->setData(self::NAME_ROW_AMOUNT_TO_SPREAD, $amountToSpreadPerUnit * $qty);
+            $rowAmountSpread = $amountToSpreadPerUnit * $qty;
+            if ($rowAmountSpread > $rowTotal) {
+                $rowAmountSpread = $rowTotal;
+            }
+            $item->setData(self::NAME_ROW_AMOUNT_TO_SPREAD, $rowAmountSpread);
 
             $priceWithDiscount = bcadd($price, (string) $discountPerUnit, 2);
 
@@ -534,11 +538,12 @@ class Discount implements DiscountHelperInterface
 
         $this->generalHelper->debug("Items sum: {$itemsSum}. Shipping increase: {$itemsSumDiff}");
 
+        $shippingSum = bcadd($shippingAmount, $itemsSumDiff, 2);
         $shippingItem = [
             self::NAME => $this->getShippingName($this->entity),
-            self::PRICE => $shippingAmount + $itemsSumDiff,
+            self::PRICE => $shippingSum,
             self::QUANTITY => 1.0,
-            self::SUM => $shippingAmount + $itemsSumDiff,
+            self::SUM => $shippingSum,
             self::TAX => $this->shippingTaxValue,
         ];
 

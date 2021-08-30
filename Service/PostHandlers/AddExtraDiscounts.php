@@ -49,6 +49,7 @@ class AddExtraDiscounts implements RecalculationPostHandlerInterface
      */
     public function handle(Order $order, RecalculateResultInterface $recalcOriginal): RecalculateResultInterface
     {
+        /** @var \Mygento\Base\Api\DiscountHelperInterface $discountHelper */
         $discountHelper = $this->discountHelperFactory->create();
 
         $extraAmounts = [

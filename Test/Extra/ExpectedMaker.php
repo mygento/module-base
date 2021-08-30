@@ -33,8 +33,15 @@ class ExpectedMaker
         $items = [];
         foreach ($recalcOriginal->getItems() as $itemId => $item) {
             $itemArray = $item->toArray();
+            unset($itemArray['name']);
+            $itemArray['price'] = round($itemArray['price'], 2);
+            $itemArray['sum'] = round($itemArray['sum'], 2);
             foreach ($item->getChildren() as $key => $child) {
-                $itemArray['children'][$key] = $child->toArray();
+                $childArray = $child->toArray();
+                $childArray['price'] = round($childArray['price'], 2);
+                $childArray['sum'] = round($childArray['sum'], 2);
+                unset($childArray['name']);
+                $itemArray['children'][$key] = $childArray;
             }
 
             $items[$itemId] = $itemArray;

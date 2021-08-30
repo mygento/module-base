@@ -11,7 +11,9 @@ namespace Mygento\Base\Test\Unit\DiscountHelper;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Mygento\Base\Helper\Discount;
 use Mygento\Base\Model\Mock\OrderMockBuilder;
+use Mygento\Base\Model\Recalculator\ResultFactory;
 use Mygento\Base\Test\Extra\ExpectedMaker;
+use Mygento\Base\Test\Extra\GetRecalculateResultFactory;
 use PHPUnit\Framework\TestCase;
 
 class GeneralTestCase extends TestCase
@@ -471,5 +473,15 @@ class GeneralTestCase extends TestCase
         echo "\033[0m"; //reset color
 
         throw $e;
+    }
+
+    protected function getRecalculateResultFactory(): ResultFactory
+    {
+        /** @var \Mygento\Base\Test\Extra\GetRecalculateResultFactory $recalculateResultFactory */
+        $recalculateResultFactory = $this->getObjectManager()->getObject(
+            GetRecalculateResultFactory::class
+        );
+
+        return $recalculateResultFactory->get($this);
     }
 }
