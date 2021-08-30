@@ -8,10 +8,12 @@
 
 namespace Mygento\Base\Test\Unit\Facade\Handlers;
 
+use Magento\Sales\Api\Data\OrderInterface;
 use Mygento\Base\Service\PreHandlers\SkipItems;
 use Mygento\Base\Service\PreHandlers\SkipItems\SkippedItemsCollector;
 use Mygento\Base\Service\RecalculatorFacade;
 use Mygento\Base\Test\Extra\ExpectedMaker;
+use Mygento\Base\Test\Extra\TableOutput;
 use Mygento\Base\Test\Extra\TestItemSkipper;
 use Mygento\Base\Test\Unit\Facade\AbstractFacadeTest;
 
@@ -47,12 +49,63 @@ class SkipItemsHandlerTest extends AbstractFacadeTest
     }
 
     /**
+     * @dataProvider \Mygento\Base\Test\Unit\Facade\Handlers\DataProvider\SkipItemsDataProvider::dataProviderForVirtualOrder()
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param mixed $order
+     */
+    public function testVirtualOrder($order, array $expected, OrderInterface $expectedVirtualOrder)
+    {
+        $skipItemsHandler = $this->getSkipItemsHandler();
+        $virtualOrder = $skipItemsHandler->handle($order);
+
+        TableOutput::dumpOrder($order, '1. Before Skipping items');
+        TableOutput::dumpOrder($virtualOrder, '2. After Skipping items');
+
+        self::assertNotNull($virtualOrder->getId(), 'Order ID is not set.');
+        self::assertEquals($expectedVirtualOrder->getId(), $virtualOrder->getId(), 'Order ID is not equal.');
+
+        $itemsCountOrig = count($order->getItems());
+        $itemsCountAfterSkipping = count($virtualOrder->getItems());
+
+        self::assertNotEquals($itemsCountOrig, $itemsCountAfterSkipping, 'Items were not skipped.');
+
+        self::assertEquals(
+            $expectedVirtualOrder->getSubtotalInclTax(),
+            $virtualOrder->getSubtotalInclTax(),
+            'Virtual order: SubtotalInclTax failed'
+        );
+        self::assertEquals(
+            $expectedVirtualOrder->getGrandTotal(),
+            $virtualOrder->getGrandTotal(),
+            'Virtual order: GrandTotal failed'
+        );
+        self::assertEquals(
+            $expectedVirtualOrder->getDiscountAmount(),
+            $virtualOrder->getDiscountAmount(),
+            'Virtual order: Discount Amount failed'
+        );
+    }
+
+    /**
      * @return \Mygento\Base\Service\RecalculatorFacade
      */
     protected function getFacadeInstance(): RecalculatorFacade
     {
         $discountHelperFactory = $this->getDiscountHelperFactory();
+        $skipItemsPreHandler = $this->getSkipItemsHandler();
 
+        return $this->getObjectManager()->getObject(
+            RecalculatorFacade::class,
+            [
+                'discountHelper' => $discountHelperFactory->create(),
+                'recalculateResultFactory' => $this->getRecalculateResultFactory(),
+                'preHandlers' => [$skipItemsPreHandler],
+            ]
+        );
+    }
+
+    protected function getSkipItemsHandler(): SkipItems
+    {
         $testItemSkipper = $this->getObjectManager()->getObject(
             TestItemSkipper::class
         );
@@ -64,19 +117,10 @@ class SkipItemsHandlerTest extends AbstractFacadeTest
             ]
         );
 
-        $skipItemsPreHandler = $this->getObjectManager()->getObject(
+        return $this->getObjectManager()->getObject(
             SkipItems::class,
             [
                 'skippedItemsCollector' => $skippedItemsCollector,
-            ]
-        );
-
-        return $this->getObjectManager()->getObject(
-            RecalculatorFacade::class,
-            [
-                'discountHelper' => $discountHelperFactory->create(),
-                'recalculateResultFactory' => $this->getRecalculateResultFactory(),
-                'preHandlers' => [$skipItemsPreHandler],
             ]
         );
     }

@@ -11,6 +11,7 @@ namespace Mygento\Base\Test\Unit\Facade;
 use Magento\Bundle\Model\Product\Type as Bundle;
 use Magento\Framework\DataObject;
 use Mygento\Base\Test\OrderMockBuilder;
+use Mygento\Base\Test\Unit\Facade\Handlers\DataProvider\SkipItemsDataProvider;
 
 class AllHandlersDataProvider
 {
@@ -175,10 +176,9 @@ class AllHandlersDataProvider
 
     private static function testsForSkippedItems(): array
     {
-        $tests = Handlers\DataProvider\SkipItemsDataProvider::dataProvider();
+        $tests = SkipItemsDataProvider::dataProvider();
 
-        reset($tests);
-        $key1 = key($tests);
+        $key1 = SkipItemsDataProvider::TEST_1_NAME;
         $newKey = str_replace('1.', '4. Skipper:', $key1);
         $tests[$newKey] = $tests[$key1];
         $expected = [
@@ -208,8 +208,7 @@ class AllHandlersDataProvider
 
         $tests[$newKey][1] = $expected;
 
-        next($tests);
-        $key2 = key($tests);
+        $key2 = SkipItemsDataProvider::TEST_2_NAME;
         $newKey = str_replace('2.', '5. Skipper:', $key2);
         $tests[$newKey] = $tests[$key2];
         $expected = [
@@ -232,8 +231,7 @@ class AllHandlersDataProvider
         ];
         $tests[$newKey][1] = $expected;
 
-        next($tests);
-        $key3 = key($tests);
+        $key3 = SkipItemsDataProvider::TEST_3_NAME;
         $newKey = str_replace('3.', '6. Skipper:', $key3);
         $tests[$newKey] = $tests[$key3];
         $expected = [

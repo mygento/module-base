@@ -112,7 +112,7 @@ class TableOutput
 
         $output = new StreamOutput(fopen('php://stdout', 'w'));
         $table = new SymfonyTable($output);
-        $table->setHeaderTitle($title . ' Order' . $order->getEntityId());
+        $table->setHeaderTitle($title . ' Order. Id: ' . $order->getEntityId());
 
         $headers = [
             'GT',
