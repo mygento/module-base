@@ -10,8 +10,8 @@ namespace Mygento\Base\Test\Unit\DiscountHelper;
 
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Mygento\Base\Helper\Discount;
+use Mygento\Base\Model\Mock\OrderMockBuilder;
 use Mygento\Base\Test\Extra\ExpectedMaker;
-use Mygento\Base\Test\OrderMockBuilder;
 use PHPUnit\Framework\TestCase;
 
 class GeneralTestCase extends TestCase

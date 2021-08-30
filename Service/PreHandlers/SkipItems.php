@@ -11,8 +11,8 @@ namespace Mygento\Base\Service\PreHandlers;
 use Magento\Sales\Api\Data\OrderInterface;
 use Mygento\Base\Api\RecalculationPreHandlerInterface;
 use Mygento\Base\Helper\Discount\Tax;
+use Mygento\Base\Model\Mock\OrderMockBuilder;
 use Mygento\Base\Service\PreHandlers\SkipItems\SkippedItemsCollector;
-use Mygento\Base\Test\OrderMockBuilder;
 
 class SkipItems implements RecalculationPreHandlerInterface
 {
@@ -69,6 +69,7 @@ class SkipItems implements RecalculationPreHandlerInterface
         $orderSkippedLess->setDiscountAmount($newDiscountAmount);
         $orderSkippedLess->setTaxAmount($newTaxAmount);
         $orderSkippedLess->setItems([]);
+        $orderSkippedLess->setAllItems([]);
 
         $itemIdsToSkip = $this->skippedItemsCollector->getItemIdsToSkip($entity);
         foreach ($entity->getItems() as $item) {

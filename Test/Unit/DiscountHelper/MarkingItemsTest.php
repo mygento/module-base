@@ -9,7 +9,7 @@
 namespace Mygento\Base\Test\Unit\DiscountHelper;
 
 use Mygento\Base\Api\DiscountHelperInterface;
-use Mygento\Base\Test\OrderMockBuilder;
+use Mygento\Base\Model\Mock\OrderMockBuilder;
 
 /**
  * class MarkingItemsTest
