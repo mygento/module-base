@@ -6,6 +6,11 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Mygento\Base\Api\ProductAttributeHelperInterface" type="Mygento\Base\Helper\Product\Attribute" />
+    <preference for="Mygento\Base\Api\Data\RecalculateResultInterface" type="Mygento\Base\Model\Recalculator\Result" />
+    <preference for="Mygento\Base\Api\Data\RecalculateResultItemInterface" type="Mygento\Base\Model\Recalculator\Result\Item" />
+    <preference for="Magento\Sales\Model\Order\Payment\Transaction" type="Mygento\Base\Model\Payment\Transaction" />
+
     <type name="Mygento\Base\Model\LogManager">
         <arguments>
             <argument name="handlers" xsi:type="array">
@@ -18,7 +23,22 @@
     <type name="Magento\Sales\Model\Order\Payment\Transaction">
         <plugin name="mygento_base_transaction_receipt" type="Mygento\Base\Plugin\Transaction"/>
     </type>
-    <preference for="Magento\Sales\Model\Order\Payment\Transaction" type="Mygento\Base\Model\Payment\Transaction" />
+
+    <preference for="Mygento\Base\Api\DiscountHelperInterface" type="Mygento\Base\Helper\Discount"/>
+
+    <type name="Mygento\Base\Service\RecalculatorFacade">
+        <arguments>
+            <argument name="preHandlers" xsi:type="array">
+                <item name="skip_items_from_recalculation" xsi:type="object">Mygento\Base\Service\PreHandlers\SkipItems</item>
+            </argument>
+            <argument name="postHandlers" xsi:type="array">
+                <!--Order is important-->
+                <item name="add_extra_discounts_like_rewards" xsi:type="object">Mygento\Base\Service\PostHandlers\AddExtraDiscounts</item>
+                <item name="add_bundle_children" xsi:type="object">Mygento\Base\Service\PostHandlers\AddChildrenOfBundle</item>
+                <item name="restore_skipped_items" xsi:type="object">Mygento\Base\Service\PostHandlers\RestoreSkippedItems</item>
+            </argument>
+        </arguments>
+    </type>
 
     <!-- generated -->
     <preference for="Mygento\Base\Api\EventRepositoryInterface" type="Mygento\Base\Model\EventRepository"/>

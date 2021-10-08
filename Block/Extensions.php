@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2019 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2021 Mygento (https://www.mygento.ru)
  * @package Mygento_Base
  */
 
@@ -154,9 +154,7 @@ class Extensions extends \Magento\Config\Block\System\Config\Form\Fieldset
         $html .= '<ul class="mygento-mod-list">';
         sort($modules);
         foreach ($modules as $moduleName) {
-            if (strstr($moduleName, 'Mygento_') === false
-                || $moduleName === 'Mygento_Base'
-            ) {
+            if (strstr($moduleName, 'Mygento_') === false) {
                 continue;
             }
 

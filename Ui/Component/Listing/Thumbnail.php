@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2019 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2021 Mygento (https://www.mygento.ru)
  * @package Mygento_Base
  */
 
@@ -10,7 +10,7 @@ namespace Mygento\Base\Ui\Component\Listing;
 
 class Thumbnail extends \Magento\Ui\Component\Listing\Columns\Column
 {
-    const ALT_FIELD = 'name';
+    public const ALT_FIELD = 'name';
 
     /** @var string */
     protected $baseUrl = '';
@@ -31,6 +31,11 @@ class Thumbnail extends \Magento\Ui\Component\Listing\Columns\Column
     private $urlBuilder;
 
     /**
+     * @var array
+     */
+    private $data;
+
+    /**
      * @param \Mygento\Base\Helper\Image $imageHelper
      * @param \Magento\Framework\UrlInterface $urlBuilder
      * @param \Magento\Framework\View\Element\UiComponent\ContextInterface $context
@@ -49,6 +54,7 @@ class Thumbnail extends \Magento\Ui\Component\Listing\Columns\Column
         parent::__construct($context, $uiComponentFactory, $components, $data);
         $this->imageHelper = $imageHelper;
         $this->urlBuilder = $urlBuilder;
+        $this->data = $data;
     }
 
     /**
@@ -58,29 +64,32 @@ class Thumbnail extends \Magento\Ui\Component\Listing\Columns\Column
      */
     public function prepareDataSource(array $dataSource)
     {
-        if (isset($dataSource['data']['items'])) {
-            foreach ($dataSource['data']['items'] as &$item) {
-                $fieldName = $this->getData('name');
-                $image = $item[$fieldName];
+        if (!isset($dataSource['data']['items'])) {
+            return $dataSource;
+        }
+        foreach ($dataSource['data']['items'] as &$item) {
+            $fieldName = $this->getData('name');
+            $image = $item[$fieldName];
 
-                $imageUrl = $this->imageHelper->getMediaUrl()
-                  . $this->baseUrl . $image;
+            $imageUrl = $this->imageHelper->getMediaUrl()
+              . $this->baseUrl . $image;
 
-                $thumbnailUrl = $this->imageHelper->resize(
-                    $image,
-                    $this->baseUrl
-                );
+            $thumbnailUrl = $this->imageHelper->resize(
+                $image,
+                $this->baseUrl,
+                $this->data['thumbnail']['viewId'],
+                $this->data['thumbnail']['moduleName']
+            );
 
-                $item[$fieldName . '_src'] = $thumbnailUrl;
-                $item[$fieldName . '_alt'] = $this->getAlt($item);
-                $item[$fieldName . '_link'] = $this->urlBuilder->getUrl(
-                    $this->route . '/' . $this->controller . '/edit',
-                    [
-                        'id' => $item[$this->key],
-                    ]
-                );
-                $item[$fieldName . '_orig_src'] = $imageUrl;
-            }
+            $item[$fieldName . '_src'] = $thumbnailUrl;
+            $item[$fieldName . '_alt'] = $this->getAlt($item);
+            $item[$fieldName . '_link'] = $this->urlBuilder->getUrl(
+                $this->route . '/' . $this->controller . '/edit',
+                [
+                    'id' => $item[$this->key],
+                ]
+            );
+            $item[$fieldName . '_orig_src'] = $imageUrl;
         }
 
         return $dataSource;

@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2019 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2021 Mygento (https://www.mygento.ru)
  * @package Mygento_Base
  */
 
@@ -12,10 +12,10 @@ use Magento\Framework\Exception\LocalizedException;
 
 class Transaction extends \Magento\Sales\Model\Order\Payment\Transaction
 {
-    const TYPE_CAPTURE_CONFIRM = 'capture_confirm';
-    const TYPE_FISCAL = 'fiscal_receipt';
-    const TYPE_FISCAL_PREPAYMENT = 'fiscal_prepay';
-    const TYPE_FISCAL_REFUND = 'fiscal_refund';
+    public const TYPE_CAPTURE_CONFIRM = 'capture_confirm';
+    public const TYPE_FISCAL = 'fiscal_receipt';
+    public const TYPE_FISCAL_PREPAYMENT = 'fiscal_prepay';
+    public const TYPE_FISCAL_REFUND = 'fiscal_refund';
 
     /**
      * Check whether specified or set transaction type is supported

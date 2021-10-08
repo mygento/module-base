@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2019 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2021 Mygento (https://www.mygento.ru)
  * @package Mygento_Base
  */
 
@@ -14,6 +14,7 @@ use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Exception\LocalizedException;
 
 /**
+ * @method getFieldConfig()
  * @SuppressWarnings(PHPMD.TooManyFields)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.ExcessiveParameterList)
@@ -21,16 +22,16 @@ use Magento\Framework\Exception\LocalizedException;
 class File extends \Magento\Framework\App\Config\Value
 {
     /**
-     * @var \Magento\Config\Model\Config\Backend\File\RequestData\RequestDataInterface
-     */
-    private $requestData;
-
-    /**
      * Upload max file size in kilobytes
      *
      * @var int
      */
-    private $maxFileSize = 0;
+    protected $maxFileSize = 0;
+
+    /**
+     * @var \Magento\Config\Model\Config\Backend\File\RequestData\RequestDataInterface
+     */
+    private $requestData;
 
     /**
      * @var \Magento\Framework\Filesystem
@@ -157,6 +158,16 @@ class File extends \Magento\Framework\App\Config\Value
     }
 
     /**
+     * Getter for allowed extensions of uploaded files
+     *
+     * @return array
+     */
+    protected function getAllowedExtensions()
+    {
+        return [];
+    }
+
+    /**
      * Receiving uploaded file data
      *
      * @return array
@@ -280,15 +291,5 @@ class File extends \Magento\Framework\App\Config\Value
         }
 
         return $path;
-    }
-
-    /**
-     * Getter for allowed extensions of uploaded files
-     *
-     * @return array
-     */
-    private function getAllowedExtensions()
-    {
-        return [];
     }
 }

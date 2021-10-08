@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2019 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2021 Mygento (https://www.mygento.ru)
  * @package Mygento_Base
  */
 
@@ -13,16 +13,35 @@ use Magento\Sales\Api\Data\InvoiceInterface as Invoice;
 use Magento\Sales\Api\Data\OrderInterface as Order;
 
 /**
- * Interface DiscountInterface
- *
  * Calculates prices of 1 unit for each item.
  * Recalculates order/invoice/creditmemo.
  * e.g. can spreads one item discount to all items
- *
- * @package Mygento\Base\Api
  */
 interface DiscountHelperInterface
 {
+    /** @deprecated */
+    public const VERSION = '1.0.25';
+
+    public const NAME_UNIT_PRICE = 'disc_hlpr_price';
+    public const NAME_ROW_AMOUNT_TO_SPREAD = 'discount_hlpr_row_amount_to_spread';
+    public const NAME_ROW_DIFF = 'recalc_row_diff';
+    public const NAME_NEW_DISC = 'recalc_new_discount';
+    public const NAME_MARKING = 'marking';
+    public const NAME_MARKING_LIST = 'marking_list';
+    public const NAME_MARKING_REFUND = 'marking_refund';
+
+    public const ORIG_GRAND_TOTAL = 'origGrandTotal';
+    public const ITEMS = 'items';
+    public const SHIPPING = 'shipping';
+    public const NAME = 'name';
+    public const PRICE = 'price';
+    public const SUM = 'sum';
+    public const QUANTITY = 'quantity';
+    public const TAX = 'tax';
+    public const MARKING = 'marking';
+    public const DA_INCL_TAX = 'discount_amount_incl_tax';
+    public const SHIPPING_DA_INCL_TAX = 'shipping_discount_amount_incl_tax';
+
     /**
      * Returns all items of the entity (order|invoice|creditmemo) with properly calculated discount
      * and properly calculated Sum
@@ -40,6 +59,12 @@ interface DiscountHelperInterface
         $taxAttributeCode = '',
         $shippingTaxValue = ''
     );
+
+    /**
+     * @param Creditmemo|Invoice|Order $entity
+     * @param float|int $amountToSpread
+     */
+    public function applyDiscount($entity = null, $amountToSpread = 0): void;
 
     /**
      * @param bool $isSplitItemsAllowed
@@ -60,18 +85,14 @@ interface DiscountHelperInterface
     public function setSpreadDiscOnAllUnits(bool $spreadDiscOnAllUnits);
 
     /**
-     * Custom floor() function
-     * @param float $val
-     * @param int $precision
-     * @return float|int
+     * @param bool $isAddGiftCardToPrice
+     * @return $this
      */
-    public function slyFloor($val, $precision = 2);
+    public function setIsAddGiftCardToPrice(bool $isAddGiftCardToPrice);
 
     /**
-     * Custom ceil() function
-     * @param float $val
-     * @param int $precision
-     * @return float|int
+     * @param bool $isAddRewardsToPrice
+     * @return $this
      */
-    public function slyCeil($val, $precision = 2);
+    public function setIsAddRewardsToPrice(bool $isAddRewardsToPrice);
 }
