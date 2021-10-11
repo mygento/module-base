@@ -1929,6 +1929,34 @@ class SplitItemsTest extends GeneralTestCase
             ],
         ];
 
+        $actualData[parent::TEST_CASE_NAME_36] = [
+            'sum' => 108.12,
+            'origGrandTotal' => 108.12,
+            'items' => [
+                100646 => [
+                    'price' => 45.9,
+                    'name' => 'pnBZBLlb',
+                    'quantity' => 1.0,
+                    'sum' => 45.9,
+                    'tax' => 'vat20',
+                ],
+                100647 => [
+                    'price' => 62.22,
+                    'name' => 'IEnM4KHM',
+                    'quantity' => 1.0,
+                    'sum' => 62.22,
+                    'tax' => 'vat20',
+                ],
+                'shipping' => [
+                    'name' => '',
+                    'price' => 0.00,
+                    'quantity' => 1.0,
+                    'sum' => 0.00,
+                    'tax' => '',
+                ],
+            ],
+        ];
+
         return $actualData;
     }
 }
