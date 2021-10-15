@@ -19,37 +19,26 @@ class Tax
 {
     /**
      * @param CreditmemoItemInterface|InvoiceItemInterface|OrderItemInterface $item
-     * @return float
+     * @return float|string|null
      */
-    public static function getDiscountAmountInclTax($item): float
+    public static function getDiscountAmountInclTax($item)
     {
-        $discAmountInclTax = (float) $item->getDiscountAmount();
-        $discPercent = (float) $item->getDiscountPercent();
-        if (!$discAmountInclTax
-            && $discPercent
+        $discAmountInclTax = $item->getDiscountAmount();
+        if (!floatval($discAmountInclTax)
+            && floatval($item->getDiscountPercent())
             && self::getItemProductType($item) === 'bundle'
-            && ($childrenItems = self::getItemChildrenItems($item))
+            && self::getItemChildrenItems($item)
         ) {
-            $discAmountInclTax = '0.0000';
-            foreach ($childrenItems as $childItem) {
-                $childDiscAmountInclTax = $childItem->getDiscountAmount();
-                //В зависимости от настроек скидка может применятся до вычисления налога, а может и после
-                if (self::isTaxCalculationNeeded($childItem)) {
-                    $taxPercent = self::getItemTaxPercent($childItem);
-                    $childDiscAmountInclTax = round((1 + $taxPercent / 100) * $childDiscAmountInclTax, 2);
-                }
-
-                $discAmountInclTax = bcadd($discAmountInclTax, $childDiscAmountInclTax, 4);
-            }
-        } else {
-            //В зависимости от настроек скидка может применятся до вычисления налога, а может и после
-            if (self::isTaxCalculationNeeded($item)) {
-                $taxPercent = self::getItemTaxPercent($item);
-                $discAmountInclTax = round((1 + $taxPercent / 100) * $discAmountInclTax, 2);
-            }
+            return self::getBundleDiscountAmountInclTax($item);
         }
 
-        return (float) $discAmountInclTax;
+        //В зависимости от настроек скидка может применятся до вычисления налога, а может и после
+        if (self::isTaxCalculationNeeded($item)) {
+            $taxPercent = self::getItemTaxPercent($item);
+            $discAmountInclTax = round((1 + $taxPercent / 100) * $discAmountInclTax, 2);
+        }
+
+        return $discAmountInclTax;
     }
 
     /**
@@ -168,5 +157,26 @@ class Tax
             (bccomp($taxAmount, '0.00', 2) === 0 || $isDiscountTaxAmountExist) &&
             $item->getRowTotal() !== $item->getRowTotalInclTax() &&
             bccomp(($item->getRowTotalInclTax() - $item->getDiscountAmount()), '0.00', 2) != 0;
+    }
+
+    /**
+     * @param CreditmemoItemInterface|InvoiceItemInterface|OrderItemInterface $item
+     * @return string
+     */
+    private static function getBundleDiscountAmountInclTax($item)
+    {
+        $discAmountInclTax = '0.0000';
+        foreach (self::getItemChildrenItems($item) as $childItem) {
+            $childDiscAmountInclTax = $childItem->getDiscountAmount();
+            //В зависимости от настроек скидка может применятся до вычисления налога, а может и после
+            if (self::isTaxCalculationNeeded($childItem)) {
+                $taxPercent = self::getItemTaxPercent($childItem);
+                $childDiscAmountInclTax = round((1 + $taxPercent / 100) * $childDiscAmountInclTax, 2);
+            }
+
+            $discAmountInclTax = bcadd($discAmountInclTax, $childDiscAmountInclTax, 4);
+        }
+
+        return $discAmountInclTax;
     }
 }
