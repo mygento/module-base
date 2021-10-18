@@ -23,16 +23,12 @@ class Tax
      */
     public static function getDiscountAmountInclTax($item)
     {
-        $discAmountInclTax = $item->getDiscountAmount();
-        if (!floatval($discAmountInclTax)
-            && floatval($item->getDiscountPercent())
-            && self::getItemProductType($item) === 'bundle'
-            && self::getItemChildrenItems($item)
-        ) {
+        if (self::canBeProcessedAsBundle($item)) {
             return self::getBundleDiscountAmountInclTax($item);
         }
 
-        //В зависимости от настроек скидка может применятся до вычисления налога, а может и после
+        $discAmountInclTax = $item->getDiscountAmount();
+        // В зависимости от настроек скидка может применяться до вычисления налога, а может и после
         if (self::isTaxCalculationNeeded($item)) {
             $taxPercent = self::getItemTaxPercent($item);
             $discAmountInclTax = round((1 + $taxPercent / 100) * $discAmountInclTax, 2);
@@ -161,6 +157,18 @@ class Tax
 
     /**
      * @param CreditmemoItemInterface|InvoiceItemInterface|OrderItemInterface $item
+     * @return bool
+     */
+    private static function canBeProcessedAsBundle($item)
+    {
+        return !floatval($item->getDiscountAmount())
+            && floatval($item->getDiscountPercent())
+            && self::getItemProductType($item) === 'bundle'
+            && self::getItemChildrenItems($item);
+    }
+
+    /**
+     * @param CreditmemoItemInterface|InvoiceItemInterface|OrderItemInterface $item
      * @return string
      */
     private static function getBundleDiscountAmountInclTax($item)
@@ -168,7 +176,7 @@ class Tax
         $discAmountInclTax = '0.0000';
         foreach (self::getItemChildrenItems($item) as $childItem) {
             $childDiscAmountInclTax = $childItem->getDiscountAmount();
-            //В зависимости от настроек скидка может применятся до вычисления налога, а может и после
+            // В зависимости от настроек скидка может применяться до вычисления налога, а может и после
             if (self::isTaxCalculationNeeded($childItem)) {
                 $taxPercent = self::getItemTaxPercent($childItem);
                 $childDiscAmountInclTax = round((1 + $taxPercent / 100) * $childDiscAmountInclTax, 2);
