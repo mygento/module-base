@@ -470,6 +470,7 @@ class GeneralTestCase extends TestCase
             OrderMockBuilder::getItem(73.2000, 73.2000, 0.0000, 1, null, 10.3700, 61.0000)
                 ->setProductType('bundle')
                 ->setDiscountPercent(15.0)
+                ->setHasChildren(true)
                 ->setChildrenItems([
                     OrderMockBuilder::getItem(22.8000, 22.8000, 3.4200, 1, 20.0000, 3.2300, 19.0000)
                         ->setProductType('simple')
