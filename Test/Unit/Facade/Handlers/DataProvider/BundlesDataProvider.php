@@ -24,8 +24,9 @@ class BundlesDataProvider
 
         //Обычный Bundle DynamicPrice=Disabled с 3 детками
         $order = OrderMockBuilder::getNewOrderInstance(1200.0000, 1230.0000, 30.0000);
-        $father = OrderMockBuilder::getItem(1200.0000, 600.0000, 0, 2);
-        $father->setProductType(Bundle::TYPE_CODE);
+        $father = OrderMockBuilder::getItem(1200.0000, 600.0000, 0, 2)
+            ->setHasChildren(true)
+            ->setProductType(Bundle::TYPE_CODE);
         $child1 = OrderMockBuilder::getItem(null, null, 0, 2);
         $child2 = OrderMockBuilder::getItem(null, null, 0, 2);
         $child3 = OrderMockBuilder::getItem(null, null, 0, 2);
@@ -69,8 +70,9 @@ class BundlesDataProvider
         $final['1. Заказ с 1 бандлом DynamicPrice = Disabled'] = [$order, $expected];
 
         $order = OrderMockBuilder::getNewOrderInstance(866.0000, 881.0000, 15.0000);
-        $father = OrderMockBuilder::getItem(866.0000, 866.0000, 0);
-        $father->setProductType(Bundle::TYPE_CODE);
+        $father = OrderMockBuilder::getItem(866.0000, 866.0000, 0)
+            ->setHasChildren(true)
+            ->setProductType(Bundle::TYPE_CODE);
         $child1 = OrderMockBuilder::getItem(null, null, 0, 1);
         $child1->setProduct(new DataObject(['final_price' => 180.00]));
         $child2 = OrderMockBuilder::getItem(null, null, 0, 1);
@@ -118,8 +120,9 @@ class BundlesDataProvider
         $final['2. Заказ с 1 бандлом DynamicPrice = Disabled. Цены дочерних берутся из продуктов'] = [$order, $expected];
 
         $order = OrderMockBuilder::getNewOrderInstance(866.0000, 880.0000, 15.0000);
-        $father = OrderMockBuilder::getItem(866.0000, 866.0000, 0);
-        $father->setProductType(Bundle::TYPE_CODE);
+        $father = OrderMockBuilder::getItem(866.0000, 866.0000, 0)
+            ->setHasChildren(true)
+            ->setProductType(Bundle::TYPE_CODE);
         //Dynamic Price = Enabled
         $father->setData('isChildrenCalculated', true);
         $child1 = OrderMockBuilder::getItem(100.00, 100.00, 0.12);
@@ -167,9 +170,10 @@ class BundlesDataProvider
         //Заказ созданный до фикса бага в пересчете
         $order = OrderMockBuilder::getNewOrderInstance(0.0000, 0.0000, 0, 0);
         $order->setData('gift_cards_amount', 1500);
-        $father = OrderMockBuilder::getItem(0.0000, 0.0000, 0.0000, 1, 20, 0);
-        $father->setProductType(Bundle::TYPE_CODE);
-        $father->setData('gift_cards_amount', 1500);
+        $father = OrderMockBuilder::getItem(0.0000, 0.0000, 0.0000, 1, 20, 0)
+            ->setHasChildren(true)
+            ->setProductType(Bundle::TYPE_CODE)
+            ->setData('gift_cards_amount', 1500);
         $child1 = OrderMockBuilder::getItem(null, null, 0, 1);
         $child1->setData('gift_cards_amount', 500.00);
         $child2 = OrderMockBuilder::getItem(null, null, 0, 1);
@@ -222,8 +226,9 @@ class BundlesDataProvider
 
         //Повторный пересчет
         $order = OrderMockBuilder::getNewOrderInstance(749.700, 862.21, 150.0000);
-        $father = OrderMockBuilder::getItem(749.7000, 749.7000, 0, 1);
-        $father->setProductType(Bundle::TYPE_CODE);
+        $father = OrderMockBuilder::getItem(749.7000, 749.7000, 0, 1)
+            ->setHasChildren(true)
+            ->setProductType(Bundle::TYPE_CODE);
         //Dynamic Price = Enabled
         $father->setData('isChildrenCalculated', true);
         $child1 = OrderMockBuilder::getItem(338.10, 338.10, 16.91);

@@ -973,6 +973,15 @@ class OrderItemMock extends DataObject implements OrderItemInterface
     }
 
     /**
+     * @param bool $hasChildren
+     * @return $this
+     */
+    public function setHasChildren($hasChildren)
+    {
+        return parent::setHasChildren($hasChildren);
+    }
+
+    /**
      * Set _isDeleted flag value (if $isDeleted parameter is defined) and return current flag value
      *
      * @param bool $isDeleted
@@ -1004,9 +1013,56 @@ class OrderItemMock extends DataObject implements OrderItemInterface
     }
 
     /**
+     * @param bool $shipment
+     * @return bool
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    public function isDummy($shipment = false)
+    {
+        if ($shipment) {
+            if ($this->getHasChildren() && $this->isShipSeparately()) {
+                return true;
+            }
+
+            if ($this->getHasChildren() && !$this->isShipSeparately()) {
+                return false;
+            }
+
+            if ($this->getParentItem() && $this->isShipSeparately()) {
+                return false;
+            }
+
+            if ($this->getParentItem() && !$this->isShipSeparately()) {
+                return true;
+            }
+        } else {
+            if ($this->getHasChildren() && $this->isChildrenCalculated()) {
+                return true;
+            }
+
+            if ($this->getHasChildren() && !$this->isChildrenCalculated()) {
+                return false;
+            }
+
+            if ($this->getParentItem() && $this->isChildrenCalculated()) {
+                return false;
+            }
+
+            if ($this->getParentItem() && !$this->isChildrenCalculated()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Return checking of what shipment type was for this product
+     * TODO: Implement (if when code uses this product param)
+     *
      * @return bool
      */
-    public function isDummy()
+    public function isShipSeparately()
     {
         return false;
     }

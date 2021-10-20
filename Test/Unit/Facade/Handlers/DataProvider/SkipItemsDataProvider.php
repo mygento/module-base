@@ -162,6 +162,6 @@ class SkipItemsDataProvider
         $virtualOrder = OrderMockBuilder::getNewOrderInstance(0.00, 125.0, 125);
         $virtualOrder->setEntityId(100600);
 
-        return [$order, $expected];
+        return [$order, $expected, $virtualOrder];
     }
 }

@@ -30,7 +30,9 @@ class StepByStepBundleDataProvider
         $order->setData('gift_cards_amount', 1493);
 
         $father = OrderMockBuilder::getItem(1293.6000, 1293.6000, 0);
-        $father->setProductType(Bundle::TYPE_CODE);
+        $father
+            ->setProductType(Bundle::TYPE_CODE)
+            ->setHasChildren(true);
         $child1 = OrderMockBuilder::getItem(null, null, 0);
         $child2 = OrderMockBuilder::getItem(null, null, 0);
         $father->setChildrenItems([$child1, $child2]);
@@ -90,8 +92,10 @@ class StepByStepBundleDataProvider
         $order->setData('gift_cards_amount', 1493);
 
         $father = OrderMockBuilder::getItem(1293.6000, 1293.6000, 0);
-        $father->setProductType(Bundle::TYPE_CODE);
-        $father->setData('isChildrenCalculated', true);
+        $father
+            ->setProductType(Bundle::TYPE_CODE)
+            ->setData('isChildrenCalculated', true)
+            ->setHasChildren(true);
         $child1 = OrderMockBuilder::getItem(293.60, 293.60, 0);
         $child2 = OrderMockBuilder::getItem(1000, 1000, 0);
         $father->setChildrenItems([$child1, $child2]);
@@ -149,9 +153,10 @@ class StepByStepBundleDataProvider
         $order = OrderMockBuilder::getNewOrderInstance(1293.6, 0.50, 200.0000, 0, -0.1);
         $order->setData('gift_cards_amount', 1493);
 
-        $father = OrderMockBuilder::getItem(1293.6000, 1293.6000, 0.1);
-        $father->setRowTotal(1293.6000);
-        $father->setProductType(Bundle::TYPE_CODE);
+        $father = OrderMockBuilder::getItem(1293.6000, 1293.6000, 0.1)
+            ->setRowTotal(1293.6000)
+            ->setProductType(Bundle::TYPE_CODE)
+            ->setHasChildren(true);
         $child1 = OrderMockBuilder::getItem(null, null, 0);
         $child2 = OrderMockBuilder::getItem(null, null, 0);
         $father->setChildrenItems([$child1, $child2]);
@@ -210,9 +215,10 @@ class StepByStepBundleDataProvider
         $order = OrderMockBuilder::getNewOrderInstance(1293.6, 0.50, 200.0000, 0, -0.1);
         $order->setData('gift_cards_amount', 1493);
 
-        $father = OrderMockBuilder::getItem(1293.6000, 1293.6000, 0.1);
-        $father->setProductType(Bundle::TYPE_CODE);
-        $father->setData('isChildrenCalculated', true);
+        $father = OrderMockBuilder::getItem(1293.6000, 1293.6000, 0.1)
+            ->setProductType(Bundle::TYPE_CODE)
+            ->setHasChildren(true)
+            ->setData('isChildrenCalculated', true);
         $child1 = OrderMockBuilder::getItem(293.60, 293.60, 0);
         $child2 = OrderMockBuilder::getItem(1000, 1000, 0.1);
         $father->setChildrenItems([$child1, $child2]);

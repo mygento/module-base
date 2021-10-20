@@ -34,10 +34,11 @@ class ExtraDiscountsDataProvider
         $simple7 = OrderMockBuilder::getItem(0.0, 0.0, 0.0000, 1, 20);
         $simple8 = OrderMockBuilder::getItem(0.0, 0.0, 0.0000, 1, 20);
 
-        $father = OrderMockBuilder::getItem(2745.500, 2745.500, 0.0000, 1, 0);
-        $father->setName('Bundle');
-        $father->setProductType(Bundle::TYPE_CODE);
-        $father->setData('isChildrenCalculated', true);
+        $father = OrderMockBuilder::getItem(2745.500, 2745.500, 0.0000, 1, 0)
+            ->setName('Bundle')
+            ->setHasChildren(true)
+            ->setProductType(Bundle::TYPE_CODE)
+            ->setData('isChildrenCalculated', true);
         $child1 = OrderMockBuilder::getItem(1515.55, 1515.55, 0, 1);
         $child1->setName('Child 1');
         $child2 = OrderMockBuilder::getItem(1229.95, 1229.95, 0, 1);
@@ -149,8 +150,9 @@ class ExtraDiscountsDataProvider
         //В заказе нет флага о том, что он был пересчитан. Поэтому кейс негативный, проверяем наличие ошибки.
         $order = OrderMockBuilder::getNewOrderInstance(0.0000, 0.0000, 0, 0);
         $order->setData('gift_cards_amount', 1500);
-        $father = OrderMockBuilder::getItem(0.0000, 0.0000, 0.0000, 1, 20, 0);
-        $father->setProductType(Bundle::TYPE_CODE);
+        $father = OrderMockBuilder::getItem(0.0000, 0.0000, 0.0000, 1, 20, 0)
+            ->setHasChildren(true)
+            ->setProductType(Bundle::TYPE_CODE);
         $child1 = OrderMockBuilder::getItem(null, null, 0, 1);
         $child1->setData('gift_cards_amount', 500.00);
         $child2 = OrderMockBuilder::getItem(null, null, 0, 1);

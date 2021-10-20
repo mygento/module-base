@@ -72,6 +72,7 @@ class DiscountAmountInclTaxTest extends TestCase
 
         $final[self::TEST_CASE_NAME_2] = OrderMockBuilder::getItem(73.2000, 73.2000, 0.0000, 1, null, 10.3700, 61.0000)
             ->setProductType('bundle')
+            ->setHasChildren(true)
             ->setDiscountPercent(15.0)
             ->setChildrenItems([
                 OrderMockBuilder::getItem(22.8000, 22.8000, 3.4200, 1, 20.0000, 3.2300, 19.0000)
