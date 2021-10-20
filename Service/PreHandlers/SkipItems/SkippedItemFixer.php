@@ -47,6 +47,7 @@ class SkippedItemFixer
     {
         $orderMock = $this->getDummyOrder($item);
 
+        /** @var \Mygento\Base\Api\DiscountHelperInterface $freshDiscountHelper */
         $freshDiscountHelper = $this->discountHelperFactory->create();
         $rawResult = $freshDiscountHelper->getRecalculated($orderMock);
         $result = $this->recalculateResultFactory->create($rawResult);

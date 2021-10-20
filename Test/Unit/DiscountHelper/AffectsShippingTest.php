@@ -8,6 +8,8 @@
 
 namespace Mygento\Base\Test\Unit\DiscountHelper;
 
+use Mygento\Base\Test\Extra\TableOutput;
+
 class AffectsShippingTest extends GeneralTestCase
 {
     /**
@@ -23,6 +25,12 @@ class AffectsShippingTest extends GeneralTestCase
         $this->assertTrue(method_exists($this->discountHelper, 'getRecalculated'));
 
         $recalculatedData = $this->discountHelper->getRecalculated($order, 'vat20');
+
+        TableOutput::dumpOrder($order, '1. Incoming');
+
+        $result = $this->getRecalculateResultFactory()->create($recalculatedData);
+
+        TableOutput::dumpResult($result, '2. Recalculation');
 
         $this->assertEquals($recalculatedData['sum'], $expectedArray['sum'], 'Total sum failed');
         $this->assertEquals($recalculatedData['origGrandTotal'], $expectedArray['origGrandTotal']);
@@ -866,7 +874,7 @@ class AffectsShippingTest extends GeneralTestCase
         ];
 
         $actualData[parent::TEST_CASE_NAME_21] = [
-            'sum' => 17431.3,
+            'sum' => 17431.00,
             'origGrandTotal' => 17431.01,
             'items' => [
                 100596 => [
@@ -876,9 +884,9 @@ class AffectsShippingTest extends GeneralTestCase
                     'tax' => 'vat20',
                 ],
                 100597 => [
-                    'price' => 29.01,
+                    'price' => 29.00,
                     'quantity' => 30,
-                    'sum' => 870.3,
+                    'sum' => 870.0,
                     'tax' => 'vat20',
                 ],
                 100598 => [
@@ -972,9 +980,9 @@ class AffectsShippingTest extends GeneralTestCase
                     'tax' => 'vat20',
                 ],
                 'shipping' => [
-                    'price' => -0.29,
+                    'price' => 0.01,
                     'quantity' => 1,
-                    'sum' => -0.29,
+                    'sum' => 0.01,
                     'tax' => '',
                 ],
             ],
@@ -1401,6 +1409,34 @@ class AffectsShippingTest extends GeneralTestCase
                     'price' => 0.03,
                     'quantity' => 1.0,
                     'sum' => 0.03,
+                    'tax' => '',
+                ],
+            ],
+        ];
+
+        $actualData[parent::TEST_CASE_NAME_36] = [
+            'sum' => 108.12,
+            'origGrandTotal' => 108.12,
+            'items' => [
+                100646 => [
+                    'price' => 45.9,
+                    'name' => 'ddt31Txu',
+                    'quantity' => 1.0,
+                    'sum' => 45.9,
+                    'tax' => 'vat20',
+                ],
+                100647 => [
+                    'price' => 62.22,
+                    'name' => 'yyTmtmEO',
+                    'quantity' => 1.0,
+                    'sum' => 62.22,
+                    'tax' => 'vat20',
+                ],
+                'shipping' => [
+                    'name' => '',
+                    'price' => 0.00,
+                    'quantity' => 1.0,
+                    'sum' => 0.00,
                     'tax' => '',
                 ],
             ],

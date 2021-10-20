@@ -6,7 +6,7 @@
  * @package Mygento_Base
  */
 
-namespace Mygento\Base\Test\Unit\Facade;
+namespace Mygento\Base\Test\Unit\Facade\Handlers\DataProvider;
 
 use Magento\Bundle\Model\Product\Type as Bundle;
 use Magento\Framework\DataObject;
@@ -163,11 +163,13 @@ class BundlesDataProvider
         ];
         $final['3. Заказ с 1 бандлом DynamicPrice = Enabled и скидкой'] = [$order, $expected];
 
-        //Пересчитанный заказ с 1 бандлом и Gift Card полная оплата.
+        //Старый пересчитанный заказ с 1 бандлом и Gift Card полная оплата.
+        //Заказ созданный до фикса бага в пересчете
         $order = OrderMockBuilder::getNewOrderInstance(0.0000, 0.0000, 0, 0);
         $order->setData('gift_cards_amount', 1500);
         $father = OrderMockBuilder::getItem(0.0000, 0.0000, 0.0000, 1, 20, 0);
         $father->setProductType(Bundle::TYPE_CODE);
+        $father->setData('gift_cards_amount', 1500);
         $child1 = OrderMockBuilder::getItem(null, null, 0, 1);
         $child1->setData('gift_cards_amount', 500.00);
         $child2 = OrderMockBuilder::getItem(null, null, 0, 1);

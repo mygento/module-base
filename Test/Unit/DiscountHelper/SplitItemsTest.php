@@ -1383,15 +1383,15 @@ class SplitItemsTest extends GeneralTestCase
                     'tax' => 'vat20',
                 ],
                 '100597_1' => [
-                    'price' => 29.01,
-                    'quantity' => 1,
-                    'sum' => 29.01,
+                    'price' => 29.00,
+                    'quantity' => 29,
+                    'sum' => 841.00,
                     'tax' => 'vat20',
                 ],
                 '100597_2' => [
-                    'price' => 29,
-                    'quantity' => 29,
-                    'sum' => 841,
+                    'price' => 29.01,
+                    'quantity' => 1,
+                    'sum' => 29.01,
                     'tax' => 'vat20',
                 ],
                 100598 => [
@@ -1924,6 +1924,34 @@ class SplitItemsTest extends GeneralTestCase
                     'price' => 0.0,
                     'quantity' => 1.0,
                     'sum' => 0.0,
+                    'tax' => '',
+                ],
+            ],
+        ];
+
+        $actualData[parent::TEST_CASE_NAME_36] = [
+            'sum' => 108.12,
+            'origGrandTotal' => 108.12,
+            'items' => [
+                100646 => [
+                    'price' => 45.9,
+                    'name' => 'pnBZBLlb',
+                    'quantity' => 1.0,
+                    'sum' => 45.9,
+                    'tax' => 'vat20',
+                ],
+                100647 => [
+                    'price' => 62.22,
+                    'name' => 'IEnM4KHM',
+                    'quantity' => 1.0,
+                    'sum' => 62.22,
+                    'tax' => 'vat20',
+                ],
+                'shipping' => [
+                    'name' => '',
+                    'price' => 0.00,
+                    'quantity' => 1.0,
+                    'sum' => 0.00,
                     'tax' => '',
                 ],
             ],

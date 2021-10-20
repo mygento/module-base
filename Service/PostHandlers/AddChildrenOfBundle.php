@@ -23,7 +23,6 @@ use Mygento\Base\Model\Mock\OrderMock;
 use Mygento\Base\Model\Recalculator\ResultFactory;
 
 /**
- * Class AddChildrenOfBundle
  * Этот класс пересчитывает дочерние продукты для бандлов,
  * чтобы их цена тоже соответствовала пересчитанному родителю
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -87,6 +86,7 @@ class AddChildrenOfBundle implements RecalculationPostHandlerInterface
 
             $dummyOrder = $this->getDummyOrderBasedOnBundle($item, $recalcOriginal);
 
+            /** @var \Mygento\Base\Api\DiscountHelperInterface $freshDiscountHelper */
             $freshDiscountHelper = $this->discountHelperFactory->create();
             $freshDiscountHelper->setSpreadDiscOnAllUnits(true);
 
@@ -148,7 +148,9 @@ class AddChildrenOfBundle implements RecalculationPostHandlerInterface
             $item->setData('id', $child->getItemId());
             $item->setData('name', $child->getName());
             $item->setData('row_total_incl_tax', $child->getRowTotalInclTax());
+            $item->setData('row_total', $child->getRowTotal());
             $item->setData('price_incl_tax', $child->getPriceInclTax());
+            $item->setData('price', $child->getPrice());
             $item->setData('discount_amount', $child->getDiscountAmount());
             $item->setData('qty', $child->getQtyOrdered());
             $item->setData('tax_percent', $child->getTaxPercent());
@@ -161,11 +163,9 @@ class AddChildrenOfBundle implements RecalculationPostHandlerInterface
         $order->setData('subtotal_incl_tax', $st);
         $order->setData('grand_total', $grandTotal);
         $order->setData('shipping_incl_tax', 0.00);
-        $order->setData('discount_amount', 0.00);
 
-        //Скидка на весь виртуальный заказ
-        $discountAmount = bcsub($order->getSubtotalInclTax(), $order->getGrandTotal(), 4);
-        $order->setData(DiscountHelperInterface::DA_INCL_TAX, $discountAmount);
+        //Нет необходимости указывать скидку явно. Она будет расчитана как
+        // GT - ST - SH - DA
 
         return $order;
     }
@@ -186,8 +186,10 @@ class AddChildrenOfBundle implements RecalculationPostHandlerInterface
 
         $parentItemRecalculated = $this->getRecalculatedItemById($parentItem->getItemId(), $recalcOriginal);
 
+        $extraDiscounts = $this->getExtraDiscounts($parentItemRecalculated);
         //Эта сумма должна быть распределена между дочерними позициями
         $grandTotal = $parentItemRecalculated->getSum();
+        $total = $grandTotal + $extraDiscounts;
 
         $numberChildren = count($parentItem->getChildrenItems());
 
@@ -200,7 +202,7 @@ class AddChildrenOfBundle implements RecalculationPostHandlerInterface
             /** @var \Magento\Catalog\Api\Data\ProductInterface $product */
             $price = $child->getProduct()
                 ? $child->getProduct()->getFinalPrice()
-                : $grandTotal / ($numberChildren * $qty);
+                : $total / ($numberChildren * $qty);
 
             $item->setData('id', $child->getItemId());
             $item->setData('name', $child->getName());
@@ -216,9 +218,8 @@ class AddChildrenOfBundle implements RecalculationPostHandlerInterface
         $order->setSubtotal($subtotal);
         $order->setGrandTotal($grandTotal);
 
-        //Скидка на весь виртуальный заказ
-        $discountAmount = bcsub($order->getSubtotalInclTax(), $order->getGrandTotal(), 4);
-        $order->setData(DiscountHelperInterface::DA_INCL_TAX, $discountAmount);
+        //Нет необходимости указывать скидку явно. Она будет расчитана как
+        // GT - ST - SH - DA
 
         return $order;
     }
@@ -307,6 +308,7 @@ class AddChildrenOfBundle implements RecalculationPostHandlerInterface
         Order $dummyOrder
     ) {
         $recalculatedItem = $recalcOriginalObject->getItemById($parentItem->getItemId());
+        /** @var \Mygento\Base\Api\DiscountHelperInterface $freshDiscountHelper */
         $freshDiscountHelper = $this->discountHelperFactory->create();
         $freshDiscountHelper->setSpreadDiscOnAllUnits(true);
 
@@ -376,5 +378,19 @@ class AddChildrenOfBundle implements RecalculationPostHandlerInterface
         }
 
         return $resultChildren;
+    }
+
+    /**
+     * @param RecalculateResultItemInterface $parentItemRecalculated
+     * @return float
+     */
+    private function getExtraDiscounts($parentItemRecalculated): float
+    {
+        $excluded = 0.0;
+        $excluded += ($parentItemRecalculated->getGiftCardAmount() ?? 0);
+        $excluded += ($parentItemRecalculated->getRewardCurrencyAmount() ?? 0);
+        $excluded += ($parentItemRecalculated->getCustomerBalanceAmount() ?? 0);
+
+        return $excluded;
     }
 }
