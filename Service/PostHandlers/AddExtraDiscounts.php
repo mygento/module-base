@@ -43,12 +43,26 @@ class AddExtraDiscounts implements RecalculationPostHandlerInterface
     /**
      * @param Order $order
      * @param RecalculateResultInterface $recalcOriginal
+     * @param mixed $taxValue
+     * @param mixed $taxAttributeCode
+     * @param mixed $shippingTaxValue
+     * @param mixed $markingAttributeCode
+     * @param mixed $markingListAttributeCode
+     * @param mixed $markingRefundAttributeCode
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @return RecalculateResultInterface
      */
-    public function handle(Order $order, RecalculateResultInterface $recalcOriginal): RecalculateResultInterface
-    {
+    public function handle(
+        Order $order,
+        RecalculateResultInterface $recalcOriginal,
+        $taxValue = '',
+        $taxAttributeCode = '',
+        $shippingTaxValue = '',
+        $markingAttributeCode = '',
+        $markingListAttributeCode = '',
+        $markingRefundAttributeCode = ''
+    ): RecalculateResultInterface {
         /** @var \Mygento\Base\Api\DiscountHelperInterface $discountHelper */
         $discountHelper = $this->discountHelperFactory->create();
 

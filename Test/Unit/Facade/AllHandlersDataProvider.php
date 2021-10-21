@@ -15,6 +15,9 @@ use Mygento\Base\Test\Unit\Facade\Handlers\DataProvider\SkipItemsDataProvider;
 
 class AllHandlersDataProvider
 {
+    private const DEFAULT_TAX_FOR_ALL_VALUE = 'VAT20';
+    private const DEFAULT_SHIPPING_TAX_VALUE = 'SHVAT20';
+
     /**
      * @return array
      * @SuppressWarnings(PHPMD)
@@ -53,18 +56,125 @@ class AllHandlersDataProvider
                     'quantity' => 1.0,
                     'sum' => 0.0,
                     'gift_cards_amount' => 1293.6,
+                    'tax' => self::DEFAULT_TAX_FOR_ALL_VALUE,
                     'children' => [
                         100502 => [
                             'price' => 0.0,
                             'quantity' => 1.0,
                             'sum' => 0.0,
                             'gift_cards_amount' => 646.8,
+                            'tax' => self::DEFAULT_TAX_FOR_ALL_VALUE,
                         ],
                         100503 => [
                             'price' => 0.0,
                             'quantity' => 1.0,
                             'sum' => 0.0,
                             'gift_cards_amount' => 646.8,
+                            'tax' => self::DEFAULT_TAX_FOR_ALL_VALUE,
+                        ],
+                    ],
+                ],
+                'shipping' => [
+                    'price' => 0.6,
+                    'quantity' => 1.0,
+                    'sum' => 0.6,
+                    'tax' => self::DEFAULT_SHIPPING_TAX_VALUE,
+                ],
+            ],
+        ];
+
+        return [$order, $expected, null, self::DEFAULT_TAX_FOR_ALL_VALUE, self::DEFAULT_SHIPPING_TAX_VALUE];
+    }
+
+    private static function test2(): array
+    {
+        $order = OrderMockBuilder::getNewOrderInstance(1293.6, 0.60, 200.0000, 0, 0);
+        $order->setData('gift_cards_amount', 1493);
+
+        $father = OrderMockBuilder::getItem(1293.6000, 1293.6000, 0)
+            ->setHasChildren(true)
+            ->setProductType(Bundle::TYPE_CODE);
+        $child1 = OrderMockBuilder::getItem(null, null, 0);
+        $child1->setProduct(new DataObject(['final_price' => 293.60]));
+        $child2 = OrderMockBuilder::getItem(null, null, 0);
+        $child2->setProduct(new DataObject(['final_price' => 1000.00]));
+        $father->setChildrenItems([$child1, $child2]);
+        OrderMockBuilder::addItem($order, $father);
+
+        $expected = [
+            'sum' => 0,
+            'origGrandTotal' => 0.60,
+            'items' => [
+                100601 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'gift_cards_amount' => 1293.6,
+                    'tax' => self::DEFAULT_TAX_FOR_ALL_VALUE,
+                    'children' => [
+                        100602 => [
+                            'price' => 0,
+                            'quantity' => 1.0,
+                            'sum' => 0,
+                            'gift_cards_amount' => 293.6,
+                            'tax' => self::DEFAULT_TAX_FOR_ALL_VALUE,
+                        ],
+                        100603 => [
+                            'price' => 0.0,
+                            'quantity' => 1.0,
+                            'sum' => 0,
+                            'gift_cards_amount' => 1000.0,
+                            'tax' => self::DEFAULT_TAX_FOR_ALL_VALUE,
+                        ],
+                    ],
+                ],
+                'shipping' => [
+                    'price' => 0.6,
+                    'quantity' => 1.0,
+                    'sum' => 0.6,
+                    'tax' => self::DEFAULT_SHIPPING_TAX_VALUE,
+                ],
+            ],
+        ];
+
+        return [$order, $expected, null, self::DEFAULT_TAX_FOR_ALL_VALUE, self::DEFAULT_SHIPPING_TAX_VALUE];
+    }
+
+    private static function test3(): array
+    {
+        $order = OrderMockBuilder::getNewOrderInstance(1293.6, 0.60, 200.0000, 0, 0);
+        $order->setData('gift_cards_amount', 1493);
+
+        $father = OrderMockBuilder::getItem(1293.6000, 1293.6000, 0)
+            ->setProductType(Bundle::TYPE_CODE)
+            ->setHasChildren(true)
+            ->setData('isChildrenCalculated', true);
+        $child1 = OrderMockBuilder::getItem(293.60, 293.60, 0);
+        $child2 = OrderMockBuilder::getItem(1000, 1000, 0);
+        $father->setChildrenItems([$child1, $child2]);
+        OrderMockBuilder::addItem($order, $father);
+
+        $expected = [
+            'sum' => 0.0,
+            'origGrandTotal' => 0.6,
+            'items' => [
+                100501 => [
+                    'price' => 0.0,
+                    'quantity' => 1.0,
+                    'sum' => 0.0,
+                    'gift_cards_amount' => 1293.6,
+                    'children' => [
+                        100502 => [
+                            'price' => 0.0,
+                            'quantity' => 1.0,
+                            'sum' => 0.0,
+                            'gift_cards_amount' => 293.6,
+                        ],
+                        100503 => [
+                            'price' => 0.0,
+                            'quantity' => 1.0,
+                            'sum' => 0.0,
+                            'gift_cards_amount' => 1000,
                         ],
                     ],
                 ],
@@ -127,18 +237,19 @@ class AllHandlersDataProvider
                     'price' => 1781.59,
                     'quantity' => 3.0,
                     'sum' => 5344.77,
+                    'tax' => self::DEFAULT_TAX_FOR_ALL_VALUE,
                     'children' => [
                         100503 => [
                             'price' => 888.79,
                             'quantity' => 3.0,
                             'sum' => 2666.37,
-                            'tax' => '',
+                            'tax' => self::DEFAULT_TAX_FOR_ALL_VALUE,
                         ],
                         100504 => [
                             'price' => 892.8,
                             'quantity' => 3.0,
                             'sum' => 2678.4,
-                            'tax' => '',
+                            'tax' => self::DEFAULT_TAX_FOR_ALL_VALUE,
                         ],
                     ],
                 ],
@@ -146,123 +257,24 @@ class AllHandlersDataProvider
                     'price' => 2152.8,
                     'quantity' => 1.0,
                     'sum' => 2152.8,
-                    'tax' => '',
+                    'tax' => self::DEFAULT_TAX_FOR_ALL_VALUE,
                 ],
                 'shipping' => [
                     'price' => 0.0,
                     'quantity' => 1.0,
                     'sum' => 0.0,
-                    'tax' => '',
+                    'tax' => self::DEFAULT_SHIPPING_TAX_VALUE,
                 ],
                 100501 => [
                     'price' => 2763.55,
                     'quantity' => 1.0,
                     'sum' => 2763.55,
-                    'tax' => '',
+                    'tax' => self::DEFAULT_TAX_FOR_ALL_VALUE,
                 ],
             ],
         ];
 
-        return [$order, $expected];
-    }
-
-    private static function test2(): array
-    {
-        $order = OrderMockBuilder::getNewOrderInstance(1293.6, 0.60, 200.0000, 0, 0);
-        $order->setData('gift_cards_amount', 1493);
-
-        $father = OrderMockBuilder::getItem(1293.6000, 1293.6000, 0)
-            ->setHasChildren(true)
-            ->setProductType(Bundle::TYPE_CODE);
-        $child1 = OrderMockBuilder::getItem(null, null, 0);
-        $child1->setProduct(new DataObject(['final_price' => 293.60]));
-        $child2 = OrderMockBuilder::getItem(null, null, 0);
-        $child2->setProduct(new DataObject(['final_price' => 1000.00]));
-        $father->setChildrenItems([$child1, $child2]);
-        OrderMockBuilder::addItem($order, $father);
-
-        $expected = [
-            'sum' => 0,
-            'origGrandTotal' => 0.60,
-            'items' => [
-                100601 => [
-                    'price' => 0.0,
-                    'quantity' => 1.0,
-                    'sum' => 0.0,
-                    'gift_cards_amount' => 1293.6,
-                    'children' => [
-                        100602 => [
-                            'price' => 0,
-                            'quantity' => 1.0,
-                            'sum' => 0,
-                            'gift_cards_amount' => 293.6,
-                        ],
-                        100603 => [
-                            'price' => 0.0,
-                            'quantity' => 1.0,
-                            'sum' => 0,
-                            'gift_cards_amount' => 1000.0,
-                        ],
-                    ],
-                ],
-                'shipping' => [
-                    'price' => 0.6,
-                    'quantity' => 1.0,
-                    'sum' => 0.6,
-                ],
-            ],
-        ];
-
-        return [$order, $expected];
-    }
-
-    private static function test3(): array
-    {
-        $order = OrderMockBuilder::getNewOrderInstance(1293.6, 0.60, 200.0000, 0, 0);
-        $order->setData('gift_cards_amount', 1493);
-
-        $father = OrderMockBuilder::getItem(1293.6000, 1293.6000, 0)
-            ->setProductType(Bundle::TYPE_CODE)
-            ->setHasChildren(true)
-            ->setData('isChildrenCalculated', true);
-        $child1 = OrderMockBuilder::getItem(293.60, 293.60, 0);
-        $child2 = OrderMockBuilder::getItem(1000, 1000, 0);
-        $father->setChildrenItems([$child1, $child2]);
-        OrderMockBuilder::addItem($order, $father);
-
-        $expected = [
-            'sum' => 0.0,
-            'origGrandTotal' => 0.6,
-            'items' => [
-                100501 => [
-                    'price' => 0.0,
-                    'quantity' => 1.0,
-                    'sum' => 0.0,
-                    'gift_cards_amount' => 1293.6,
-                    'children' => [
-                        100502 => [
-                            'price' => 0.0,
-                            'quantity' => 1.0,
-                            'sum' => 0.0,
-                            'gift_cards_amount' => 293.6,
-                        ],
-                        100503 => [
-                            'price' => 0.0,
-                            'quantity' => 1.0,
-                            'sum' => 0.0,
-                            'gift_cards_amount' => 1000,
-                        ],
-                    ],
-                ],
-                'shipping' => [
-                    'price' => 0.6,
-                    'quantity' => 1.0,
-                    'sum' => 0.6,
-                ],
-            ],
-        ];
-
-        return [$order, $expected];
+        return [$order, $expected, null, self::DEFAULT_TAX_FOR_ALL_VALUE, self::DEFAULT_SHIPPING_TAX_VALUE];
     }
 
     private static function testsForSkippedItems(): array
@@ -280,24 +292,26 @@ class AllHandlersDataProvider
                     'price' => 739.2,
                     'quantity' => 1.0,
                     'sum' => 739.2,
-                    'tax' => '',
+                    'tax' => self::DEFAULT_TAX_FOR_ALL_VALUE,
                 ],
                 'shipping' => [
                     'price' => 125.00,
                     'quantity' => 1.0,
                     'sum' => 125.00,
-                    'tax' => '',
+                    'tax' => self::DEFAULT_SHIPPING_TAX_VALUE,
                 ],
                 100510 => [
                     'price' => 60.0,
                     'quantity' => 1.0,
                     'sum' => 60.0,
-                    'tax' => '',
+                    'tax' => self::DEFAULT_TAX_FOR_ALL_VALUE,
                 ],
             ],
         ];
 
         $tests[$newKey][1] = $expected;
+        $tests[$newKey][3] = self::DEFAULT_TAX_FOR_ALL_VALUE;
+        $tests[$newKey][4] = self::DEFAULT_SHIPPING_TAX_VALUE;
 
         $key2 = SkipItemsDataProvider::TEST_2_NAME;
         $newKey = str_replace('2.', '5. Skipper:', $key2);

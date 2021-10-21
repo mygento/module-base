@@ -16,9 +16,24 @@ interface RecalculationPostHandlerInterface
     /**
      * @param Order $order
      * @param RecalculateResultInterface $recalcOriginal
+     * @param string $taxValue
+     * @param string $taxAttributeCode
+     * @param string $shippingTaxValue
+     * @param string $markingAttributeCode
+     * @param string $markingListAttributeCode
+     * @param string $markingRefundAttributeCode
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @return RecalculateResultInterface
      */
-    public function handle(Order $order, RecalculateResultInterface $recalcOriginal): RecalculateResultInterface;
+    public function handle(
+        Order $order,
+        RecalculateResultInterface $recalcOriginal,
+        $taxValue = '',
+        $taxAttributeCode = '',
+        $shippingTaxValue = '',
+        $markingAttributeCode = '',
+        $markingListAttributeCode = '',
+        $markingRefundAttributeCode = ''
+    ): RecalculateResultInterface;
 }
