@@ -249,7 +249,7 @@ class RecalculatorFacade implements RecalculatorFacadeInterface
         if ($entity instanceof Order) {
             //Make some auxiliary actions after recalculation
             foreach ($this->postHandlers as $handler) {
-                $handler->handle($entity, $resultObject);
+                $handler->handle($entity, $resultObject, ...$args);
             }
         }
 
