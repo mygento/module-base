@@ -1016,6 +1016,8 @@ class OrderItemMock extends DataObject implements OrderItemInterface
      * @param bool $shipment
      * @return bool
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @see \Magento\Sales\Model\Order\Item::isDummy()
      */
     public function isDummy($shipment = false)
     {
@@ -1035,22 +1037,24 @@ class OrderItemMock extends DataObject implements OrderItemInterface
             if ($this->getParentItem() && !$this->isShipSeparately()) {
                 return true;
             }
-        } else {
-            if ($this->getHasChildren() && $this->isChildrenCalculated()) {
-                return true;
-            }
 
-            if ($this->getHasChildren() && !$this->isChildrenCalculated()) {
-                return false;
-            }
+            return false;
+        }
 
-            if ($this->getParentItem() && $this->isChildrenCalculated()) {
-                return false;
-            }
+        if ($this->getHasChildren() && $this->isChildrenCalculated()) {
+            return true;
+        }
 
-            if ($this->getParentItem() && !$this->isChildrenCalculated()) {
-                return true;
-            }
+        if ($this->getHasChildren() && !$this->isChildrenCalculated()) {
+            return false;
+        }
+
+        if ($this->getParentItem() && $this->isChildrenCalculated()) {
+            return false;
+        }
+
+        if ($this->getParentItem() && !$this->isChildrenCalculated()) {
+            return true;
         }
 
         return false;
