@@ -61,11 +61,25 @@ class AddChildrenOfBundle implements RecalculationPostHandlerInterface
     /**
      * @param Order $order
      * @param RecalculateResultInterface|null $recalcOriginal
+     * @param mixed $taxValue
+     * @param mixed $taxAttributeCode
+     * @param mixed $shippingTaxValue
+     * @param mixed $markingAttributeCode
+     * @param mixed $markingListAttributeCode
+     * @param mixed $markingRefundAttributeCode
      * @throws \Exception
      * @return RecalculateResultInterface
      */
-    public function handle(Order $order, RecalculateResultInterface $recalcOriginal): RecalculateResultInterface
-    {
+    public function handle(
+        Order $order,
+        RecalculateResultInterface $recalcOriginal,
+        $taxValue = '',
+        $taxAttributeCode = '',
+        $shippingTaxValue = '',
+        $markingAttributeCode = '',
+        $markingListAttributeCode = '',
+        $markingRefundAttributeCode = ''
+    ): RecalculateResultInterface {
         $isRecalculated = $order->getPayment()->getAdditionalInformation(PaymentInterface::RECALCULATED_FLAG);
 
         $items = $order->getAllVisibleItems() ?? $order->getAllItems();
@@ -90,7 +104,16 @@ class AddChildrenOfBundle implements RecalculationPostHandlerInterface
             $freshDiscountHelper = $this->discountHelperFactory->create();
             $freshDiscountHelper->setSpreadDiscOnAllUnits(true);
 
-            $discountData = $freshDiscountHelper->getRecalculated($dummyOrder);
+            $discountData = $freshDiscountHelper->getRecalculated(
+                $dummyOrder,
+                $taxValue,
+                $taxAttributeCode,
+                $shippingTaxValue,
+                $markingAttributeCode,
+                $markingListAttributeCode,
+                $markingRefundAttributeCode
+            );
+
             $childrenResult = $this->recalculateResultFactory->create($discountData);
 
             $this->updateParentItem($item, $recalcOriginal, $childrenResult);

@@ -40,16 +40,17 @@ class SkippedItemFixer
 
     /**
      * @param CreditmemoItemInterface|InvoiceItemInterface|OrderItemInterface $item
+     * @param mixed ...$recalcParams
      * @throws \Exception
      * @return RecalculateResultItemInterface
      */
-    public function execute($item): RecalculateResultItemInterface
+    public function execute($item, ...$recalcParams): RecalculateResultItemInterface
     {
         $orderMock = $this->getDummyOrder($item);
 
         /** @var \Mygento\Base\Api\DiscountHelperInterface $freshDiscountHelper */
         $freshDiscountHelper = $this->discountHelperFactory->create();
-        $rawResult = $freshDiscountHelper->getRecalculated($orderMock);
+        $rawResult = $freshDiscountHelper->getRecalculated($orderMock, ...$recalcParams);
         $result = $this->recalculateResultFactory->create($rawResult);
 
         return $result->getItemById($item->getId());

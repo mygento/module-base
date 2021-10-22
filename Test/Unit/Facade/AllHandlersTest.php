@@ -26,14 +26,17 @@ class AllHandlersTest extends AbstractFacadeTest
      * @dataProvider \Mygento\Base\Test\Unit\Facade\AllHandlersDataProvider::dataProvider
      * @param mixed $order
      * @param mixed $expected
+     * @param mixed|null $virtualOrder
+     * @param mixed $taxValue
+     * @param mixed $shippingTaxValue
      * @throws \Exception
      */
-    public function testCalculation($order, $expected)
+    public function testCalculation($order, $expected, $virtualOrder = null, $taxValue = '', $shippingTaxValue = '')
     {
         $facade = $this->getFacadeInstance();
         TableOutput::dumpOrder($order, '1. Initial');
 
-        $result = $facade->execute($order);
+        $result = $facade->execute($order, $taxValue, '', $shippingTaxValue);
         TableOutput::dumpResult($result, '2.');
 
         if (!$expected) {
@@ -47,6 +50,7 @@ class AllHandlersTest extends AbstractFacadeTest
         foreach ($result->getItems() as $key => $recalcItem) {
             $expectedItem = array_shift($expectedItems);
             self::assertEquals($expectedItem['price'], $recalcItem->getPrice(), $key . ' Price of item failed');
+            self::assertEquals($expectedItem['tax'] ?? null, $recalcItem->getTax(), $key . ' Tax of item failed');
             self::assertEquals($expectedItem['quantity'], $recalcItem->getQuantity());
             self::assertEquals($expectedItem['sum'], $recalcItem->getSum(), $key . ' Sum of item failed');
             if (isset($expectedItem['gift_cards_amount'])) {
@@ -57,9 +61,10 @@ class AllHandlersTest extends AbstractFacadeTest
                 self::assertArrayHasKey(RecalculateResultItemInterface::CHILDREN, $expectedItem);
                 $expectedChild = array_shift($expectedItem[RecalculateResultItemInterface::CHILDREN]);
 
-                self::assertEquals($expectedChild['price'], $child->getPrice(), $key . ' Price of item failed');
+                self::assertEquals($expectedChild['price'], $child->getPrice(), $key . ' Price of child item failed');
                 self::assertEquals($expectedChild['quantity'], $child->getQuantity());
-                self::assertEquals($expectedChild['sum'], $child->getSum(), $key . ' Sum of item failed');
+                self::assertEquals($expectedChild['sum'], $child->getSum(), $key . ' Sum of child item failed');
+                self::assertEquals($expectedChild['tax'] ?? null, $child->getTax(), $key . ' Tax of child item failed');
             }
         }
     }

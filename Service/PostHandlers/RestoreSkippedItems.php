@@ -37,11 +37,25 @@ class RestoreSkippedItems implements RecalculationPostHandlerInterface
     /**
      * @param OrderInterface $order
      * @param RecalculateResultInterface|null $recalcOriginal
+     * @param mixed $taxValue
+     * @param mixed $taxAttributeCode
+     * @param mixed $shippingTaxValue
+     * @param mixed $markingAttributeCode
+     * @param mixed $markingListAttributeCode
+     * @param mixed $markingRefundAttributeCode
      * @throws \Exception
      * @return RecalculateResultInterface
      */
-    public function handle(OrderInterface $order, RecalculateResultInterface $recalcOriginal): RecalculateResultInterface
-    {
+    public function handle(
+        OrderInterface $order,
+        RecalculateResultInterface $recalcOriginal,
+        $taxValue = '',
+        $taxAttributeCode = '',
+        $shippingTaxValue = '',
+        $markingAttributeCode = '',
+        $markingListAttributeCode = '',
+        $markingRefundAttributeCode = ''
+    ): RecalculateResultInterface {
         $itemsToSkip = $this->skippedItemsCollector->getItemsToSkip($order);
 
         if (empty($itemsToSkip)) {
@@ -50,7 +64,15 @@ class RestoreSkippedItems implements RecalculationPostHandlerInterface
 
         $recalculatedItems = [];
         foreach ($itemsToSkip as $item) {
-            $skippedRecalculatedItem = $this->skippedItemFixer->execute($item);
+            $skippedRecalculatedItem = $this->skippedItemFixer->execute(
+                $item,
+                $taxValue,
+                $taxAttributeCode,
+                $shippingTaxValue,
+                $markingAttributeCode,
+                $markingListAttributeCode,
+                $markingRefundAttributeCode
+            );
             $recalculatedItems[$item->getItemId()] = $skippedRecalculatedItem;
         }
 
