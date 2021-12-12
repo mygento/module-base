@@ -16,10 +16,12 @@ use Magento\Sales\Api\Data\OrderInterface as Order;
 use Magento\Sales\Api\Data\OrderItemInterface as OrderItem;
 use Mygento\Base\Api\DiscountHelperInterface;
 use Mygento\Base\Helper\Discount\Math;
+use Mygento\Base\Helper\Discount\Tax;
 
 /**
  * @inheritDoc
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.TooManyFields)
  */
 class Discount implements DiscountHelperInterface
 {
@@ -37,6 +39,12 @@ class Discount implements DiscountHelperInterface
 
     /** @var bool Размазывать ли скидку по всей позициям? */
     protected $spreadDiscOnAllUnits = false;
+
+    /** @var bool Добавлять ли giftCard в цены позиций? */
+    protected $isAddGiftCardToPrice = true;
+
+    /** @var bool Добавлять ли баллы в цены позиций? */
+    protected $isAddRewardsToPrice = true;
 
     /**
      * @var \Mygento\Base\Helper\Data
@@ -195,6 +203,28 @@ class Discount implements DiscountHelperInterface
     }
 
     /**
+     * @param bool $isAddGiftCardToPrice
+     * @return $this
+     */
+    public function setIsAddGiftCardToPrice(bool $isAddGiftCardToPrice)
+    {
+        $this->isAddGiftCardToPrice = $isAddGiftCardToPrice;
+
+        return $this;
+    }
+
+    /**
+     * @param bool $isAddRewardsToPrice
+     * @return $this
+     */
+    public function setIsAddRewardsToPrice(bool $isAddRewardsToPrice)
+    {
+        $this->isAddRewardsToPrice = $isAddRewardsToPrice;
+
+        return $this;
+    }
+
+    /**
      * @inheritdoc
      */
     public function setSpreadDiscOnAllUnits(bool $spreadDiscOnAllUnits)
@@ -293,13 +323,28 @@ class Discount implements DiscountHelperInterface
                 $rowDiscount = 0;
             }
 
-            $discountPerUnit = Math::slyCeil(
-                bcadd($rowDiscount, $rowPercentage * $grandDiscount, 4) / $qty
-            );
+            $rowGrandDiscount = $rowPercentage * $grandDiscount;
+
+            //Проверяем, не превышает ли скидка ряда его тотал.
+            // Если да - делаем скидку равной тоталу, чтобы тот не ушел в минус.
+            if (abs($rowGrandDiscount) > ($rowTotal + $rowDiscount)) {
+                $rowGrandDiscount = (-1) * ($rowTotal + $rowDiscount);
+            }
+
+            $discountPerUnitRaw = bcdiv(bcadd($rowDiscount, $rowGrandDiscount, 4), $qty, 4);
+
+            //Если это наценка - то мы должны иначе округлять. Не вверх, а вниз. Из-за отличия в знаке.
+            $discountPerUnit = $grandDiscount > 0
+                ? Math::slyFloor($discountPerUnitRaw, 4)
+                : Math::slyCeil($discountPerUnitRaw, 4);
 
             //Set посчитанная на ряд $amountToSpread. Округленная вверх.
             $amountToSpreadPerUnit = Math::slyCeil($rowPercentage * $amountToSpread / $qty);
-            $item->setData(self::NAME_ROW_AMOUNT_TO_SPREAD, $amountToSpreadPerUnit * $qty);
+            $rowAmountSpread = $amountToSpreadPerUnit * $qty;
+            if ($rowAmountSpread > $rowTotal) {
+                $rowAmountSpread = $rowTotal;
+            }
+            $item->setData(self::NAME_ROW_AMOUNT_TO_SPREAD, $rowAmountSpread);
 
             $priceWithDiscount = bcadd($price, (string) $discountPerUnit, 2);
 
@@ -308,7 +353,7 @@ class Discount implements DiscountHelperInterface
 
             $rowTotalNew = round($priceWithDiscount * $qty, 2);
 
-            $rowDiscountNew = $rowDiscount + round($rowPercentage * $grandDiscount, 2);
+            $rowDiscountNew = $rowDiscount + round($rowGrandDiscount, 2);
 
             $rowDiff = round($rowTotal + $rowDiscountNew - $rowTotalNew, 2) * 100;
 
@@ -339,8 +384,9 @@ class Discount implements DiscountHelperInterface
         $shippingAmount = $this->entity->getShippingInclTax() ?? 0.00;
         $grandTotal = $this->getGrandTotal();
         $discount = $this->getEntityDiscountAmountInclTax($this->entity);
+        $excludedDiscounts = $this->getExcludedDiscounts();
 
-        return round($grandTotal - $shippingAmount - $totalItemsSum - $discount, 2);
+        return round($grandTotal - $shippingAmount - $totalItemsSum - $discount + $excludedDiscounts, 2);
     }
 
     /**
@@ -394,6 +440,10 @@ class Discount implements DiscountHelperInterface
             $rowTotalNew = $item->getData(self::NAME_UNIT_PRICE) * $qty
                 + ($item->getData(self::NAME_ROW_DIFF) / 100);
             $newItemsSum += $rowTotalNew;
+        }
+
+        if ($newItemsSum === 0.00) {
+            return 0;
         }
 
         $lostDiscount = round($grandTotal - $shippingAmount - $newItemsSum + $shippingDiscount, 2);
@@ -481,15 +531,19 @@ class Discount implements DiscountHelperInterface
         ];
 
         $shippingAmount = $this->entity->getShippingInclTax() ?? 0.00;
-        $itemsSumDiff = round(Math::slyFloor($grandTotal - $itemsSum - $shippingAmount, 3), 2);
+
+        //GiftCard, баллы могут не участвовать в расчетах
+        $excludedDiscounts = $this->getExcludedDiscounts();
+        $itemsSumDiff = round(Math::slyFloor($grandTotal - $itemsSum - $shippingAmount + $excludedDiscounts, 3), 2);
 
         $this->generalHelper->debug("Items sum: {$itemsSum}. Shipping increase: {$itemsSumDiff}");
 
+        $shippingSum = bcadd($shippingAmount, $itemsSumDiff, 2);
         $shippingItem = [
             self::NAME => $this->getShippingName($this->entity),
-            self::PRICE => $shippingAmount + $itemsSumDiff,
+            self::PRICE => $shippingSum,
             self::QUANTITY => 1.0,
-            self::SUM => $shippingAmount + $itemsSumDiff,
+            self::SUM => $shippingSum,
             self::TAX => $this->shippingTaxValue,
         ];
 
@@ -832,9 +886,8 @@ class Discount implements DiscountHelperInterface
     private function getAllItems()
     {
         /** @psalm-suppress UndefinedMethod */
-        return $this->entity->getAllVisibleItems()
-            ? $this->entity->getAllVisibleItems()
-            : $this->entity->getAllItems();
+        return ($this->entity->getAllVisibleItems()
+            ?: $this->entity->getAllItems()) ?? [];
     }
 
     /**
@@ -856,17 +909,9 @@ class Discount implements DiscountHelperInterface
         if ($item->getData(self::DA_INCL_TAX)) {
             return $item->getData(self::DA_INCL_TAX);
         }
-        $taxPercent = $this->getItemTaxPercent($item);
 
-        if ($this->isTaxCalculationNeeded($item)) {
-            $discAmountInclTax = (1 + $taxPercent / 100) * $item->getDiscountAmount();
-            $discAmountInclTax = round($discAmountInclTax, 2);
-            $item->setData(self::DA_INCL_TAX, $discAmountInclTax);
-
-            return $item->getData(self::DA_INCL_TAX);
-        }
-
-        $item->setData(self::DA_INCL_TAX, (float) $item->getDiscountAmount());
+        $discAmountInclTax = Tax::getDiscountAmountInclTax($item);
+        $item->setData(self::DA_INCL_TAX, $discAmountInclTax);
 
         return $item->getData(self::DA_INCL_TAX);
     }
@@ -908,71 +953,11 @@ class Discount implements DiscountHelperInterface
             return $entity->getData(self::SHIPPING_DA_INCL_TAX);
         }
 
-        $ratio = 1;
-
-        //bccomp returns 0 if operands are equal
-        $isShippingsEqual = bccomp($entity->getShippingAmount(), $entity->getShippingInclTax(), 2) === 0;
-        $isShippingNotNull = bccomp($entity->getShippingAmount(), 0.00, 2) !== 0;
-
-        if (!$isShippingsEqual && $isShippingNotNull) {
-            $ratio = round($entity->getShippingInclTax() / $entity->getShippingAmount(), 2);
-        }
-
-        $shippingDiscount = $entity->getShippingDiscountAmount();
-
-        $isOrder = $entity instanceof Order;
-        if (!$isOrder) {
-            $shippingDiscount = $entity->getOrder()->getShippingDiscountAmount();
-        }
-
-        //При различных настройках налогов Magento - налог на скидку доставки либо уже применен либо нет.
-        //Если ShTA === (ShAmount - DiscShip) * 20% - то налог должен быть посчитан на скидку доставки
-        //Если ShTA === ShAmount * 20% - то налог уже включен в скидку и доп расчет не нужен
-        //где ShTA - shipping_tax_amount, ShAmount - shipping_amount, DiscShip - shipping_discount_amount
-        $hasTaxInShippingDiscount = bccomp(
-            $entity->getShippingTaxAmount(),
-            $entity->getShippingAmount() * ($ratio - 1),
-            2
-        ) === 0;
-
-        $shippingDiscountWithTax = $hasTaxInShippingDiscount
-            ? $shippingDiscount
-            : $shippingDiscount * $ratio;
+        $shippingDiscountWithTax = Tax::getShippingDiscountAmountInclTax($entity);
 
         $entity->setData(self::SHIPPING_DA_INCL_TAX, $shippingDiscountWithTax);
 
         return $entity->getData(self::SHIPPING_DA_INCL_TAX);
-    }
-
-    /**
-     * @param CreditmemoItem|InvoiceItem|OrderItem $item
-     * @return bool
-     */
-    private function isTaxCalculationNeeded($item)
-    {
-        $taxPercent = $this->getItemTaxPercent($item);
-        $taxAmount = $this->getItemTaxAmount($item);
-
-        return $taxPercent &&
-            //bccomp returns 0 if operands are equal
-            bccomp($taxAmount, '0.00', 2) === 0 &&
-            $item->getRowTotal() !== $item->getRowTotalInclTax() &&
-            //Bug NN-3475 Проверка остатка стоимости с налогом за вычетом скидки
-            bccomp(($item->getRowTotalInclTax() - $item->getDiscountAmount()), '0.00', 2) != 0;
-    }
-
-    /**
-     * @param CreditmemoItem|InvoiceItem|OrderItem $item
-     * @return string
-     */
-    private function getItemTaxPercent($item)
-    {
-        $isOrderItem = $item instanceof OrderItem;
-        if (!$isOrderItem) {
-            return $item->getOrderItem()->getTaxPercent();
-        }
-
-        return $item->getTaxPercent();
     }
 
     /**
@@ -1010,20 +995,6 @@ class Discount implements DiscountHelperInterface
     }
 
     /**
-     * @param CreditmemoItem|InvoiceItem|OrderItem $item
-     * @return string
-     */
-    private function getItemTaxAmount($item)
-    {
-        $isOrderItem = $item instanceof OrderItem;
-        if (!$isOrderItem) {
-            return $item->getOrderItem()->getTaxAmount();
-        }
-
-        return $item->getTaxAmount();
-    }
-
-    /**
      * @return bool
      */
     private function canMark(): bool
@@ -1031,5 +1002,24 @@ class Discount implements DiscountHelperInterface
         return $this->markingAttributeCode
             && $this->markingListAttributeCode
             && $this->markingRefundAttributeCode;
+    }
+
+    /**
+     * Accordingly to settings gift_card_amount, reward_currency_amount, customer_balance_amount
+     * might be excluded from item prices calculation
+     * @return float
+     */
+    private function getExcludedDiscounts(): float
+    {
+        $excludedDiscounts = 0.00;
+        if (!$this->isAddGiftCardToPrice) {
+            $excludedDiscounts += $this->entity->getData('gift_cards_amount');
+        }
+
+        if (!$this->isAddRewardsToPrice) {
+            $excludedDiscounts += $this->entity->getData('reward_currency_amount');
+        }
+
+        return $excludedDiscounts;
     }
 }

@@ -12,6 +12,7 @@ grumphp:
             config: '.php_cs'
         phpmd:
             ruleset: ['vendor/mygento/coding-standard/Mygento-Mage2/phpmd.xml']
+            exclude: ['Test']
         phpunit:
           testsuite: 'Test'
         phpcs:

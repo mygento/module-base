@@ -6,14 +6,13 @@
  * @package Mygento_Base
  */
 
-namespace Mygento\Base\Test;
+namespace Mygento\Base\Model\Mock;
 
 use Magento\Framework\DataObject;
 use Magento\Sales\Api\Data\OrderItemInterface;
 
 /**
  * Class OrderItemMock
- * @package Mygento\Base\Test
  *
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
@@ -974,6 +973,15 @@ class OrderItemMock extends DataObject implements OrderItemInterface
     }
 
     /**
+     * @param bool $hasChildren
+     * @return $this
+     */
+    public function setHasChildren($hasChildren)
+    {
+        return parent::setHasChildren($hasChildren);
+    }
+
+    /**
      * Set _isDeleted flag value (if $isDeleted parameter is defined) and return current flag value
      *
      * @param bool $isDeleted
@@ -997,5 +1005,69 @@ class OrderItemMock extends DataObject implements OrderItemInterface
     public function setExtensionAttributes(\Magento\Sales\Api\Data\OrderItemExtensionInterface $extensionAttributes)
     {
         return parent::setExtensionAttributes($extensionAttributes);
+    }
+
+    public function isChildrenCalculated()
+    {
+        return (bool) $this->getData('isChildrenCalculated');
+    }
+
+    /**
+     * @param bool $shipment
+     * @return bool
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @see \Magento\Sales\Model\Order\Item::isDummy()
+     */
+    public function isDummy($shipment = false)
+    {
+        if ($shipment) {
+            if ($this->getHasChildren() && $this->isShipSeparately()) {
+                return true;
+            }
+
+            if ($this->getHasChildren() && !$this->isShipSeparately()) {
+                return false;
+            }
+
+            if ($this->getParentItem() && $this->isShipSeparately()) {
+                return false;
+            }
+
+            if ($this->getParentItem() && !$this->isShipSeparately()) {
+                return true;
+            }
+
+            return false;
+        }
+
+        if ($this->getHasChildren() && $this->isChildrenCalculated()) {
+            return true;
+        }
+
+        if ($this->getHasChildren() && !$this->isChildrenCalculated()) {
+            return false;
+        }
+
+        if ($this->getParentItem() && $this->isChildrenCalculated()) {
+            return false;
+        }
+
+        if ($this->getParentItem() && !$this->isChildrenCalculated()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Return checking of what shipment type was for this product
+     * TODO: Implement (if when code uses this product param)
+     *
+     * @return bool
+     */
+    public function isShipSeparately()
+    {
+        return false;
     }
 }

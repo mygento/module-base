@@ -6,16 +6,17 @@
  * @package Mygento_Base
  */
 
-namespace Mygento\Base\Service\Handlers;
+namespace Mygento\Base\Service\PostHandlers;
 
 use Magento\Sales\Api\Data\OrderInterface as Order;
+use Mygento\Base\Api\Data\PaymentInterface;
 use Mygento\Base\Api\Data\RecalculateResultInterface;
 use Mygento\Base\Api\DiscountHelperInterface;
 use Mygento\Base\Api\DiscountHelperInterfaceFactory;
-use Mygento\Base\Api\RecalculationHandler;
+use Mygento\Base\Api\RecalculationPostHandlerInterface;
 use Mygento\Base\Model\OrderRepository;
 
-class AddExtraDiscounts implements RecalculationHandler
+class AddExtraDiscounts implements RecalculationPostHandlerInterface
 {
     /**
      * @var \Mygento\Base\Api\DiscountHelperInterfaceFactory
@@ -42,12 +43,27 @@ class AddExtraDiscounts implements RecalculationHandler
     /**
      * @param Order $order
      * @param RecalculateResultInterface $recalcOriginal
+     * @param mixed $taxValue
+     * @param mixed $taxAttributeCode
+     * @param mixed $shippingTaxValue
+     * @param mixed $markingAttributeCode
+     * @param mixed $markingListAttributeCode
+     * @param mixed $markingRefundAttributeCode
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @return RecalculateResultInterface
      */
-    public function handle(Order $order, RecalculateResultInterface $recalcOriginal): RecalculateResultInterface
-    {
+    public function handle(
+        Order $order,
+        RecalculateResultInterface $recalcOriginal,
+        $taxValue = '',
+        $taxAttributeCode = '',
+        $shippingTaxValue = '',
+        $markingAttributeCode = '',
+        $markingListAttributeCode = '',
+        $markingRefundAttributeCode = ''
+    ): RecalculateResultInterface {
+        /** @var \Mygento\Base\Api\DiscountHelperInterface $discountHelper */
         $discountHelper = $this->discountHelperFactory->create();
 
         $extraAmounts = [
@@ -57,6 +73,8 @@ class AddExtraDiscounts implements RecalculationHandler
         ];
 
         $discountHelper->setSpreadDiscOnAllUnits(true);
+
+        $isRecalculated = $order->getPayment()->getAdditionalInformation(PaymentInterface::RECALCULATED_FLAG);
 
         foreach ($extraAmounts as $extraAmountKey) {
             $extraAmount = $order->getData($extraAmountKey);
@@ -69,12 +87,13 @@ class AddExtraDiscounts implements RecalculationHandler
             //Clean up the order
             $this->orderRepository->reloadOrder($order->getId());
 
-            $discountHelper->applyDiscount($order, (float) $extraAmount);
+            if (!$isRecalculated) {
+                $discountHelper->applyDiscount($order, (float) $extraAmount);
+            }
 
+            $sourceAmountKey = $isRecalculated ? $extraAmountKey : DiscountHelperInterface::NAME_ROW_AMOUNT_TO_SPREAD;
             foreach ($order->getAllVisibleItems() as $item) {
-                $recalcOriginal->getItemById($item->getId())[$extraAmountKey] = $item->getData(
-                    DiscountHelperInterface::NAME_ROW_AMOUNT_TO_SPREAD
-                );
+                $recalcOriginal->getItemById($item->getId())[$extraAmountKey] = $item->getData($sourceAmountKey);
             }
         }
 
