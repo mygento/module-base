@@ -21,6 +21,8 @@ class RecalculatorFacade implements RecalculatorFacadeInterface
     private const DO_CALCULATION_DEFAULT_VALUE = true;
     private const IS_SPLIT_ALLOWED_DEFAULT_VALUE = false;
     private const SPREAD_DISC_ON_ALL_UNITS_DEFAULT_VALUE = false;
+    private const ADD_GIFT_CARD_TO_PRICE_DEFAULT_VALUE = true;
+    private const ADD_REWARD_POINTS_TO_PRICE_DEFAULT_VALUE = true;
 
     /**
      * @var \Mygento\Base\Api\DiscountHelperInterface
@@ -33,23 +35,31 @@ class RecalculatorFacade implements RecalculatorFacadeInterface
     private $recalculateResultFactory;
 
     /**
-     * @var \Mygento\Base\Api\RecalculationHandler[]
+     * @var \Mygento\Base\Api\RecalculationPreHandlerInterface[]
      */
-    private $handlers;
+    private $preHandlers;
+
+    /**
+     * @var \Mygento\Base\Api\RecalculationPostHandlerInterface[]
+     */
+    private $postHandlers;
 
     /**
      * @param \Mygento\Base\Api\DiscountHelperInterface $discountHelper
      * @param \Mygento\Base\Model\Recalculator\ResultFactory $recalculateResultFactory
-     * @param array $handlers
+     * @param array $preHandlers
+     * @param array $postHandlers
      */
     public function __construct(
         Discount $discountHelper,
         ResultFactory $recalculateResultFactory,
-        array $handlers = []
+        array $preHandlers = [],
+        array $postHandlers = []
     ) {
         $this->discountHelper = $discountHelper;
         $this->recalculateResultFactory = $recalculateResultFactory;
-        $this->handlers = $handlers;
+        $this->preHandlers = $preHandlers;
+        $this->postHandlers = $postHandlers;
     }
 
     /**
@@ -150,6 +160,64 @@ class RecalculatorFacade implements RecalculatorFacadeInterface
     }
 
     /**
+     * @inheritDoc
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function executeWithoutGiftCardSpreading(
+        $entity,
+        $taxValue = '',
+        $taxAttributeCode = '',
+        $shippingTaxValue = '',
+        $markingAttributeCode = '',
+        $markingListAttributeCode = '',
+        $markingRefundAttributeCode = ''
+    ) {
+        $this->resetHelper();
+        $this->discountHelper->setIsAddGiftCardToPrice(false);
+
+        return $this->recalculate(...func_get_args());
+    }
+
+    /**
+     * @inheritDoc
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function executeWithoutRewardsSpreading(
+        $entity,
+        $taxValue = '',
+        $taxAttributeCode = '',
+        $shippingTaxValue = '',
+        $markingAttributeCode = '',
+        $markingListAttributeCode = '',
+        $markingRefundAttributeCode = ''
+    ) {
+        $this->resetHelper();
+        $this->discountHelper->setIsAddRewardsToPrice(false);
+
+        return $this->recalculate(...func_get_args());
+    }
+
+    /**
+     * @inheritDoc
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function executeWithoutExtraDiscountsSpreading(
+        $entity,
+        $taxValue = '',
+        $taxAttributeCode = '',
+        $shippingTaxValue = '',
+        $markingAttributeCode = '',
+        $markingListAttributeCode = '',
+        $markingRefundAttributeCode = ''
+    ) {
+        $this->resetHelper();
+        $this->discountHelper->setIsAddGiftCardToPrice(false);
+        $this->discountHelper->setIsAddRewardsToPrice(false);
+
+        return $this->recalculate(...func_get_args());
+    }
+
+    /**
      * @param Creditmemo|Invoice|Order $entity
      * @param mixed $args
      * @throws \Exception
@@ -159,14 +227,29 @@ class RecalculatorFacade implements RecalculatorFacadeInterface
      */
     protected function recalculate($entity, ...$args): RecalculateResultInterface
     {
+        //TODO: Idea for refactoring:
+        //Create separate modules from handlers
+        //and execute them via Magento Plugins for this method
+
+        //Make some auxiliary actions before recalculation
+        if ($entity instanceof Order) {
+            foreach ($this->preHandlers as $preHandler) {
+                if (!$preHandler->shouldBeApplied($entity)) {
+                    continue;
+                }
+
+                $entity = $preHandler->handle($entity);
+            }
+        }
+
         $res = $this->discountHelper->getRecalculated($entity, ...$args);
         $resultObject = $this->recalculateResultFactory->create($res);
 
         //Apply POST Handlers
         if ($entity instanceof Order) {
             //Make some auxiliary actions after recalculation
-            foreach ($this->handlers as $handler) {
-                $handler->handle($entity, $resultObject);
+            foreach ($this->postHandlers as $handler) {
+                $handler->handle($entity, $resultObject, ...$args);
             }
         }
 
@@ -183,5 +266,7 @@ class RecalculatorFacade implements RecalculatorFacadeInterface
         $this->discountHelper->setDoCalculation(self::DO_CALCULATION_DEFAULT_VALUE);
         $this->discountHelper->setIsSplitItemsAllowed(self::IS_SPLIT_ALLOWED_DEFAULT_VALUE);
         $this->discountHelper->setSpreadDiscOnAllUnits(self::SPREAD_DISC_ON_ALL_UNITS_DEFAULT_VALUE);
+        $this->discountHelper->setIsAddGiftCardToPrice(self::ADD_GIFT_CARD_TO_PRICE_DEFAULT_VALUE);
+        $this->discountHelper->setIsAddRewardsToPrice(self::ADD_REWARD_POINTS_TO_PRICE_DEFAULT_VALUE);
     }
 }

@@ -134,4 +134,77 @@ interface RecalculatorFacadeInterface
         $markingListAttributeCode = '',
         $markingRefundAttributeCode = ''
     );
+
+    /**
+     * Returns all items of the entity (order|invoice|creditmemo) with properly calculated discount
+     * and properly calculated Sum. GiftCards is not treated as a discount and not spread to price.
+     *
+     * @param Creditmemo|Invoice|Order $entity
+     * @param string $taxValue
+     * @param string $taxAttributeCode Set it if info about tax is stored in product in certain attr
+     * @param string $shippingTaxValue
+     * @param string $markingAttributeCode
+     * @param string $markingListAttributeCode
+     * @param string $markingRefundAttributeCode
+     * @throws \Exception
+     * @return array|RecalculateResultInterface with calculated items and sum
+     */
+    public function executeWithoutGiftCardSpreading(
+        $entity,
+        $taxValue = '',
+        $taxAttributeCode = '',
+        $shippingTaxValue = '',
+        $markingAttributeCode = '',
+        $markingListAttributeCode = '',
+        $markingRefundAttributeCode = ''
+    );
+
+    /**
+     * Returns all items of the entity (order|invoice|creditmemo) with properly calculated discount
+     * and properly calculated Sum. RewardPoints is not treated as a discount and not spread to price.
+     *
+     * @param Creditmemo|Invoice|Order $entity
+     * @param string $taxValue
+     * @param string $taxAttributeCode Set it if info about tax is stored in product in certain attr
+     * @param string $shippingTaxValue
+     * @param string $markingAttributeCode
+     * @param string $markingListAttributeCode
+     * @param string $markingRefundAttributeCode
+     * @throws \Exception
+     * @return array|RecalculateResultInterface with calculated items and sum
+     */
+    public function executeWithoutRewardsSpreading(
+        $entity,
+        $taxValue = '',
+        $taxAttributeCode = '',
+        $shippingTaxValue = '',
+        $markingAttributeCode = '',
+        $markingListAttributeCode = '',
+        $markingRefundAttributeCode = ''
+    );
+
+    /**
+     * Returns all items of the entity (order|invoice|creditmemo) with properly calculated discount
+     * and properly calculated Sum. GiftCards, RewardPoints (extra discounts)
+     * are not treated as a discounts and not spread to price.
+     *
+     * @param Creditmemo|Invoice|Order $entity
+     * @param string $taxValue
+     * @param string $taxAttributeCode Set it if info about tax is stored in product in certain attr
+     * @param string $shippingTaxValue
+     * @param string $markingAttributeCode
+     * @param string $markingListAttributeCode
+     * @param string $markingRefundAttributeCode
+     * @throws \Exception
+     * @return array|RecalculateResultInterface with calculated items and sum
+     */
+    public function executeWithoutExtraDiscountsSpreading(
+        $entity,
+        $taxValue = '',
+        $taxAttributeCode = '',
+        $shippingTaxValue = '',
+        $markingAttributeCode = '',
+        $markingListAttributeCode = '',
+        $markingRefundAttributeCode = ''
+    );
 }

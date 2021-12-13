@@ -13,8 +13,6 @@ use Magento\Sales\Api\Data\InvoiceInterface as Invoice;
 use Magento\Sales\Api\Data\OrderInterface as Order;
 
 /**
- * Interface DiscountInterface
- *
  * Calculates prices of 1 unit for each item.
  * Recalculates order/invoice/creditmemo.
  * e.g. can spreads one item discount to all items
@@ -85,4 +83,16 @@ interface DiscountHelperInterface
      * @return $this
      */
     public function setSpreadDiscOnAllUnits(bool $spreadDiscOnAllUnits);
+
+    /**
+     * @param bool $isAddGiftCardToPrice
+     * @return $this
+     */
+    public function setIsAddGiftCardToPrice(bool $isAddGiftCardToPrice);
+
+    /**
+     * @param bool $isAddRewardsToPrice
+     * @return $this
+     */
+    public function setIsAddRewardsToPrice(bool $isAddRewardsToPrice);
 }
