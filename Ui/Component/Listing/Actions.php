@@ -8,34 +8,25 @@
 
 namespace Mygento\Base\Ui\Component\Listing;
 
-abstract class Actions extends \Magento\Ui\Component\Listing\Columns\Column
+use Magento\Framework\UrlInterface;
+use Magento\Framework\View\Element\UiComponent\ContextInterface;
+use Magento\Framework\View\Element\UiComponentFactory;
+use Magento\Ui\Component\Listing\Columns\Column;
+
+abstract class Actions extends Column
 {
-    /** @var string */
-    protected $route = '*';
+    protected string $route = '*';
 
-    /** @var string */
-    protected $controller = '*';
+    protected string $controller = '*';
 
-    /** @var string */
-    protected $key = 'id';
+    protected string $key = 'id';
 
-    /**
-     * @var \Magento\Framework\UrlInterface
-     */
-    protected $urlBuilder;
+    protected UrlInterface $urlBuilder;
 
-    /**
-     * Actions constructor.
-     * @param \Magento\Framework\UrlInterface $urlBuilder
-     * @param \Magento\Framework\View\Element\UiComponent\ContextInterface $context
-     * @param \Magento\Framework\View\Element\UiComponentFactory $uiComponentFactory
-     * @param array $components
-     * @param array $data
-     */
     public function __construct(
-        \Magento\Framework\UrlInterface $urlBuilder,
-        \Magento\Framework\View\Element\UiComponent\ContextInterface $context,
-        \Magento\Framework\View\Element\UiComponentFactory $uiComponentFactory,
+        UrlInterface $urlBuilder,
+        ContextInterface $context,
+        UiComponentFactory $uiComponentFactory,
         array $components = [],
         array $data = []
     ) {
@@ -43,13 +34,7 @@ abstract class Actions extends \Magento\Ui\Component\Listing\Columns\Column
         $this->urlBuilder = $urlBuilder;
     }
 
-    /**
-     * Prepare Data Source
-     *
-     * @param array $dataSource
-     * @return array
-     */
-    public function prepareDataSource(array $dataSource)
+    public function prepareDataSource(array $dataSource): array
     {
         if (isset($dataSource['data']['items'])) {
             foreach ($dataSource['data']['items'] as &$item) {
