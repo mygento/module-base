@@ -163,7 +163,7 @@ class Discount implements DiscountHelperInterface
                 $this->generalHelper->debug('No calculation at all.');
                 break;
             case ($this->checkSpread()):
-                $this->applyDiscount();
+                $this->applyDiscount($entity);
                 $this->generalHelper->debug("'Apply Discount' logic was applied");
                 break;
             default:
@@ -841,7 +841,7 @@ class Discount implements DiscountHelperInterface
 
             $rowPrice = $item->getData('row_total_incl_tax') - $discountAmountInclTax;
 
-            if ($discountAmountInclTax === 0.00) {
+            if (bccomp($discountAmountInclTax, '0.0000', 2) === 0) {
                 $this->discountlessSum += $item->getData('row_total_incl_tax');
             }
 
@@ -906,7 +906,7 @@ class Discount implements DiscountHelperInterface
      */
     private function getItemDiscountAmountInclTax($item)
     {
-        if ($item->getData(self::DA_INCL_TAX)) {
+        if ($item->getData(self::DA_INCL_TAX) && !Tax::canBeProcessedAsBundle($item)) {
             return $item->getData(self::DA_INCL_TAX);
         }
 

@@ -135,6 +135,17 @@ class Tax
      * @param CreditmemoItemInterface|InvoiceItemInterface|OrderItemInterface $item
      * @return bool
      */
+    public static function canBeProcessedAsBundle($item)
+    {
+        return !floatval($item->getDiscountAmount())
+            && self::getItemProductType($item) === 'bundle'
+            && self::getItemChildrenItems($item);
+    }
+
+    /**
+     * @param CreditmemoItemInterface|InvoiceItemInterface|OrderItemInterface $item
+     * @return bool
+     */
     private static function isTaxCalculationNeeded($item): bool
     {
         $taxAmount = self::getItemTaxAmount($item);
@@ -153,18 +164,6 @@ class Tax
             (bccomp($taxAmount, '0.00', 2) === 0 || $isDiscountTaxAmountExist) &&
             $item->getRowTotal() !== $item->getRowTotalInclTax() &&
             bccomp(($item->getRowTotalInclTax() - $item->getDiscountAmount()), '0.00', 2) != 0;
-    }
-
-    /**
-     * @param CreditmemoItemInterface|InvoiceItemInterface|OrderItemInterface $item
-     * @return bool
-     */
-    private static function canBeProcessedAsBundle($item)
-    {
-        return !floatval($item->getDiscountAmount())
-            && floatval($item->getDiscountPercent())
-            && self::getItemProductType($item) === 'bundle'
-            && self::getItemChildrenItems($item);
     }
 
     /**
