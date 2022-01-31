@@ -238,13 +238,13 @@ class Discount implements DiscountHelperInterface
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @param mixed|null $order
+     * @param Creditmemo|Invoice|Order $entity
      * @param mixed $amountToSpread
      */
-    public function applyDiscount($order = null, $amountToSpread = 0): void
+    public function applyDiscount($entity, $amountToSpread = 0): void
     {
-        if ($order) {
-            $this->entity = $order;
+        if ($entity) {
+            $this->entity = $entity;
         }
 
         $subTotal = $this->entity->getSubtotalInclTax() ?? 0;
