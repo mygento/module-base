@@ -17,7 +17,8 @@ class DiscountAmountInclTaxTest extends TestCase
 {
     // consts for getDiscountAmountInclTax() method
     public const TEST_CASE_NAME_1 = '#case 1. Простой товар. НДС 20%. Дисконт 15% применен к цене с НДС.';
-    public const TEST_CASE_NAME_2 = '#case 2. Бандл с динамической ценой. НДС 20%. Дисконт 15% применен к цене с НДС.';
+    public const TEST_CASE_NAME_2 = '#case 2. Бандл с динамической ценой. НДС 20%. Дисконт 15% применен к цене с НДС. (Magento 2.3)';
+    public const TEST_CASE_NAME_3 = '#case 2. Бандл с динамической ценой. НДС 20%. Дисконт 15% применен к цене с НДС. (Magento 2.4)';
 
     /**
      * @SuppressWarnings(PHPMD.ExitExpression)
@@ -89,6 +90,28 @@ class DiscountAmountInclTaxTest extends TestCase
                     ->setDiscountTaxCompensationAmount(0.6900),
             ]);
 
+        $final[self::TEST_CASE_NAME_3] = OrderMockBuilder::getItem(73.2000, 73.2000, 0.0000, 1, null, 10.3700, 61.0000)
+            ->setProductType('bundle')
+            ->setHasChildren(true)
+            ->setChildrenItems([
+                OrderMockBuilder::getItem(22.8000, 22.8000, 3.4200, 1, 20.0000, 3.2300, 19.0000)
+                    ->setProductType('simple')
+                    ->setDiscountPercent(15.0)
+                    ->setDiscountTaxCompensationAmount(0.5700),
+                OrderMockBuilder::getItem(16.8000, 16.8000, 2.5200, 1, 20.0000, 2.3800, 14.0000)
+                    ->setProductType('simple')
+                    ->setDiscountPercent(15.0)
+                    ->setDiscountTaxCompensationAmount(0.4200),
+                OrderMockBuilder::getItem(6.0000, 6.0000, 0.9000, 1, 20.0000, 0.8500, 5.0000)
+                    ->setProductType('simple')
+                    ->setDiscountPercent(15.0)
+                    ->setDiscountTaxCompensationAmount(0.1500),
+                OrderMockBuilder::getItem(27.6000, 27.6000, 4.1400, 1, 20.0000, 3.9100, 23.0000)
+                    ->setProductType('simple')
+                    ->setDiscountPercent(15.0)
+                    ->setDiscountTaxCompensationAmount(0.6900),
+            ]);
+
         return $final;
     }
 
@@ -100,6 +123,7 @@ class DiscountAmountInclTaxTest extends TestCase
         return [
             self::TEST_CASE_NAME_1 => 8.10,
             self::TEST_CASE_NAME_2 => 10.98,
+            self::TEST_CASE_NAME_3 => 10.98,
         ];
     }
 

@@ -64,7 +64,7 @@ interface DiscountHelperInterface
      * @param Creditmemo|Invoice|Order $entity
      * @param float|int $amountToSpread
      */
-    public function applyDiscount($entity = null, $amountToSpread = 0): void;
+    public function applyDiscount($entity, $amountToSpread = 0): void;
 
     /**
      * @param bool $isSplitItemsAllowed

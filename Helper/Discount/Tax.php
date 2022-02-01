@@ -162,7 +162,6 @@ class Tax
     private static function canBeProcessedAsBundle($item)
     {
         return !floatval($item->getDiscountAmount())
-            && floatval($item->getDiscountPercent())
             && self::getItemProductType($item) === 'bundle'
             && self::getItemChildrenItems($item);
     }

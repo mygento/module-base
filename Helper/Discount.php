@@ -163,7 +163,7 @@ class Discount implements DiscountHelperInterface
                 $this->generalHelper->debug('No calculation at all.');
                 break;
             case ($this->checkSpread()):
-                $this->applyDiscount();
+                $this->applyDiscount($entity);
                 $this->generalHelper->debug("'Apply Discount' logic was applied");
                 break;
             default:
@@ -238,13 +238,13 @@ class Discount implements DiscountHelperInterface
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @param mixed|null $order
+     * @param Creditmemo|Invoice|Order $entity
      * @param mixed $amountToSpread
      */
-    public function applyDiscount($order = null, $amountToSpread = 0): void
+    public function applyDiscount($entity, $amountToSpread = 0): void
     {
-        if ($order) {
-            $this->entity = $order;
+        if ($entity) {
+            $this->entity = $entity;
         }
 
         $subTotal = $this->entity->getSubtotalInclTax() ?? 0;
@@ -841,7 +841,7 @@ class Discount implements DiscountHelperInterface
 
             $rowPrice = $item->getData('row_total_incl_tax') - $discountAmountInclTax;
 
-            if ($discountAmountInclTax === 0.00) {
+            if (bccomp($discountAmountInclTax, '0.0000', 2) === 0) {
                 $this->discountlessSum += $item->getData('row_total_incl_tax');
             }
 
