@@ -51,7 +51,7 @@ class Database extends \Monolog\Handler\AbstractProcessingHandler
      * @param array $record
      * @return void
      */
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         $event = $this->eventFactory->create();
         $event->setInstance(gethostname());
