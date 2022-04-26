@@ -841,7 +841,7 @@ class Discount implements DiscountHelperInterface
 
             $rowPrice = $item->getData('row_total_incl_tax') - $discountAmountInclTax;
 
-            if (bccomp($discountAmountInclTax, '0.0000', 2) === 0) {
+            if (bccomp((string) $discountAmountInclTax, '0.0000', 2) === 0) {
                 $this->discountlessSum += $item->getData('row_total_incl_tax');
             }
 
@@ -870,7 +870,7 @@ class Discount implements DiscountHelperInterface
             return true;
         }
 
-        $isDiscountExist = bccomp($discountSum, '0.00', 2) !== 0;
+        $isDiscountExist = bccomp((string) $discountSum, '0.00', 2) !== 0;
         if ($this->spreadDiscOnAllUnits && $isDiscountExist) {
             $this->generalHelper->debug('3. SpreadDiscount = Yes.');
 
