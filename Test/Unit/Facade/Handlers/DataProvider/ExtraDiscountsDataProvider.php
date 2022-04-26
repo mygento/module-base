@@ -164,7 +164,7 @@ class ExtraDiscountsDataProvider
 
         $expected = PHP_VERSION_ID < 80000
             ? new \PHPUnit\Framework\Exception('Warning: Division by zero', 2)
-            : new \DivisionByZeroError('Warning: Division by zero', 2);
+            : new \DivisionByZeroError('Division by zero', 2);
 
         $final['1. Заказ с 1 пересчитанным бандлом и Gift Card полная оплата. Division by zero.'] = [$order, $expected];
 
