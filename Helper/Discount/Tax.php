@@ -146,7 +146,7 @@ class Tax
         //RowTotalInclTax === RowTotal + TaxAmount + DiscountTaxCompensationAmount
 
         // $discountTaxAmount = $rowTotalInclTax - $rowTotal - $taxAmount - $discountTaxCompensationAmount;
-        $discountTaxAmount = bcsub(bcsub(bcsub((string) $item->getRowTotalInclTax(), (string) $item->getRowTotal(), 4), $taxAmount, 4), $discountTaxCompensationAmount, 4);
+        $discountTaxAmount = bcsub(bcsub(bcsub((string) $item->getRowTotalInclTax(), (string) $item->getRowTotal(), 4), $taxAmount, 4), (string) $discountTaxCompensationAmount, 4);
         $isDiscountTaxAmountExist = $discountTaxAmount !== '0.0000';
 
         return $taxPercent &&
