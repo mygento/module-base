@@ -315,7 +315,7 @@ class AddChildrenOfBundle implements RecalculationPostHandlerInterface
         $childShipping = $childrenResult->getItemById('shipping');
         $masterShipping = $recalcOriginal->getItemById('shipping');
 
-        $newShippingAmount = bcadd($masterShipping->getPrice(), $childShipping->getPrice(), 4);
+        $newShippingAmount = bcadd((string) $masterShipping->getPrice(), (string) $childShipping->getPrice(), 4);
         $masterShipping->setPrice($newShippingAmount);
         $masterShipping->setSum($newShippingAmount);
     }

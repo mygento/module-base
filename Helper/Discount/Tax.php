@@ -146,7 +146,7 @@ class Tax
         //RowTotalInclTax === RowTotal + TaxAmount + DiscountTaxCompensationAmount
 
         // $discountTaxAmount = $rowTotalInclTax - $rowTotal - $taxAmount - $discountTaxCompensationAmount;
-        $discountTaxAmount = bcsub(bcsub(bcsub((string) $item->getRowTotalInclTax(), (string) $item->getRowTotal(), 4), $taxAmount, 4), (string) $discountTaxCompensationAmount, 4);
+        $discountTaxAmount = bcsub(bcsub(bcsub((string) $item->getRowTotalInclTax(), (string) $item->getRowTotal(), 4), (string) $taxAmount, 4), (string) $discountTaxCompensationAmount, 4);
         $isDiscountTaxAmountExist = $discountTaxAmount !== '0.0000';
 
         return $taxPercent &&
@@ -181,7 +181,7 @@ class Tax
                 $childDiscAmountInclTax = round((1 + $taxPercent / 100) * $childDiscAmountInclTax, 2);
             }
 
-            $discAmountInclTax = bcadd($discAmountInclTax, $childDiscAmountInclTax, 4);
+            $discAmountInclTax = bcadd((string) $discAmountInclTax, (string) $childDiscAmountInclTax, 4);
         }
 
         return $discAmountInclTax;

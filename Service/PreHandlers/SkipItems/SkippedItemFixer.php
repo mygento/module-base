@@ -70,7 +70,7 @@ class SkippedItemFixer
         $discountAmountInclTax = Tax::getDiscountAmountInclTax($sourceItem);
 
         $subTotal = $rowTotalInclTax;
-        $grandTotal = bcsub($subTotal, $discountAmountInclTax, 4);
+        $grandTotal = bcsub((string) $subTotal, (string) $discountAmountInclTax, 4);
         $shippingInclTax = 0;
 
         $discountAmount = (-1) * $sourceItem->getDiscountAmount();

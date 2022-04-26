@@ -53,13 +53,13 @@ class SkipItems implements RecalculationPreHandlerInterface
             $reduceTaxAmount += $item->getTaxAmount();
         }
 
-        $reduceGrandTotal = bcsub($reduceSubtotal, $reduceDiscountAmountInclTax, 4);
+        $reduceGrandTotal = bcsub((string) $reduceSubtotal, (string) $reduceDiscountAmountInclTax, 4);
 
-        $newGrandTotal = bcsub($entity->getGrandTotal(), $reduceGrandTotal, 4);
-        $newSubTotalInclTax = bcsub($entity->getSubtotalInclTax(), $reduceSubtotal, 4);
+        $newGrandTotal = bcsub((string) $entity->getGrandTotal(), (string) $reduceGrandTotal, 4);
+        $newSubTotalInclTax = bcsub((string) $entity->getSubtotalInclTax(), (string) $reduceSubtotal, 4);
         //DiscountAmount has different signs in order and orderItem
-        $newDiscountAmount = bcadd($entity->getDiscountAmount(), $reduceDiscountAmount, 4);
-        $newTaxAmount = bcsub($entity->getTaxAmount(), $reduceTaxAmount, 4);
+        $newDiscountAmount = bcadd((string) $entity->getDiscountAmount(), (string) $reduceDiscountAmount, 4);
+        $newTaxAmount = bcsub((string) $entity->getTaxAmount(), (string) $reduceTaxAmount, 4);
 
         //Create mock Order
         $orderSkippedLess = OrderMockBuilder::getNewOrderInstance(0, 0, 0);
