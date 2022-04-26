@@ -64,7 +64,7 @@ class AddExtraDiscountsHandlerTest extends AbstractFacadeTest
     {
         $facade = $this->getFacadeInstance();
 
-        if ($expected instanceof \Exception) {
+        if ($expected instanceof \Exception || $expected instanceof \Error) {
             $this->expectExceptionObject($expected);
             $facade->execute($order);
 
