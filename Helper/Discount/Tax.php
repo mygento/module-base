@@ -47,8 +47,8 @@ class Tax
         $ratio = 1;
 
         //bccomp returns 0 if operands are equal
-        $isShippingsEqual = bccomp($entity->getShippingAmount(), $entity->getShippingInclTax(), 2) === 0;
-        $isShippingNotNull = bccomp($entity->getShippingAmount(), 0.00, 2) !== 0;
+        $isShippingsEqual = bccomp((string) $entity->getShippingAmount(), (string) $entity->getShippingInclTax(), 2) === 0;
+        $isShippingNotNull = bccomp((string) $entity->getShippingAmount(), '0.00', 2) !== 0;
 
         if (!$isShippingsEqual && $isShippingNotNull) {
             $ratio = round($entity->getShippingInclTax() / $entity->getShippingAmount(), 2);
@@ -66,8 +66,8 @@ class Tax
         //Если ShTA === ShAmount * 20% - то налог уже включен в скидку и доп расчет не нужен
         //где ShTA - shipping_tax_amount, ShAmount - shipping_amount, DiscShip - shipping_discount_amount
         $hasTaxInShippingDiscount = bccomp(
-            $entity->getShippingTaxAmount(),
-            $entity->getShippingAmount() * ($ratio - 1),
+            (string) $entity->getShippingTaxAmount(),
+            (string) ($entity->getShippingAmount() * ($ratio - 1)),
             2
         ) === 0;
 
@@ -150,9 +150,9 @@ class Tax
         $isDiscountTaxAmountExist = $discountTaxAmount !== '0.0000';
 
         return $taxPercent &&
-            (bccomp($taxAmount, '0.00', 2) === 0 || $isDiscountTaxAmountExist) &&
+            (bccomp((string) $taxAmount, '0.00', 2) === 0 || $isDiscountTaxAmountExist) &&
             $item->getRowTotal() !== $item->getRowTotalInclTax() &&
-            bccomp(($item->getRowTotalInclTax() - $item->getDiscountAmount()), '0.00', 2) != 0;
+            bccomp((string) ($item->getRowTotalInclTax() - $item->getDiscountAmount()), '0.00', 2) != 0;
     }
 
     /**
