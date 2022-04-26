@@ -29,7 +29,6 @@ interface DiscountHelperInterface
     public const NAME_MARKING = 'marking';
     public const NAME_MARKING_LIST = 'marking_list';
     public const NAME_MARKING_REFUND = 'marking_refund';
-
     public const ORIG_GRAND_TOTAL = 'origGrandTotal';
     public const ITEMS = 'items';
     public const SHIPPING = 'shipping';

@@ -29,7 +29,7 @@
   },
   "require-dev": {
     "mygento/coding-standard": "~2.14.0-beta5",
-    "phpunit/phpunit": "~9.0.0"
+    "phpunit/phpunit": "~9.5.0"
   },
   "autoload": {
     "files": [

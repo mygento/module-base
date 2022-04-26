@@ -162,7 +162,10 @@ class ExtraDiscountsDataProvider
         $father->setChildrenItems([$child1, $child2, $child3]);
         OrderMockBuilder::addItem($order, $father);
 
-        $expected = new \PHPUnit\Framework\Exception('Warning: Division by zero', 2);
+        $expected = PHP_VERSION_ID < 80000
+            ? new \PHPUnit\Framework\Exception('Warning: Division by zero', 2)
+            : new \DivisionByZeroError('Division by zero', 0);
+
         $final['1. Заказ с 1 пересчитанным бандлом и Gift Card полная оплата. Division by zero.'] = [$order, $expected];
 
         //Пересчитанный заказ. При повторном пересчете порождает ошибку

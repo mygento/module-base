@@ -47,8 +47,8 @@ class Tax
         $ratio = 1;
 
         //bccomp returns 0 if operands are equal
-        $isShippingsEqual = bccomp($entity->getShippingAmount(), $entity->getShippingInclTax(), 2) === 0;
-        $isShippingNotNull = bccomp($entity->getShippingAmount(), 0.00, 2) !== 0;
+        $isShippingsEqual = bccomp((string) $entity->getShippingAmount(), (string) $entity->getShippingInclTax(), 2) === 0;
+        $isShippingNotNull = bccomp((string) $entity->getShippingAmount(), '0.00', 2) !== 0;
 
         if (!$isShippingsEqual && $isShippingNotNull) {
             $ratio = round($entity->getShippingInclTax() / $entity->getShippingAmount(), 2);
@@ -66,8 +66,8 @@ class Tax
         //Если ShTA === ShAmount * 20% - то налог уже включен в скидку и доп расчет не нужен
         //где ShTA - shipping_tax_amount, ShAmount - shipping_amount, DiscShip - shipping_discount_amount
         $hasTaxInShippingDiscount = bccomp(
-            $entity->getShippingTaxAmount(),
-            $entity->getShippingAmount() * ($ratio - 1),
+            (string) $entity->getShippingTaxAmount(),
+            (string) ($entity->getShippingAmount() * ($ratio - 1)),
             2
         ) === 0;
 
@@ -146,13 +146,13 @@ class Tax
         //RowTotalInclTax === RowTotal + TaxAmount + DiscountTaxCompensationAmount
 
         // $discountTaxAmount = $rowTotalInclTax - $rowTotal - $taxAmount - $discountTaxCompensationAmount;
-        $discountTaxAmount = bcsub(bcsub(bcsub($item->getRowTotalInclTax(), $item->getRowTotal(), 4), $taxAmount, 4), $discountTaxCompensationAmount, 4);
+        $discountTaxAmount = bcsub(bcsub(bcsub((string) $item->getRowTotalInclTax(), (string) $item->getRowTotal(), 4), (string) $taxAmount, 4), (string) $discountTaxCompensationAmount, 4);
         $isDiscountTaxAmountExist = $discountTaxAmount !== '0.0000';
 
         return $taxPercent &&
-            (bccomp($taxAmount, '0.00', 2) === 0 || $isDiscountTaxAmountExist) &&
+            (bccomp((string) $taxAmount, '0.00', 2) === 0 || $isDiscountTaxAmountExist) &&
             $item->getRowTotal() !== $item->getRowTotalInclTax() &&
-            bccomp(($item->getRowTotalInclTax() - $item->getDiscountAmount()), '0.00', 2) != 0;
+            bccomp((string) ($item->getRowTotalInclTax() - $item->getDiscountAmount()), '0.00', 2) != 0;
     }
 
     /**
@@ -181,7 +181,7 @@ class Tax
                 $childDiscAmountInclTax = round((1 + $taxPercent / 100) * $childDiscAmountInclTax, 2);
             }
 
-            $discAmountInclTax = bcadd($discAmountInclTax, $childDiscAmountInclTax, 4);
+            $discAmountInclTax = bcadd((string) $discAmountInclTax, (string) $childDiscAmountInclTax, 4);
         }
 
         return $discAmountInclTax;
