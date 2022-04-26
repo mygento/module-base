@@ -32,7 +32,7 @@ class GetRecalculateResultFactory
 
         /** @var \Mygento\Base\Test\Extra\RecalculateResultItemInterfaceFactory $recalculateResultItemFactory */
         $recalculateResultItemFactory = $this->getObjectManager($testCase)->getObject(
-            RecalculateResultItemInterfaceFactory ::class,
+            RecalculateResultItemInterfaceFactory::class,
             ['objectManager' => $this->objectMan]
         );
 

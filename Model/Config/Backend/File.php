@@ -143,7 +143,8 @@ class File extends \Magento\Framework\App\Config\Value
     public function validateMaxSize($filePath)
     {
         $directory = $this->filesystem->getDirectoryRead(DirectoryList::SYS_TMP);
-        if ($this->maxFileSize > 0 &&
+        if (
+            $this->maxFileSize > 0 &&
             $directory->stat(
                 $directory->getRelativePath($filePath)
             )['size'] > $this->maxFileSize * 1024
@@ -226,10 +227,11 @@ class File extends \Magento\Framework\App\Config\Value
 
         if (is_array($fieldConfig['upload_dir'])) {
             $uploadDir = $fieldConfig['upload_dir']['value'];
-            if (array_key_exists(
-                'scope_info',
-                $fieldConfig['upload_dir']
-            ) && $fieldConfig['upload_dir']['scope_info']
+            if (
+                array_key_exists(
+                    'scope_info',
+                    $fieldConfig['upload_dir']
+                ) && $fieldConfig['upload_dir']['scope_info']
             ) {
                 $uploadDir = $this->appendScopeInfo($uploadDir);
             }
