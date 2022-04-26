@@ -162,7 +162,7 @@ class ExtraDiscountsDataProvider
         $father->setChildrenItems([$child1, $child2, $child3]);
         OrderMockBuilder::addItem($order, $father);
 
-        $expected = phpversion() <= '8.0'
+        $expected = PHP_VERSION_ID < 80000
             ? new \PHPUnit\Framework\Exception('Warning: Division by zero', 2)
             : new \DivisionByZeroError('Warning: Division by zero', 2);
 
