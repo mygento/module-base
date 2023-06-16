@@ -163,7 +163,7 @@ class Discount implements DiscountHelperInterface
                 $this->generalHelper->debug('No calculation at all.');
                 break;
             case ($this->checkSpread()):
-                $this->applyDiscount();
+                $this->applyDiscount($entity);
                 $this->generalHelper->debug("'Apply Discount' logic was applied");
                 break;
             default:
@@ -238,13 +238,13 @@ class Discount implements DiscountHelperInterface
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @param mixed|null $order
+     * @param Creditmemo|Invoice|Order $entity
      * @param mixed $amountToSpread
      */
-    public function applyDiscount($order = null, $amountToSpread = 0): void
+    public function applyDiscount($entity, $amountToSpread = 0): void
     {
-        if ($order) {
-            $this->entity = $order;
+        if ($entity) {
+            $this->entity = $entity;
         }
 
         $subTotal = $this->entity->getSubtotalInclTax() ?? 0;
@@ -331,7 +331,7 @@ class Discount implements DiscountHelperInterface
                 $rowGrandDiscount = (-1) * ($rowTotal + $rowDiscount);
             }
 
-            $discountPerUnitRaw = bcdiv(bcadd($rowDiscount, $rowGrandDiscount, 4), $qty, 4);
+            $discountPerUnitRaw = bcdiv(bcadd((string) $rowDiscount, (string) $rowGrandDiscount, 4), $qty, 4);
 
             //Если это наценка - то мы должны иначе округлять. Не вверх, а вниз. Из-за отличия в знаке.
             $discountPerUnit = $grandDiscount > 0
@@ -346,7 +346,7 @@ class Discount implements DiscountHelperInterface
             }
             $item->setData(self::NAME_ROW_AMOUNT_TO_SPREAD, $rowAmountSpread);
 
-            $priceWithDiscount = bcadd($price, (string) $discountPerUnit, 2);
+            $priceWithDiscount = bcadd((string) $price, (string) $discountPerUnit, 2);
 
             //Set Recalculated unit price for the item
             $item->setData(self::NAME_UNIT_PRICE, $priceWithDiscount);
@@ -522,7 +522,7 @@ class Discount implements DiscountHelperInterface
 
         //Calculate sum
         foreach ($itemsFinal as $item) {
-            $itemsSum = bcadd($item[self::SUM], $itemsSum, 2);
+            $itemsSum = bcadd((string) $item[self::SUM], (string) $itemsSum, 2);
         }
 
         $receipt = [
@@ -538,7 +538,7 @@ class Discount implements DiscountHelperInterface
 
         $this->generalHelper->debug("Items sum: {$itemsSum}. Shipping increase: {$itemsSumDiff}");
 
-        $shippingSum = bcadd($shippingAmount, $itemsSumDiff, 2);
+        $shippingSum = bcadd((string) $shippingAmount, (string) $itemsSumDiff, 2);
         $shippingItem = [
             self::NAME => $this->getShippingName($this->entity),
             self::PRICE => $shippingSum,
@@ -794,7 +794,7 @@ class Discount implements DiscountHelperInterface
             }
         );
 
-        return bcsub($sum, $receipt[self::ORIG_GRAND_TOTAL], 2) === '0.00';
+        return bcsub((string) $sum, (string) $receipt[self::ORIG_GRAND_TOTAL], 2) === '0.00';
     }
 
     /**
@@ -841,7 +841,7 @@ class Discount implements DiscountHelperInterface
 
             $rowPrice = $item->getData('row_total_incl_tax') - $discountAmountInclTax;
 
-            if ($discountAmountInclTax === 0.00) {
+            if (bccomp((string) $discountAmountInclTax, '0.0000', 2) === 0) {
                 $this->discountlessSum += $item->getData('row_total_incl_tax');
             }
 
@@ -870,7 +870,7 @@ class Discount implements DiscountHelperInterface
             return true;
         }
 
-        $isDiscountExist = bccomp($discountSum, '0.00', 2) !== 0;
+        $isDiscountExist = bccomp((string) $discountSum, '0.00', 2) !== 0;
         if ($this->spreadDiscOnAllUnits && $isDiscountExist) {
             $this->generalHelper->debug('3. SpreadDiscount = Yes.');
 

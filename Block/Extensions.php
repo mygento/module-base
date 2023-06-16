@@ -212,7 +212,8 @@ class Extensions extends \Magento\Config\Block\System\Config\Form\Fieldset
     private function getFieldHtml(AbstractElement $fieldset, $moduleCode)
     {
         $module = $this->getModuleInfo($moduleCode);
-        if (!is_array($module) ||
+        if (
+            !is_array($module) ||
             !array_key_exists('version', $module) ||
             !array_key_exists('description', $module)
         ) {

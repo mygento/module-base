@@ -29,7 +29,6 @@ interface DiscountHelperInterface
     public const NAME_MARKING = 'marking';
     public const NAME_MARKING_LIST = 'marking_list';
     public const NAME_MARKING_REFUND = 'marking_refund';
-
     public const ORIG_GRAND_TOTAL = 'origGrandTotal';
     public const ITEMS = 'items';
     public const SHIPPING = 'shipping';
@@ -64,7 +63,7 @@ interface DiscountHelperInterface
      * @param Creditmemo|Invoice|Order $entity
      * @param float|int $amountToSpread
      */
-    public function applyDiscount($entity = null, $amountToSpread = 0): void;
+    public function applyDiscount($entity, $amountToSpread = 0): void;
 
     /**
      * @param bool $isSplitItemsAllowed
