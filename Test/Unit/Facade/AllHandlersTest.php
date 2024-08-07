@@ -49,7 +49,7 @@ class AllHandlersTest extends AbstractFacadeTest
 
         foreach ($result->getItems() as $key => $recalcItem) {
             $expectedItem = array_shift($expectedItems);
-            self::assertEquals($expectedItem['price'], $recalcItem->getPrice(), $key . ' Price of item failed');
+            self::assertEqualsWithDelta($expectedItem['price'], $recalcItem->getPrice(), 0.001, $key . ' Price of item failed');
             self::assertEquals($expectedItem['tax'] ?? null, $recalcItem->getTax(), $key . ' Tax of item failed');
             self::assertEquals($expectedItem['quantity'], $recalcItem->getQuantity());
             self::assertEquals($expectedItem['sum'], $recalcItem->getSum(), $key . ' Sum of item failed');

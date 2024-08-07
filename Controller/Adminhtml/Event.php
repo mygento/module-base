@@ -55,6 +55,7 @@ abstract class Event extends \Magento\Backend\App\Action
     protected function initPage($resultPage)
     {
         $resultPage->setActiveMenu('Mygento_Base::event');
+
         //->addBreadcrumb(__('Event'), __('Event'));
         return $resultPage;
     }

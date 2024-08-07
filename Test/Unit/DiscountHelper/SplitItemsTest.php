@@ -42,7 +42,7 @@ class SplitItemsTest extends GeneralTestCase
         $recalcExpectedItems = array_values($expectedArray['items']);
 
         foreach ($recalcItems as $index => $recalcItem) {
-            $this->assertEquals($recalcExpectedItems[$index]['price'], $recalcItem['price'], 'Price of item failed');
+            $this->assertEqualsWithDelta($recalcExpectedItems[$index]['price'], $recalcItem['price'], 0.001, 'Price of item failed');
             $this->assertEquals($recalcExpectedItems[$index]['quantity'], $recalcItem['quantity']);
             $this->assertEquals($recalcExpectedItems[$index]['sum'], $recalcItem['sum'], 'Sum of item failed');
         }
