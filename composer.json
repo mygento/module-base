@@ -1,21 +1,21 @@
 {
   "name": "mygento/module-base",
   "type": "magento2-module",
-  "version": "2.4.2",
+  "version": "2.4.3",
   "license": "OSL-3.0",
   "homepage": "https://github.com/mygento/module-base",
   "description": "Mygento Base",
   "authors": [
     {
       "name": "Nikita Tarasov",
-      "email": "nikita@mygento.net",
-      "homepage": "http://www.mygento.net/",
+      "email": "nikita@mygento.com",
+      "homepage": "http://www.mygento.com/",
       "role": "Developer"
     },
     {
       "name": "Mygento",
-      "email": "connect@mygento.net",
-      "homepage": "https://www.mygento.ru/"
+      "email": "connect@mygento.com",
+      "homepage": "https://www.mygento.com/"
     }
   ],
   "keywords": [
@@ -23,12 +23,13 @@
     "mygento"
   ],
   "require": {
+    "php": ">=8.0.0",
     "ext-bcmath": "*",
     "magento/framework": "103.*",
     "magento/module-sales": "103.*"
   },
   "require-dev": {
-    "mygento/coding-standard": "~2.14.0-beta5",
+    "mygento/coding-standard": "~2.14.0",
     "phpunit/phpunit": "~9.5.0"
   },
   "autoload": {
@@ -44,5 +45,11 @@
       "type": "composer",
       "url": "https://repo.magento.com"
     }
-  ]
+  ],
+  "config": {
+    "allow-plugins": {
+      "magento/composer-dependency-version-audit-plugin": false,
+      "phpro/grumphp": true
+    }
+  }
 }

@@ -8,3 +8,5 @@
 .php-cs-fixer.cache
 auth.json
 /generate
+/generated
+.phpunit.result.cache

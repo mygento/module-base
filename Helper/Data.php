@@ -9,11 +9,12 @@
 namespace Mygento\Base\Helper;
 
 use Magento\Framework\DB\Adapter\AdapterInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Base Data helper
  */
-class Data extends \Magento\Framework\App\Helper\AbstractHelper implements \Psr\Log\LoggerInterface
+class Data extends \Magento\Framework\App\Helper\AbstractHelper implements LoggerInterface
 {
     /** @var string */
     protected $code = 'mygento';
@@ -27,11 +28,6 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper implements \Psr\
     /** @var \Magento\Framework\Encryption\Encryptor */
     private $encryptor;
 
-    /**
-     * @param \Mygento\Base\Model\LogManager $logManager
-     * @param \Magento\Framework\Encryption\Encryptor $encryptor
-     * @param \Magento\Framework\App\Helper\Context $context
-     */
     public function __construct(
         \Mygento\Base\Model\LogManager $logManager,
         \Magento\Framework\Encryption\Encryptor $encryptor,
@@ -145,92 +141,47 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper implements \Psr\
         );
     }
 
-    /**
-     * @param string $message
-     * @param array $context
-     */
-    public function alert($message, array $context = [])
+    public function alert(string|\Stringable $message, array $context = []): void
     {
         $this->getLogger()->alert($message, $context);
     }
 
-    /**
-     * @param string $message
-     * @param array $context
-     */
-    public function critical($message, array $context = [])
+    public function critical(string|\Stringable $message, array $context = []): void
     {
         $this->getLogger()->critical($message, $context);
     }
 
-    /**
-     * @param string $message
-     * @param array $context
-     */
-    public function debug($message, array $context = [])
+    public function debug(string|\Stringable $message, array $context = []): void
     {
         $this->getLogger()->debug($message, $context);
     }
 
-    /**
-     * @param string $message
-     * @param array $context
-     */
-    public function emergency($message, array $context = [])
+    public function emergency(string|\Stringable $message, array $context = []): void
     {
         $this->getLogger()->emergency($message, $context);
     }
 
-    /**
-     * @param string $message
-     * @param array $context
-     */
-    public function error($message, array $context = [])
+    public function error(string|\Stringable $message, array $context = []): void
     {
         $this->getLogger()->error($message, $context);
     }
 
-    /**
-     * Info
-     *
-     * @param string $message
-     * @param array $context
-     */
-    public function info($message, array $context = [])
+    public function info(string|\Stringable $message, array $context = []): void
     {
         $this->getLogger()->info($message, $context);
     }
 
-    /**
-     * Logs with an arbitrary level.
-     *
-     * @param mixed $level
-     * @param string $message
-     * @param array $context
-     *
-     * @return void
-     */
-    public function log($level, $message, array $context = [])
+    public function log($level, string|\Stringable $message, array $context = []): void
     {
         $this->getLogger()->log($level, $message, $context);
     }
 
-    /**
-     * Notice
-     *
-     * @param string $message
-     * @param array $context
-     */
-    public function notice($message, array $context = [])
+    public function notice(string|\Stringable $message, array $context = []): void
     {
         $this->getLogger()->notice($message, $context);
     }
 
-    /**
-     * @param string $message
-     * @param array $context
-     */
-    public function warning($message, array $context = [])
+    public function warning(string|\Stringable $message, array $context = []): void
     {
         $this->getLogger()->warning($message, $context);
     }
