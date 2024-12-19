@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2025 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -780,28 +780,28 @@ class OrderItemMock extends DataObject implements OrderItemInterface
     public function setDiscountTaxCompensationInvoiced($discountTaxCompensationInvoiced)
     {
         return parent::setDiscountTaxCompensationInvoiced(
-            $discountTaxCompensationInvoiced
+            $discountTaxCompensationInvoiced,
         );
     }
 
     public function setBaseDiscountTaxCompensationInvoiced($baseDiscountTaxCompensationInvoiced)
     {
         return parent::setBaseDiscountTaxCompensationInvoiced(
-            $baseDiscountTaxCompensationInvoiced
+            $baseDiscountTaxCompensationInvoiced,
         );
     }
 
     public function setDiscountTaxCompensationRefunded($discountTaxCompensationRefunded)
     {
         return parent::setDiscountTaxCompensationRefunded(
-            $discountTaxCompensationRefunded
+            $discountTaxCompensationRefunded,
         );
     }
 
     public function setBaseDiscountTaxCompensationRefunded($baseDiscountTaxCompensationRefunded)
     {
         return parent::setBaseDiscountTaxCompensationRefunded(
-            $baseDiscountTaxCompensationRefunded
+            $baseDiscountTaxCompensationRefunded,
         );
     }
 
@@ -813,7 +813,7 @@ class OrderItemMock extends DataObject implements OrderItemInterface
     public function setDiscountTaxCompensationCanceled($discountTaxCompensationCanceled)
     {
         return parent::setDiscountTaxCompensationCanceled(
-            $discountTaxCompensationCanceled
+            $discountTaxCompensationCanceled,
         );
     }
 

@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2025 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -64,7 +64,7 @@ class SkippedItemsCollector
             static function ($item) {
                 return (int) $item->getId();
             },
-            $items
+            $items,
         );
     }
 }

@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2025 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -72,17 +72,17 @@ class SkipItemsHandlerTest extends AbstractFacadeTest
         self::assertEquals(
             $expectedVirtualOrder->getSubtotalInclTax(),
             $virtualOrder->getSubtotalInclTax(),
-            'Virtual order: SubtotalInclTax failed'
+            'Virtual order: SubtotalInclTax failed',
         );
         self::assertEquals(
             $expectedVirtualOrder->getGrandTotal(),
             $virtualOrder->getGrandTotal(),
-            'Virtual order: GrandTotal failed'
+            'Virtual order: GrandTotal failed',
         );
         self::assertEquals(
             $expectedVirtualOrder->getDiscountAmount(),
             $virtualOrder->getDiscountAmount(),
-            'Virtual order: Discount Amount failed'
+            'Virtual order: Discount Amount failed',
         );
     }
 
@@ -100,28 +100,28 @@ class SkipItemsHandlerTest extends AbstractFacadeTest
                 'discountHelper' => $discountHelperFactory->create(),
                 'recalculateResultFactory' => $this->getRecalculateResultFactory(),
                 'preHandlers' => [$skipItemsPreHandler],
-            ]
+            ],
         );
     }
 
     protected function getSkipItemsHandler(): SkipItems
     {
         $testItemSkipper = $this->getObjectManager()->getObject(
-            TestItemSkipper::class
+            TestItemSkipper::class,
         );
 
         $skippedItemsCollector = $this->getObjectManager()->getObject(
             SkippedItemsCollector::class,
             [
                 'skippers' => [$testItemSkipper],
-            ]
+            ],
         );
 
         return $this->getObjectManager()->getObject(
             SkipItems::class,
             [
                 'skippedItemsCollector' => $skippedItemsCollector,
-            ]
+            ],
         );
     }
 }

@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2025 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -79,7 +79,7 @@ class Extensions extends \Magento\Config\Block\System\Config\Form\Fieldset
         \Magento\Backend\Block\Context $context,
         \Magento\Backend\Model\Auth\Session $authSession,
         \Magento\Framework\View\Helper\Js $jsHelper,
-        array $data = []
+        array $data = [],
     ) {
         parent::__construct($context, $authSession, $jsHelper, $data);
 
@@ -114,18 +114,18 @@ class Extensions extends \Magento\Config\Block\System\Config\Form\Fieldset
         $url = __(
             'Purchased extensions support is available through '
             . '<a href="%1" target="_blank">ticket tracking system</a>',
-            $ticketUrl
+            $ticketUrl,
         );
         $bugs = __('Please report all bugs and feature requests.');
         $emailtext = __(
             'If for some reasons you can not submit ticket '
             . 'to our system, you can write us an email %1.',
-            $email
+            $email,
         );
         $hiretext = __(
             'You can hire us for any Magento extension customization and development.'
             . '<br/>Write us to %1',
-            $email
+            $email,
         );
         $tender = __('Tender offer can be checked '
             . '<a href="https://www.mygento.ru/oferta" target="_blank">here</a>');
@@ -141,7 +141,7 @@ class Extensions extends \Magento\Config\Block\System\Config\Form\Fieldset
             . '</td><td>' . $hiretext . '<br/><br/>' . __(
                 'You can check all providable services on '
                 . '<a href="%1" target="_blank">our website</a>.',
-                $site . '/services'
+                $site . '/services',
             ) . '</td></tr><tr class="mygento-info-line"></tr>';
         $html .= '</table>';
 
@@ -176,7 +176,7 @@ class Extensions extends \Magento\Config\Block\System\Config\Form\Fieldset
             $layout = $this->layoutFactory->create();
 
             $this->fieldRenderer = $layout->createBlock(
-                \Magento\Config\Block\System\Config\Form\Field::class
+                \Magento\Config\Block\System\Config\Form\Field::class,
             );
         }
 

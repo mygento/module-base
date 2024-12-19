@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2025 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -37,7 +37,7 @@ abstract class Actions extends \Magento\Ui\Component\Listing\Columns\Column
         \Magento\Framework\View\Element\UiComponent\ContextInterface $context,
         \Magento\Framework\View\Element\UiComponentFactory $uiComponentFactory,
         array $components = [],
-        array $data = []
+        array $data = [],
     ) {
         parent::__construct($context, $uiComponentFactory, $components, $data);
         $this->urlBuilder = $urlBuilder;
@@ -60,7 +60,7 @@ abstract class Actions extends \Magento\Ui\Component\Listing\Columns\Column
                                 $this->route . '/' . $this->controller . '/edit',
                                 [
                                     'id' => $item[$this->key],
-                                ]
+                                ],
                             ),
                             'label' => __('Edit'),
                         ],
@@ -69,7 +69,7 @@ abstract class Actions extends \Magento\Ui\Component\Listing\Columns\Column
                                 $this->route . '/' . $this->controller . '/delete',
                                 [
                                     'id' => $item[$this->key],
-                                ]
+                                ],
                             ),
                             'label' => __('Delete'),
                             'confirm' => [

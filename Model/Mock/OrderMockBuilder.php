@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2025 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -29,7 +29,7 @@ class OrderMockBuilder
         $grandTotal,
         $shippingInclTax,
         $rewardPoints = 0.00,
-        $discountAmount = null
+        $discountAmount = null,
     ): OrderInterface {
         $order = new OrderMock();
         $payment = new OrderPaymentMock();
@@ -41,7 +41,7 @@ class OrderMockBuilder
         $order->setData(
             'discount_amount',
             $discountAmount ??
-            $grandTotal + $rewardPoints - $subTotalInclTax - $shippingInclTax
+            $grandTotal + $rewardPoints - $subTotalInclTax - $shippingInclTax,
         );
         $order->setPayment($payment);
 
@@ -65,7 +65,7 @@ class OrderMockBuilder
         $qty = 1,
         $taxPercent = 0,
         $taxAmount = 0,
-        $rowTotal = null
+        $rowTotal = null,
     ): OrderItemMock {
         static $id = 100500;
         $id++;
