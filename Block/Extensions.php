@@ -8,77 +8,46 @@
 
 namespace Mygento\Base\Block;
 
+use Magento\Backend\Block\Context;
+use Magento\Backend\Model\Auth\Session;
+use Magento\Config\Block\System\Config\Form\Field;
+use Magento\Config\Block\System\Config\Form\Fieldset;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Data\Form\Element\AbstractElement;
+use Magento\Framework\Exception\FileSystemException;
+use Magento\Framework\Filesystem\Driver\File;
+use Magento\Framework\Locale\ResolverInterface;
+use Magento\Framework\Module\Dir\Reader;
+use Magento\Framework\Module\ModuleListInterface;
+use Magento\Framework\Serialize\Serializer\Json;
+use Magento\Framework\View\Element\BlockInterface;
+use Magento\Framework\View\Helper\Js;
+use Magento\Framework\View\LayoutFactory;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class Extensions extends \Magento\Config\Block\System\Config\Form\Fieldset
+class Extensions extends Fieldset
 {
-    /**
-     * @var \Magento\Framework\Module\ModuleListInterface
-     */
-    private $moduleList;
+    private ModuleListInterface $moduleList;
+    private LayoutFactory $layoutFactory;
+    private Reader $moduleReader;
+    private Json $serializer;
+    private File $filesystem;
+    private ResolverInterface $locale;
+    private BlockInterface $fieldRenderer;
+    private ScopeConfigInterface $scopeConfig;
 
-    /**
-     * @var \Magento\Framework\View\LayoutFactory
-     */
-    private $layoutFactory;
-
-    /**
-     * @var \Magento\Framework\Module\Dir\Reader
-     */
-    private $moduleReader;
-
-    /**
-     * @var \Magento\Framework\Json\DecoderInterface
-     */
-    private $jsonDecoder;
-
-    /**
-     * @var \Magento\Framework\Filesystem\Driver\File
-     */
-    private $filesystem;
-
-    /**
-     * @var \Magento\Framework\Locale\ResolverInterface
-     */
-    private $locale;
-
-    /**
-     * @var \Magento\Framework\View\Element\BlockInterface
-     */
-    private $fieldRenderer;
-
-    /**
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface
-     */
-    private $scopeConfig;
-
-    /**
-     * @param \Magento\Framework\Module\ModuleListInterface $moduleList
-     * @param \Magento\Framework\Module\Dir\Reader $moduleReader
-     * @param \Magento\Framework\Filesystem\Driver\File $filesystem
-     * @param \Magento\Framework\Locale\ResolverInterface $locale
-     * @param \Magento\Framework\Json\DecoderInterface $jsonDecoder
-     * @param \Magento\Framework\View\LayoutFactory $layoutFactory
-     * @param \Magento\Backend\Block\Context $context
-     * @param \Magento\Backend\Model\Auth\Session $authSession
-     * @param \Magento\Framework\View\Helper\Js $jsHelper
-     * @param array $data
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
-     */
     public function __construct(
-        \Magento\Framework\Module\ModuleListInterface $moduleList,
-        \Magento\Framework\Module\Dir\Reader $moduleReader,
-        \Magento\Framework\Filesystem\Driver\File $filesystem,
-        \Magento\Framework\Locale\ResolverInterface $locale,
-        \Magento\Framework\Json\DecoderInterface $jsonDecoder,
-        \Magento\Framework\View\LayoutFactory $layoutFactory,
-        \Magento\Backend\Block\Context $context,
-        \Magento\Backend\Model\Auth\Session $authSession,
-        \Magento\Framework\View\Helper\Js $jsHelper,
+        ModuleListInterface $moduleList,
+        Reader $moduleReader,
+        File $filesystem,
+        ResolverInterface $locale,
+        Json $jsonDecoder,
+        LayoutFactory $layoutFactory,
+        Context $context,
+        Session $authSession,
+        Js $jsHelper,
         array $data = [],
     ) {
         parent::__construct($context, $authSession, $jsHelper, $data);
@@ -86,7 +55,7 @@ class Extensions extends \Magento\Config\Block\System\Config\Form\Fieldset
         $this->moduleList = $moduleList;
         $this->layoutFactory = $layoutFactory;
         $this->moduleReader = $moduleReader;
-        $this->jsonDecoder = $jsonDecoder;
+        $this->serializer = $jsonDecoder;
         $this->filesystem = $filesystem;
         $this->locale = $locale;
         $this->scopeConfig = $context->getScopeConfig();
@@ -94,15 +63,12 @@ class Extensions extends \Magento\Config\Block\System\Config\Form\Fieldset
 
     /**
      * Render fieldset html
-     *
-     * @param AbstractElement $element
-     * @return string
      */
-    public function render(AbstractElement $element)
+    public function render(AbstractElement $element): string
     {
         $html = $this->_getHeaderHtml($element);
 
-        $site = 'https://www.mygento.net';
+        $site = 'https://www.mygento.com';
         $email = 'connect@mygento.net';
 
         if ($this->locale->getLocale() === 'ru_RU') {
@@ -110,45 +76,30 @@ class Extensions extends \Magento\Config\Block\System\Config\Form\Fieldset
             $email = 'connect@mygento.ru';
         }
 
-        $ticketUrl = 'mailto:support@mygento.ru';
-        $url = __(
-            'Purchased extensions support is available through '
-            . '<a href="%1" target="_blank">ticket tracking system</a>',
-            $ticketUrl,
-        );
-        $bugs = __('Please report all bugs and feature requests.');
-        $emailtext = __(
-            'If for some reasons you can not submit ticket '
-            . 'to our system, you can write us an email %1.',
-            $email,
-        );
+        $bugs = __('Please report all bugs and feature requests to %1.', $email);
         $hiretext = __(
             'You can hire us for any Magento extension customization and development.'
-            . '<br/>Write us to %1',
+                . '<br/>Write us to %1',
             $email,
         );
-        $tender = __('Tender offer can be checked '
-            . '<a href="https://www.mygento.ru/oferta" target="_blank">here</a>');
+        $tender = __('Legal information can be checked '
+            . '<a href="https://mygento.com/impressum" target="_blank">here</a>');
 
         $html .= '<table class="mygento-info" cellspacing="0" cellpading="0">'
             . '<tr class="mygento-info-line">';
         $html .= '<tr><td>' . __('Support') . ':</td>' .
-            '<td>' . $url . '.<br/><br/>' . $bugs .
-            '<br/><br/>' . $emailtext . '</td></tr>';
+            '<td>' . $bugs . '</td></tr>';
         $html .= '<tr><td>' . __('License') . ':</td><td>' . $tender . '</td></tr>';
         $html .= '<tr class="mygento-info-line "><td>'
-            . '<img src="//www.mygento.ru/media/wysiwyg/logo_base.png" width="100" height="100"/>'
+            . '<img src="https://www.mygento.ru/media/wysiwyg/logo_base.png" width="100" height="100"/>'
             . '</td><td>' . $hiretext . '<br/><br/>' . __(
                 'You can check all providable services on '
-                . '<a href="%1" target="_blank">our website</a>.',
+                    . '<a href="%1" target="_blank">our website</a>.',
                 $site . '/services',
             ) . '</td></tr><tr class="mygento-info-line"></tr>';
         $html .= '</table>';
 
         $modules = $this->moduleList->getNames();
-
-        $dispatchResult = new \Magento\Framework\DataObject($modules);
-        $modules = $dispatchResult->toArray();
 
         $html .= '<h2>' . __('Installed Extensions') . '</h2>';
         $html .= '<ul class="mygento-mod-list">';
@@ -176,7 +127,7 @@ class Extensions extends \Magento\Config\Block\System\Config\Form\Fieldset
             $layout = $this->layoutFactory->create();
 
             $this->fieldRenderer = $layout->createBlock(
-                \Magento\Config\Block\System\Config\Form\Field::class,
+                Field::class,
             );
         }
 
@@ -186,21 +137,21 @@ class Extensions extends \Magento\Config\Block\System\Config\Form\Fieldset
     /**
      * Read info about extension from composer json file
      * @param string $moduleCode
-     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws FileSystemException
      * @return mixed
      */
-    private function getModuleInfo($moduleCode)
+    private function getModuleInfo(string $moduleCode)
     {
         $dir = $this->moduleReader->getModuleDir('', $moduleCode);
         $file = $dir . DIRECTORY_SEPARATOR . 'composer.json';
 
         try {
             $string = $this->filesystem->fileGetContents($file);
-        } catch (\Magento\Framework\Exception\FileSystemException $e) {
+        } catch (FileSystemException $e) {
             return null;
         }
 
-        return $this->jsonDecoder->decode($string);
+        return $this->serializer->unserialize($string);
     }
 
     /**
@@ -209,7 +160,7 @@ class Extensions extends \Magento\Config\Block\System\Config\Form\Fieldset
      * @param string $moduleCode
      * @return string
      */
-    private function getFieldHtml(AbstractElement $fieldset, $moduleCode)
+    private function getFieldHtml(AbstractElement $fieldset, string $moduleCode): string
     {
         $module = $this->getModuleInfo($moduleCode);
         if (
