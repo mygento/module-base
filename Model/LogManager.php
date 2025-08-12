@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2025 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -25,7 +25,7 @@ class LogManager
      */
     public function __construct(
         \Mygento\Base\Model\Logger\LoggerFactory $loggerFactory,
-        $handlers = []
+        $handlers = [],
     ) {
         $this->handlers = $handlers;
         $this->loggerFactory = $loggerFactory;
@@ -41,14 +41,14 @@ class LogManager
     public function getLogger(
         $name,
         $type = 'file',
-        $level = \Monolog\Logger::DEBUG
+        $level = \Monolog\Logger::DEBUG,
     ) {
         if (isset($this->loggers[$name])) {
             return $this->loggers[$name];
         }
         if (!isset($this->handlers[$type])) {
             throw new \Magento\Framework\Exception\LocalizedException(
-                __('No Logger Handlers')
+                __('No Logger Handlers'),
             );
         }
         $logger = $this->loggerFactory->create(['name' => $name]);

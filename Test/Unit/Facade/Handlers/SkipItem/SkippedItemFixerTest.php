@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2025 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -50,7 +50,7 @@ class SkippedItemFixerTest extends TestCase
     {
         if (!$this->objectMan) {
             $this->objectMan = new ObjectManager(
-                $this
+                $this,
             );
         }
 
@@ -65,7 +65,7 @@ class SkippedItemFixerTest extends TestCase
         /** @var \Mygento\Base\Test\Extra\DiscountHelperInterfaceFactory $discountHelperFactory */
         $discountHelperFactory = $this->getObjectManager()->getObject(
             DiscountHelperInterfaceFactory::class,
-            ['objectManager' => $this->objectMan]
+            ['objectManager' => $this->objectMan],
         );
 
         $resultFactory = $this->getRecalculateResultFactory();
@@ -75,7 +75,7 @@ class SkippedItemFixerTest extends TestCase
             [
                 'discountHelperFactory' => $discountHelperFactory,
                 'recalculateResultFactory' => $resultFactory,
-            ]
+            ],
         );
     }
 
@@ -86,7 +86,7 @@ class SkippedItemFixerTest extends TestCase
     {
         /** @var \Mygento\Base\Test\Extra\GetRecalculateResultFactory $recalculateResultFactory */
         $recalculateResultFactory = $this->getObjectManager()->getObject(
-            GetRecalculateResultFactory::class
+            GetRecalculateResultFactory::class,
         );
 
         return $recalculateResultFactory->get($this);

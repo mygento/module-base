@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2025 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -23,7 +23,7 @@ class RecalculateResultItemInterfaceFactory extends \Mygento\Base\Api\Data\Recal
      * @param \Magento\Framework\TestFramework\Unit\Helper\ObjectManager $objectManager
      */
     public function __construct(
-        \Magento\Framework\TestFramework\Unit\Helper\ObjectManager $objectManager
+        \Magento\Framework\TestFramework\Unit\Helper\ObjectManager $objectManager,
     ) {
         $this->_objectManager = $objectManager;
     }

@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2025 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -18,7 +18,7 @@ class Transaction
      */
     public function afterGetTransactionTypes(
         \Magento\Sales\Model\Order\Payment\Transaction $subject,
-        $result
+        $result,
     ) {
         return array_merge($result, [
             \Mygento\Base\Model\Payment\Transaction::TYPE_CAPTURE_CONFIRM => __('Capture confirm'),

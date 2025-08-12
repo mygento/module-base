@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2025 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -51,7 +51,7 @@ class AddChildrenOfBundle implements RecalculationPostHandlerInterface
     public function __construct(
         DiscountHelperInterfaceFactory $discountHelperFactory,
         ResultFactory $recalculateResultFactory,
-        RecalculateResultItemInterfaceFactory $recalculateResultItemFactory
+        RecalculateResultItemInterfaceFactory $recalculateResultItemFactory,
     ) {
         $this->discountHelperFactory = $discountHelperFactory;
         $this->recalculateResultFactory = $recalculateResultFactory;
@@ -78,7 +78,7 @@ class AddChildrenOfBundle implements RecalculationPostHandlerInterface
         $shippingTaxValue = '',
         $markingAttributeCode = '',
         $markingListAttributeCode = '',
-        $markingRefundAttributeCode = ''
+        $markingRefundAttributeCode = '',
     ): RecalculateResultInterface {
         $isRecalculated = $order->getPayment()->getAdditionalInformation(PaymentInterface::RECALCULATED_FLAG);
 
@@ -111,7 +111,7 @@ class AddChildrenOfBundle implements RecalculationPostHandlerInterface
                 $shippingTaxValue,
                 $markingAttributeCode,
                 $markingListAttributeCode,
-                $markingRefundAttributeCode
+                $markingRefundAttributeCode,
             );
 
             $childrenResult = $this->recalculateResultFactory->create($discountData);
@@ -270,7 +270,7 @@ class AddChildrenOfBundle implements RecalculationPostHandlerInterface
     private function updateParentItem(
         OrderItemInterface $parentItem,
         RecalculateResultInterface $recalcOriginalObject,
-        RecalculateResultInterface $childrenResultObject
+        RecalculateResultInterface $childrenResultObject,
     ): RecalculateResultInterface {
         $parentRecalculateItem = $recalcOriginalObject->getItemById($parentItem->getItemId());
         $children = $childrenResultObject->getItems();
@@ -297,8 +297,8 @@ class AddChildrenOfBundle implements RecalculationPostHandlerInterface
                     return $key !== 'shipping' ? $item->getSum() : 0;
                 },
                 $recalcOriginal->getItems(),
-                array_keys($recalcOriginal->getItems())
-            )
+                array_keys($recalcOriginal->getItems()),
+            ),
         );
 
         $recalcOriginal->setSum($newSum);
@@ -310,7 +310,7 @@ class AddChildrenOfBundle implements RecalculationPostHandlerInterface
      */
     private function updateShippingAmount(
         RecalculateResultInterface $recalcOriginal,
-        RecalculateResultInterface $childrenResult
+        RecalculateResultInterface $childrenResult,
     ): void {
         $childShipping = $childrenResult->getItemById('shipping');
         $masterShipping = $recalcOriginal->getItemById('shipping');
@@ -328,7 +328,7 @@ class AddChildrenOfBundle implements RecalculationPostHandlerInterface
     private function updateExtraDiscountsOfChildren(
         OrderItemInterface $parentItem,
         RecalculateResultInterface $recalcOriginalObject,
-        Order $dummyOrder
+        Order $dummyOrder,
     ) {
         $recalculatedItem = $recalcOriginalObject->getItemById($parentItem->getItemId());
         /** @var \Mygento\Base\Api\DiscountHelperInterface $freshDiscountHelper */

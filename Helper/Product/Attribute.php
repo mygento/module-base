@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2025 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -35,7 +35,7 @@ class Attribute implements ProductAttributeHelperInterface
     public function __construct(
         \Mygento\Base\Helper\Data $generalHelper,
         \Magento\Catalog\Model\ResourceModel\Product $productResource,
-        \Magento\Store\Model\StoreManagerInterface $storeManager
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
     ) {
         $this->generalHelper = $generalHelper;
         $this->productResource = $productResource;
@@ -50,7 +50,7 @@ class Attribute implements ProductAttributeHelperInterface
         $attributeCode = $this->generalHelper->getGlobalConfig($pathToParam);
         if (!$attributeCode || '0' === $attributeCode || 0 === $attributeCode) {
             return $this->generalHelper->getGlobalConfig(
-                $pathToParam . self::CONFIG_PATH_DEFAULT_SUFFIX
+                $pathToParam . self::CONFIG_PATH_DEFAULT_SUFFIX,
             );
         }
 
@@ -60,7 +60,7 @@ class Attribute implements ProductAttributeHelperInterface
         }
 
         return $this->generalHelper->getGlobalConfig(
-            $pathToParam . self::CONFIG_PATH_DEFAULT_SUFFIX
+            $pathToParam . self::CONFIG_PATH_DEFAULT_SUFFIX,
         );
     }
 

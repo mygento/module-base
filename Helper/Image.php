@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2025 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -45,7 +45,7 @@ class Image
         \Magento\Framework\Filesystem $filesystem,
         \Magento\Framework\Image\AdapterFactory $imageFactory,
         \Magento\Framework\View\ConfigInterface $configInterface,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
     ) {
         $this->storeManager = $storeManager;
         $this->filesystem = $filesystem;
@@ -120,7 +120,7 @@ class Image
         if (!$this->imageConfig) {
             $this->imageConfig = $this->viewConfig->getViewConfig()->getMediaEntities(
                 $moduleName,
-                'images'
+                'images',
             );
         }
 
@@ -134,7 +134,7 @@ class Image
     public function getMediaUrl(): string
     {
         return $this->storeManager->getStore()->getBaseUrl(
-            \Magento\Framework\UrlInterface::URL_TYPE_MEDIA
+            \Magento\Framework\UrlInterface::URL_TYPE_MEDIA,
         );
     }
 }

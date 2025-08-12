@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2025 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -18,7 +18,7 @@ class Handler extends \Magento\Framework\Logger\Handler\Base
     public function __construct(
         $name,
         \Magento\Framework\Filesystem\DriverInterface $filesystem,
-        $filePath = null
+        $filePath = null,
     ) {
         $this->fileName = DIRECTORY_SEPARATOR . 'var' . DIRECTORY_SEPARATOR .
             'log' . DIRECTORY_SEPARATOR . $name . '.log';
