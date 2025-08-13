@@ -69,12 +69,7 @@ class Extensions extends Fieldset
         $html = $this->_getHeaderHtml($element);
 
         $site = 'https://www.mygento.com';
-        $email = 'connect@mygento.net';
-
-        if ($this->locale->getLocale() === 'ru_RU') {
-            $site = 'https://www.mygento.ru';
-            $email = 'connect@mygento.ru';
-        }
+        $email = 'hello@mygento.сom';
 
         $bugs = __('Please report all bugs and feature requests to %1.', $email);
         $hiretext = __(
@@ -82,8 +77,7 @@ class Extensions extends Fieldset
                 . '<br/>Write us to %1',
             $email,
         );
-        $tender = __('Legal information can be checked '
-            . '<a href="https://mygento.com/impressum" target="_blank">here</a>');
+        $tender = __('<a href="https://mygento.com/impressum" target="_blank">Legal information</a>');
 
         $html .= '<table class="mygento-info" cellspacing="0" cellpading="0">'
             . '<tr class="mygento-info-line">';
@@ -91,7 +85,7 @@ class Extensions extends Fieldset
             '<td>' . $bugs . '</td></tr>';
         $html .= '<tr><td>' . __('License') . ':</td><td>' . $tender . '</td></tr>';
         $html .= '<tr class="mygento-info-line "><td>'
-            . '<img src="https://www.mygento.ru/media/wysiwyg/logo_base.png" width="100" height="100"/>'
+            . '<img src="https://www.mygento.com/media/wysiwyg/logo_base.png" width="100" height="100"/>'
             . '</td><td>' . $hiretext . '<br/><br/>' . __(
                 'You can check all providable services on '
                     . '<a href="%1" target="_blank">our website</a>.',
