@@ -1,22 +1,23 @@
 # Mygento Base module
 
-[![Build Status](https://github.com/mygento/module-base/actions/workflows/grumphp.yml/badge.svg?branch=v2.4)](https://github.com/mygento/module-base/actions/workflows/grumphp.yml)
+[![Build Status](https://github.com/mygento/module-base/actions/workflows/grumphp.yml/badge.svg)](https://github.com/mygento/module-base/actions/workflows/grumphp.yml)
 [![Latest Stable Version](https://poser.pugx.org/mygento/module-base/v/stable)](https://packagist.org/packages/mygento/module-base)
+[![License](https://poser.pugx.org/mygento/module-base/license)](https://packagist.org/packages/mygento/module-base)
 [![Total Downloads](https://poser.pugx.org/mygento/module-base/downloads)](https://packagist.org/packages/mygento/module-base)
 
 ## Description
 
-- Helper для работы с налогами и чеками 54-ФЗ
-- Helper для ресайза любых картинок
-- Helper для работы с валютой
-- Helper для определения статуса задачи крон
-- Блок Ajax кнопки для system.xml
-- Блок Cron кнопки для system.xml
-- Общие блоки и модели для CRUD
-- Модель для загрузки файлов в CRUD
-- Компонент превью картинки для GRID
-- Расширенный логгер с возможностью записи в БД
-- Модель для загрузки файлов в system.xml
+- Helper for taxes and cheques for 54-FZ
+- Helper for any images resizing
+- Helper working with currencies
+- Helper for understanding cron task status
+- Ready Ajax button Block for system.xml
+- Ready Cron button Block for system.xml
+- Common blocks & models for CRUD
+- Model for loading files into CRUD
+- Image preview component for GRID
+- Enhanced logger with ability to write to DB /
+- Model for loading files in system.xml
 
 ## Core Extension
 
@@ -24,4 +25,4 @@
 
 ## Autotests
 
-- Работа с налогами и чеками 54-ФЗ
+- Handle taxes and cheques for 54-FZ
