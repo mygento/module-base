@@ -1,26 +1,28 @@
 # Mygento Base module
 
-[![Build Status](https://travis-ci.com/mygento/module-base.svg?branch=v2.4)](https://travis-ci.com/mygento/module-base)
+[![Build Status](https://github.com/mygento/module-base/actions/workflows/grumphp.yml/badge.svg)](https://github.com/mygento/module-base/actions/workflows/grumphp.yml)
 [![Latest Stable Version](https://poser.pugx.org/mygento/module-base/v/stable)](https://packagist.org/packages/mygento/module-base)
+[![License](https://poser.pugx.org/mygento/module-base/license)](https://packagist.org/packages/mygento/module-base)
 [![Total Downloads](https://poser.pugx.org/mygento/module-base/downloads)](https://packagist.org/packages/mygento/module-base)
 
+## Description
 
-## Функционал
+- Helper for taxes and cheques for 54-FZ
+- Helper for any images resizing
+- Helper working with currencies
+- Helper for understanding cron task status
+- Ready Ajax button Block for system.xml
+- Ready Cron button Block for system.xml
+- Common blocks & models for CRUD
+- Model for loading files into CRUD
+- Image preview component for GRID
+- Enhanced logger with ability to write to DB /
+- Model for loading files in system.xml
 
-* Helper для работы с налогами и чеками 54-ФЗ
-* Helper для ресайза любых картинок
-* Helper для работы с валютой
-* Helper для определения статуса задачи крон
-* Блок Ajax кнопки для system.xml
-* Блок Cron кнопки для system.xml
-* Общие блоки и модели для CRUD
-* Модель для загрузки файлов в CRUD
-* Компонент превью картинки для GRID
-* Расширенный логгер с возможностью записи в БД
-* Модель для загрузки файлов в system.xml
+## Core Extension
 
-## Расширение ядра
-* Плагин: Дополнительные виды платежных транзакции - чек покупки и чек возврата
+- Plugin: Extended type of payment transactions - buy and refund receipt
 
-## Автотесты
-* Работа с налогами и чеками 54-ФЗ
+## Autotests
+
+- Handle taxes and cheques for 54-FZ
