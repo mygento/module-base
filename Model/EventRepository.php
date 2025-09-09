@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2026 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -38,7 +38,7 @@ class EventRepository implements \Mygento\Base\Api\EventRepositoryInterface
         ResourceModel\Event $resource,
         ResourceModel\Event\CollectionFactory $collectionFactory,
         \Mygento\Base\Api\Data\EventInterfaceFactory $entityFactory,
-        \Mygento\Base\Api\Data\EventSearchResultsInterfaceFactory $searchResultsFactory
+        \Mygento\Base\Api\Data\EventSearchResultsInterfaceFactory $searchResultsFactory,
     ) {
         $this->resource = $resource;
         $this->collectionFactory = $collectionFactory;
@@ -57,7 +57,7 @@ class EventRepository implements \Mygento\Base\Api\EventRepositoryInterface
         $this->resource->load($entity, $entityId);
         if (!$entity->getId()) {
             throw new \Magento\Framework\Exception\NoSuchEntityException(
-                __('Base Event with id "%1" does not exist.', $entityId)
+                __('Base Event with id "%1" does not exist.', $entityId),
             );
         }
 
@@ -66,9 +66,9 @@ class EventRepository implements \Mygento\Base\Api\EventRepositoryInterface
 
     /**
      * @param \Mygento\Base\Api\Data\EventInterface $entity
+     * @psalm-param \Mygento\Base\Api\Data\EventInterface&\Magento\Framework\Model\AbstractModel $event
      * @throws \Magento\Framework\Exception\CouldNotSaveException
      * @return \Mygento\Base\Api\Data\EventInterface
-     * @psalm-param \Mygento\Base\Api\Data\EventInterface&\Magento\Framework\Model\AbstractModel $event
      */
     public function save(\Mygento\Base\Api\Data\EventInterface $entity)
     {
@@ -77,7 +77,7 @@ class EventRepository implements \Mygento\Base\Api\EventRepositoryInterface
             $this->resource->save($entity);
         } catch (\Exception $exception) {
             throw new \Magento\Framework\Exception\CouldNotSaveException(
-                __($exception->getMessage())
+                __($exception->getMessage()),
             );
         }
 
@@ -95,7 +95,7 @@ class EventRepository implements \Mygento\Base\Api\EventRepositoryInterface
             $this->resource->delete($entity);
         } catch (\Exception $exception) {
             throw new \Magento\Framework\Exception\CouldNotDeleteException(
-                __($exception->getMessage())
+                __($exception->getMessage()),
             );
         }
 
@@ -142,7 +142,7 @@ class EventRepository implements \Mygento\Base\Api\EventRepositoryInterface
             foreach ($sortOrders as $sortOrder) {
                 $collection->addOrder(
                     $sortOrder->getField(),
-                    ($sortOrder->getDirection() == $sortAsc) ? $orderAsc : $orderDesc
+                    ($sortOrder->getDirection() == $sortAsc) ? $orderAsc : $orderDesc,
                 );
             }
         }

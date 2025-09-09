@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2026 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -44,7 +44,7 @@ class Transaction extends \Magento\Sales\Model\Order\Payment\Transaction
                 break;
             default:
                 throw new LocalizedException(
-                    __('We found an unsupported transaction type "%1".', $txnType)
+                    __('We found an unsupported transaction type "%1".', $txnType),
                 );
         }
     }

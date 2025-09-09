@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2026 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -25,7 +25,7 @@ class DeleteButton extends GenericButton implements ButtonProviderInterface
                 'label' => __('Delete'),
                 'class' => 'delete',
                 'on_click' => 'deleteConfirm(\'' . __(
-                    'Are you sure you want to do this?'
+                    'Are you sure you want to do this?',
                 ) . '\', \'' . $this->getDeleteUrl() . '\')',
                 'sort_order' => 20,
             ];

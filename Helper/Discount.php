@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2026 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -103,7 +103,7 @@ class Discount implements DiscountHelperInterface
      */
     public function __construct(
         \Mygento\Base\Helper\Data $baseHelper,
-        \Mygento\Base\Helper\Product\Attribute $attributeHelper
+        \Mygento\Base\Helper\Product\Attribute $attributeHelper,
     ) {
         $this->generalHelper = $baseHelper;
         $this->attributeHelper = $attributeHelper;
@@ -119,7 +119,7 @@ class Discount implements DiscountHelperInterface
         $shippingTaxValue = '',
         $markingAttributeCode = '',
         $markingListAttributeCode = '',
-        $markingRefundAttributeCode = ''
+        $markingRefundAttributeCode = '',
     ) {
         if (!$entity) {
             return null;
@@ -143,11 +143,11 @@ class Discount implements DiscountHelperInterface
         $this->generalHelper->debug(
             '== START == Recalculation of entity prices. Helper Version: '
             . self::VERSION . '.  Entity class: ' . get_class($entity)
-            . ". Entity id: {$entity->getEntityId()}"
+            . ". Entity id: {$entity->getEntityId()}",
         );
         $this->generalHelper->debug('Do calculation: ' . ($this->doCalculation ? 'Yes' : 'No'));
         $this->generalHelper->debug(
-            'Spread discount: ' . ($this->spreadDiscOnAllUnits ? 'Yes' : 'No')
+            'Spread discount: ' . ($this->spreadDiscOnAllUnits ? 'Yes' : 'No'),
         );
         $this->generalHelper->debug('Split items: ' . ($this->isSplitItemsAllowed ? 'Yes' : 'No'));
         //Если есть RewardPoints - то калькуляцию применять необходимо принудительно
@@ -155,7 +155,7 @@ class Discount implements DiscountHelperInterface
             $this->doCalculation = true;
             $this->generalHelper->debug(
                 'SplitItems and DoCalculation set to true'
-                . ' because of global Discount (e.g. reward points)'
+                . ' because of global Discount (e.g. reward points)',
             );
         }
         switch (true) {
@@ -175,8 +175,8 @@ class Discount implements DiscountHelperInterface
         }
         $this->generalHelper->debug(
             '== STOP == Recalculation. Entity class: ' . get_class(
-                $entity
-            ) . ". Entity id: {$entity->getEntityId()}"
+                $entity,
+            ) . ". Entity id: {$entity->getEntityId()}",
         );
 
         return $this->buildFinalArray();
@@ -552,7 +552,7 @@ class Discount implements DiscountHelperInterface
 
         if (!$this->checkReceipt($receipt)) {
             $this->generalHelper->debug(
-                'WARNING: Calculation error! Sum of items is not equal to grandTotal!'
+                'WARNING: Calculation error! Sum of items is not equal to grandTotal!',
             );
         }
 
@@ -575,7 +575,7 @@ class Discount implements DiscountHelperInterface
         $qty = $item->getQty() ?: $item->getQtyOrdered();
         if (!$qty) {
             throw new \Exception(
-                'Divide by zero. Qty of the item is equal to zero! Item: ' . $item->getId()
+                'Divide by zero. Qty of the item is equal to zero! Item: ' . $item->getId(),
             );
         }
 
@@ -592,7 +592,7 @@ class Discount implements DiscountHelperInterface
 
             $entityItem[self::SUM] = round(
                 $item->getData('row_total_incl_tax') - $discountAmountInclTax,
-                2
+                2,
             );
             $entityItem[self::PRICE] = 1;
         }
@@ -694,9 +694,9 @@ class Discount implements DiscountHelperInterface
                     'base64_decode',
                     array_map(
                         'trim',
-                        explode(',', $this->getItemMark($item))
-                    )
-                )
+                        explode(',', $this->getItemMark($item)),
+                    ),
+                ),
             );
         }
 
@@ -791,7 +791,7 @@ class Discount implements DiscountHelperInterface
                 $carry += $item[self::SUM];
 
                 return $carry;
-            }
+            },
         );
 
         return bcsub((string) $sum, (string) $receipt[self::ORIG_GRAND_TOTAL], 2) === '0.00';

@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2026 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -23,7 +23,7 @@ class Index extends \Mygento\Base\Controller\Adminhtml\Event
         \Magento\Framework\View\Result\PageFactory $resultPageFactory,
         \Mygento\Base\Api\EventRepositoryInterface $repository,
         \Magento\Framework\Registry $coreRegistry,
-        \Magento\Backend\App\Action\Context $context
+        \Magento\Backend\App\Action\Context $context,
     ) {
         $this->resultPageFactory = $resultPageFactory;
         parent::__construct($repository, $coreRegistry, $context);

@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2026 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -42,7 +42,7 @@ class Cron extends \Magento\Framework\App\Helper\AbstractHelper
         \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezone,
         \Magento\Cron\Model\ScheduleFactory $entity,
         \Magento\Cron\Model\ResourceModel\Schedule\CollectionFactory $collection,
-        \Magento\Framework\App\Helper\Context $context
+        \Magento\Framework\App\Helper\Context $context,
     ) {
         parent::__construct($context);
         $this->collection = $collection;
@@ -97,7 +97,7 @@ class Cron extends \Magento\Framework\App\Helper\AbstractHelper
         $collection->addFieldToFilter('job_code', $jobCode);
         $collection->addFieldToFilter(
             'status',
-            ['eq' => \Magento\Cron\Model\Schedule::STATUS_SUCCESS]
+            ['eq' => \Magento\Cron\Model\Schedule::STATUS_SUCCESS],
         );
         $collection->setPageSize(1);
         $collection->addOrder('finished_at', $collection::SORT_ORDER_DESC);
@@ -107,7 +107,7 @@ class Cron extends \Magento\Framework\App\Helper\AbstractHelper
         }
 
         $date = $this->timezone->date(
-            new \DateTime($collection->getFirstItem()->getFinishedAt())
+            new \DateTime($collection->getFirstItem()->getFinishedAt()),
         );
 
         return $date->format('d.m.Y H:i:s');
@@ -122,7 +122,7 @@ class Cron extends \Magento\Framework\App\Helper\AbstractHelper
         $schedules->addFieldToFilter('job_code', $jobCode);
         $schedules->addFieldToFilter(
             'status',
-            ['in' => [\Magento\Cron\Model\Schedule::STATUS_PENDING]]
+            ['in' => [\Magento\Cron\Model\Schedule::STATUS_PENDING]],
         );
         $schedules->walk('delete');
     }

@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2026 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -34,7 +34,7 @@ class AddExtraDiscounts implements RecalculationPostHandlerInterface
      */
     public function __construct(
         DiscountHelperInterfaceFactory $discountHelperFactory,
-        OrderRepository $orderRepository
+        OrderRepository $orderRepository,
     ) {
         $this->discountHelperFactory = $discountHelperFactory;
         $this->orderRepository = $orderRepository;
@@ -61,7 +61,7 @@ class AddExtraDiscounts implements RecalculationPostHandlerInterface
         $shippingTaxValue = '',
         $markingAttributeCode = '',
         $markingListAttributeCode = '',
-        $markingRefundAttributeCode = ''
+        $markingRefundAttributeCode = '',
     ): RecalculateResultInterface {
         /** @var \Mygento\Base\Api\DiscountHelperInterface $discountHelper */
         $discountHelper = $this->discountHelperFactory->create();

@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2026 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -27,13 +27,13 @@ class GetRecalculateResultFactory
         /** @var \Mygento\Base\Test\Extra\RecalculateResultInterfaceFactory $recalculateResultFactory */
         $recalculateResultFactory = $this->getObjectManager($testCase)->getObject(
             RecalculateResultInterfaceFactory::class,
-            ['objectManager' => $this->objectMan]
+            ['objectManager' => $this->objectMan],
         );
 
         /** @var \Mygento\Base\Test\Extra\RecalculateResultItemInterfaceFactory $recalculateResultItemFactory */
         $recalculateResultItemFactory = $this->getObjectManager($testCase)->getObject(
             RecalculateResultItemInterfaceFactory::class,
-            ['objectManager' => $this->objectMan]
+            ['objectManager' => $this->objectMan],
         );
 
         return $this->getObjectManager($testCase)->getObject(
@@ -41,7 +41,7 @@ class GetRecalculateResultFactory
             [
                 'resultInterfaceFactory' => $recalculateResultFactory,
                 'itemInterfaceFactory' => $recalculateResultItemFactory,
-            ]
+            ],
         );
     }
 
@@ -53,7 +53,7 @@ class GetRecalculateResultFactory
     {
         if (!$this->objectMan) {
             $this->objectMan = new ObjectManager(
-                $testCase
+                $testCase,
             );
         }
 

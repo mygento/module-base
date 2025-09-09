@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2026 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -54,7 +54,7 @@ class RecalculatorFacade implements RecalculatorFacadeInterface
         Discount $discountHelper,
         ResultFactory $recalculateResultFactory,
         array $preHandlers = [],
-        array $postHandlers = []
+        array $postHandlers = [],
     ) {
         $this->discountHelper = $discountHelper;
         $this->recalculateResultFactory = $recalculateResultFactory;
@@ -73,7 +73,7 @@ class RecalculatorFacade implements RecalculatorFacadeInterface
         $shippingTaxValue = '',
         $markingAttributeCode = '',
         $markingListAttributeCode = '',
-        $markingRefundAttributeCode = ''
+        $markingRefundAttributeCode = '',
     ) {
         $this->resetHelper();
 
@@ -93,7 +93,7 @@ class RecalculatorFacade implements RecalculatorFacadeInterface
         $shippingTaxValue = '',
         $markingAttributeCode = '',
         $markingListAttributeCode = '',
-        $markingRefundAttributeCode = ''
+        $markingRefundAttributeCode = '',
     ) {
         $this->resetHelper();
         $this->discountHelper->setDoCalculation(false);
@@ -112,7 +112,7 @@ class RecalculatorFacade implements RecalculatorFacadeInterface
         $shippingTaxValue = '',
         $markingAttributeCode = '',
         $markingListAttributeCode = '',
-        $markingRefundAttributeCode = ''
+        $markingRefundAttributeCode = '',
     ) {
         $this->resetHelper();
         $this->discountHelper->setSpreadDiscOnAllUnits(true);
@@ -131,7 +131,7 @@ class RecalculatorFacade implements RecalculatorFacadeInterface
         $shippingTaxValue = '',
         $markingAttributeCode = '',
         $markingListAttributeCode = '',
-        $markingRefundAttributeCode = ''
+        $markingRefundAttributeCode = '',
     ) {
         $this->resetHelper();
         $this->discountHelper->setIsSplitItemsAllowed(true);
@@ -150,7 +150,7 @@ class RecalculatorFacade implements RecalculatorFacadeInterface
         $shippingTaxValue = '',
         $markingAttributeCode = '',
         $markingListAttributeCode = '',
-        $markingRefundAttributeCode = ''
+        $markingRefundAttributeCode = '',
     ) {
         $this->resetHelper();
         $this->discountHelper->setIsSplitItemsAllowed(true);
@@ -170,7 +170,7 @@ class RecalculatorFacade implements RecalculatorFacadeInterface
         $shippingTaxValue = '',
         $markingAttributeCode = '',
         $markingListAttributeCode = '',
-        $markingRefundAttributeCode = ''
+        $markingRefundAttributeCode = '',
     ) {
         $this->resetHelper();
         $this->discountHelper->setIsAddGiftCardToPrice(false);
@@ -189,7 +189,7 @@ class RecalculatorFacade implements RecalculatorFacadeInterface
         $shippingTaxValue = '',
         $markingAttributeCode = '',
         $markingListAttributeCode = '',
-        $markingRefundAttributeCode = ''
+        $markingRefundAttributeCode = '',
     ) {
         $this->resetHelper();
         $this->discountHelper->setIsAddRewardsToPrice(false);
@@ -208,7 +208,7 @@ class RecalculatorFacade implements RecalculatorFacadeInterface
         $shippingTaxValue = '',
         $markingAttributeCode = '',
         $markingListAttributeCode = '',
-        $markingRefundAttributeCode = ''
+        $markingRefundAttributeCode = '',
     ) {
         $this->resetHelper();
         $this->discountHelper->setIsAddGiftCardToPrice(false);

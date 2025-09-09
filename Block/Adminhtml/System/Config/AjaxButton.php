@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2026 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -73,7 +73,7 @@ class AjaxButton extends \Magento\Config\Block\System\Config\Form\Field
                 'html_id' => $element->getHtmlId(),
                 'ajax_url' => $this->getActionUrl($originalData),
                 'original_data' => $originalData,
-            ]
+            ],
         );
 
         return $this->_toHtml();

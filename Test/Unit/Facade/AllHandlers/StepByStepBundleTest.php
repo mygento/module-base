@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2026 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -97,21 +97,21 @@ class StepByStepBundleTest extends AbstractFacadeTest
         $resultFactory = $this->getRecalculateResultFactory();
 
         $testItemSkipper = $this->getObjectManager()->getObject(
-            TestItemSkipper::class
+            TestItemSkipper::class,
         );
 
         $skippedItemsCollector = $this->getObjectManager()->getObject(
             SkippedItemsCollector::class,
             [
                 'skippers' => [$testItemSkipper],
-            ]
+            ],
         );
 
         $skipItemsPreHandler = $this->getObjectManager()->getObject(
             SkipItems::class,
             [
                 'skippedItemsCollector' => $skippedItemsCollector,
-            ]
+            ],
         );
 
         return $this->getObjectManager()->getObject(
@@ -121,7 +121,7 @@ class StepByStepBundleTest extends AbstractFacadeTest
                 'recalculateResultFactory' => $resultFactory,
                 'preHandlers' => [$skipItemsPreHandler],
                 'postHandlers' => [],
-            ]
+            ],
         );
     }
 
@@ -131,7 +131,7 @@ class StepByStepBundleTest extends AbstractFacadeTest
             AddExtraDiscounts::class,
             [
                 'discountHelperFactory' => $this->getDiscountHelperFactory(),
-            ]
+            ],
         );
     }
 
@@ -142,7 +142,7 @@ class StepByStepBundleTest extends AbstractFacadeTest
             [
                 'discountHelperFactory' => $this->getDiscountHelperFactory(),
                 'recalculateResultFactory' => $this->getRecalculateResultFactory(),
-            ]
+            ],
         );
     }
 
@@ -178,7 +178,7 @@ class StepByStepBundleTest extends AbstractFacadeTest
     private function assertVirtualOrderForBundles(
         OrderInterface $order,
         array $expectedVirtualOrders,
-        RecalculateResultInterface $recalculateResult
+        RecalculateResultInterface $recalculateResult,
     ): void {
         $addChildrenOfBundleHandler = $this->getAddChildrenOfBundleHandler();
         $orderItems = $order->getAllVisibleItems() ?? $order->getAllItems();
@@ -193,7 +193,7 @@ class StepByStepBundleTest extends AbstractFacadeTest
             $bundleOrder = $this->invokeMethod(
                 $addChildrenOfBundleHandler,
                 'getDummyOrderBasedOnBundle',
-                [$orderItem, $recalculateResult]
+                [$orderItem, $recalculateResult],
             );
 
             if (!$expectedVirtualOrder) {
@@ -205,17 +205,17 @@ class StepByStepBundleTest extends AbstractFacadeTest
             self::assertEquals(
                 $expectedVirtualOrder->getSubtotalInclTax(),
                 $bundleOrder->getSubtotalInclTax(),
-                'Virtual order: SubtotalInclTax failed'
+                'Virtual order: SubtotalInclTax failed',
             );
             self::assertEquals(
                 $expectedVirtualOrder->getSubtotal(),
                 $bundleOrder->getSubtotal(),
-                'Virtual order: Subtotal failed'
+                'Virtual order: Subtotal failed',
             );
             self::assertEquals(
                 $expectedVirtualOrder->getGrandTotal(),
                 $bundleOrder->getGrandTotal(),
-                'Virtual order: GrandTotal failed'
+                'Virtual order: GrandTotal failed',
             );
 
             $expectedVirtualItems = $expectedVirtualOrder->getAllVisibleItems() ?? $expectedVirtualOrder->getAllItems();
@@ -226,27 +226,27 @@ class StepByStepBundleTest extends AbstractFacadeTest
                 self::assertEquals(
                     $expectedItem->getPriceInclTax(),
                     $item->getPriceInclTax(),
-                    $name . ' Price of virtual item failed'
+                    $name . ' Price of virtual item failed',
                 );
                 self::assertEquals(
                     $expectedItem->getRowTotalInclTax(),
                     $item->getRowTotalInclTax(),
-                    $name . ' RowTotalInclTax of virtual item failed'
+                    $name . ' RowTotalInclTax of virtual item failed',
                 );
                 self::assertEquals(
                     $expectedItem->getQty(),
                     $item->getQty(),
-                    $name . ' Qty of virtual item failed'
+                    $name . ' Qty of virtual item failed',
                 );
                 self::assertEquals(
                     $expectedItem->getTaxAmount(),
                     $item->getTaxAmount(),
-                    $name . ' TaxAmount of virtual item failed'
+                    $name . ' TaxAmount of virtual item failed',
                 );
                 self::assertEquals(
                     $expectedItem->getDiscountAmount(),
                     $item->getDiscountAmount(),
-                    $name . ' DiscountAmount of virtual item failed'
+                    $name . ' DiscountAmount of virtual item failed',
                 );
             }
         }

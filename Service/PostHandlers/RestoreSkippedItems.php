@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2026 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -28,7 +28,7 @@ class RestoreSkippedItems implements RecalculationPostHandlerInterface
 
     public function __construct(
         SkippedItemsCollector $skippedItemsCollector,
-        SkippedItemFixer $skippedItemFixer
+        SkippedItemFixer $skippedItemFixer,
     ) {
         $this->skippedItemFixer = $skippedItemFixer;
         $this->skippedItemsCollector = $skippedItemsCollector;
@@ -54,7 +54,7 @@ class RestoreSkippedItems implements RecalculationPostHandlerInterface
         $shippingTaxValue = '',
         $markingAttributeCode = '',
         $markingListAttributeCode = '',
-        $markingRefundAttributeCode = ''
+        $markingRefundAttributeCode = '',
     ): RecalculateResultInterface {
         $itemsToSkip = $this->skippedItemsCollector->getItemsToSkip($order);
 
@@ -71,7 +71,7 @@ class RestoreSkippedItems implements RecalculationPostHandlerInterface
                 $shippingTaxValue,
                 $markingAttributeCode,
                 $markingListAttributeCode,
-                $markingRefundAttributeCode
+                $markingRefundAttributeCode,
             );
             $recalculatedItems[$item->getItemId()] = $skippedRecalculatedItem;
         }
@@ -99,8 +99,8 @@ class RestoreSkippedItems implements RecalculationPostHandlerInterface
                     return $key !== 'shipping' ? $item->getSum() : 0;
                 },
                 $recalcOriginal->getItems(),
-                array_keys($recalcOriginal->getItems())
-            )
+                array_keys($recalcOriginal->getItems()),
+            ),
         );
 
         $recalcOriginal->setSum($newSum);

@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2026 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -34,7 +34,7 @@ abstract class AbstractFacadeTest extends TestCase
     {
         /** @var \Mygento\Base\Test\Extra\GetRecalculateResultFactory $recalculateResultFactory */
         $recalculateResultFactory = $this->getObjectManager()->getObject(
-            GetRecalculateResultFactory::class
+            GetRecalculateResultFactory::class,
         );
 
         return $recalculateResultFactory->get($this);
@@ -48,7 +48,7 @@ abstract class AbstractFacadeTest extends TestCase
         //Вместо моков нам нужны реальные объекты, которые участвуют в рассчете:
         return $this->getObjectManager()->getObject(
             DiscountHelperInterfaceFactory::class,
-            ['objectManager' => $this->getObjectManager()]
+            ['objectManager' => $this->getObjectManager()],
         );
     }
 
@@ -59,7 +59,7 @@ abstract class AbstractFacadeTest extends TestCase
     {
         if (!$this->objectMan) {
             $this->objectMan = new ObjectManager(
-                $this
+                $this,
             );
         }
 

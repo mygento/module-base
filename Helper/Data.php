@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2026 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -31,7 +31,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper implements Logge
     public function __construct(
         \Mygento\Base\Model\LogManager $logManager,
         \Magento\Framework\Encryption\Encryptor $encryptor,
-        \Magento\Framework\App\Helper\Context $context
+        \Magento\Framework\App\Helper\Context $context,
     ) {
         parent::__construct($context);
 
@@ -70,7 +70,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper implements Logge
         array $insertData,
         array $updateFields = [],
         bool $clean = false,
-        $cleanWhere = ''
+        $cleanWhere = '',
     ) {
         try {
             $conn->beginTransaction();
@@ -81,7 +81,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper implements Logge
                 $conn->insertOnDuplicate(
                     $table,
                     $row,
-                    $updateFields
+                    $updateFields,
                 );
             }
             $conn->commit();
@@ -123,7 +123,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper implements Logge
         return $this->scopeConfig->getValue(
             $configPath,
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
-            $scopeCode
+            $scopeCode,
         );
     }
 
@@ -137,7 +137,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper implements Logge
         return $this->scopeConfig->getValue(
             $configPath,
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
-            $scopeCode
+            $scopeCode,
         );
     }
 

@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2026 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -34,7 +34,7 @@ class MarkingItemsTest extends SplitItemsTest
         $discountAmount,
         $qty = 1,
         $taxPercent = 0,
-        $taxAmount = 0
+        $taxAmount = 0,
     ) {
         $item = OrderMockBuilder::getItem($rowTotalInclTax, $priceInclTax, $discountAmount, $qty, $taxPercent, $taxAmount);
 
@@ -273,9 +273,9 @@ class MarkingItemsTest extends SplitItemsTest
                 ',',
                 array_map(
                     'base64_encode',
-                    ['SOME_MARK_1', 'SOME_MARK_2', 'SOME_MARK_3']
-                )
-            )
+                    ['SOME_MARK_1', 'SOME_MARK_2', 'SOME_MARK_3'],
+                ),
+            ),
         );
 
         $expected = [

@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2026 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -78,7 +78,7 @@ class GeneralTestCase extends TestCase
     {
         if (!$this->objectMan) {
             $this->objectMan = new ObjectManager(
-                $this
+                $this,
             );
         }
 
@@ -88,7 +88,7 @@ class GeneralTestCase extends TestCase
     public function getDiscountHelperInstance()
     {
         $this->discountHelper = $this->getObjectManager()->getObject(
-            Discount::class
+            Discount::class,
         );
 
         return $this->discountHelper;
@@ -430,7 +430,7 @@ class GeneralTestCase extends TestCase
         $order->setData('gift_cards_amount', 1200);
         OrderMockBuilder::addItem(
             $order,
-            OrderMockBuilder::getItem(1000.0000, 1000.0000, 0, 1, 20)->setRowTotal(1000.0000)->setTaxAmount(200.0000)
+            OrderMockBuilder::getItem(1000.0000, 1000.0000, 0, 1, 20)->setRowTotal(1000.0000)->setTaxAmount(200.0000),
         );
         $final[self::TEST_CASE_NAME_32] = $order;
 
@@ -463,7 +463,7 @@ class GeneralTestCase extends TestCase
             OrderMockBuilder::getItem(54.0000, 54.0000, 8.1000, 1, 20.0000, 7.6500, 45.0000)
                 ->setProductType('simple')
                 ->setDiscountPercent(15.0)
-                ->setDiscountTaxCompensationAmount(1.35)
+                ->setDiscountTaxCompensationAmount(1.35),
         );
         OrderMockBuilder::addItem(
             $order,
@@ -484,7 +484,7 @@ class GeneralTestCase extends TestCase
                     OrderMockBuilder::getItem(27.6000, 27.6000, 4.1400, 1, 20.0000, 3.9100, 23.0000)
                         ->setProductType('simple')
                         ->setDiscountTaxCompensationAmount(0.6900),
-                ])
+                ]),
         );
         $final[self::TEST_CASE_NAME_36] = $order;
 
@@ -494,9 +494,7 @@ class GeneralTestCase extends TestCase
     /**
      * getExpected description
      */
-    protected static function getExpected()
-    {
-    }
+    protected static function getExpected() {}
 
     protected function onNotSuccessfulTest(\Throwable $e): void
     {
@@ -512,7 +510,7 @@ class GeneralTestCase extends TestCase
     {
         /** @var \Mygento\Base\Test\Extra\GetRecalculateResultFactory $recalculateResultFactory */
         $recalculateResultFactory = $this->getObjectManager()->getObject(
-            GetRecalculateResultFactory::class
+            GetRecalculateResultFactory::class,
         );
 
         return $recalculateResultFactory->get($this);

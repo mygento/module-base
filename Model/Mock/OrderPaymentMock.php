@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2026 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -1067,7 +1067,7 @@ class OrderPaymentMock extends DataObject implements OrderPaymentInterface
 
         return null === $key ? !empty($this->additionalInformation) : array_key_exists(
             $key,
-            $this->additionalInformation
+            $this->additionalInformation,
         );
     }
 

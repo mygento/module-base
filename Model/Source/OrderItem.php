@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2026 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -42,7 +42,7 @@ class OrderItem implements \Magento\Framework\Data\OptionSourceInterface
         if ($this->options === null) {
             $this->options = [];
             $table = $this->connection->describeTable(
-                $this->resource->getTableName('sales_order_item')
+                $this->resource->getTableName('sales_order_item'),
             );
 
             foreach ($table as $fieldName => $fieldData) {

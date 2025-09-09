@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2026 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -49,7 +49,7 @@ class Thumbnail extends \Magento\Ui\Component\Listing\Columns\Column
         \Magento\Framework\View\Element\UiComponent\ContextInterface $context,
         \Magento\Framework\View\Element\UiComponentFactory $uiComponentFactory,
         array $components = [],
-        array $data = []
+        array $data = [],
     ) {
         parent::__construct($context, $uiComponentFactory, $components, $data);
         $this->imageHelper = $imageHelper;
@@ -78,7 +78,7 @@ class Thumbnail extends \Magento\Ui\Component\Listing\Columns\Column
                 $image,
                 $this->baseUrl,
                 $this->data['thumbnail']['viewId'],
-                $this->data['thumbnail']['moduleName']
+                $this->data['thumbnail']['moduleName'],
             );
 
             $item[$fieldName . '_src'] = $thumbnailUrl;
@@ -87,7 +87,7 @@ class Thumbnail extends \Magento\Ui\Component\Listing\Columns\Column
                 $this->route . '/' . $this->controller . '/edit',
                 [
                     'id' => $item[$this->key],
-                ]
+                ],
             );
             $item[$fieldName . '_orig_src'] = $imageUrl;
         }

@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2026 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -82,24 +82,24 @@ class AllHandlersTest extends AbstractFacadeTest
             [
                 'discountHelperFactory' => $discountHelperFactory,
                 'recalculateResultFactory' => $resultFactory,
-            ]
+            ],
         );
         $addExtraDiscountsHandler = $this->getObjectManager()->getObject(
             AddExtraDiscounts::class,
             [
                 'discountHelperFactory' => $discountHelperFactory,
-            ]
+            ],
         );
 
         $testItemSkipper = $this->getObjectManager()->getObject(
-            TestItemSkipper::class
+            TestItemSkipper::class,
         );
 
         $skippedItemsCollector = $this->getObjectManager()->getObject(
             SkippedItemsCollector::class,
             [
                 'skippers' => [$testItemSkipper],
-            ]
+            ],
         );
 
         $skippedItemFixer = $this->getObjectManager()->getObject(
@@ -107,7 +107,7 @@ class AllHandlersTest extends AbstractFacadeTest
             [
                 'discountHelperFactory' => $discountHelperFactory,
                 'recalculateResultFactory' => $resultFactory,
-            ]
+            ],
         );
 
         $addRestoreSkipHandler = $this->getObjectManager()->getObject(
@@ -115,14 +115,14 @@ class AllHandlersTest extends AbstractFacadeTest
             [
                 'skippedItemsCollector' => $skippedItemsCollector,
                 'skippedItemFixer' => $skippedItemFixer,
-            ]
+            ],
         );
 
         $skipItemsPreHandler = $this->getObjectManager()->getObject(
             SkipItems::class,
             [
                 'skippedItemsCollector' => $skippedItemsCollector,
-            ]
+            ],
         );
 
         return $this->getObjectManager()->getObject(
@@ -136,7 +136,7 @@ class AllHandlersTest extends AbstractFacadeTest
                     $addChildrenOfBundleHandler,
                     $addRestoreSkipHandler,
                 ],
-            ]
+            ],
         );
     }
 }

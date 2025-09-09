@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2026 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -57,7 +57,7 @@ class ImageUploader
         \Psr\Log\LoggerInterface $logger,
         string $baseTmpPath,
         string $basePath,
-        array $allowedExtensions
+        array $allowedExtensions,
     ) {
         $this->coreFileStorageDatabase = $coreFileStorageDatabase;
         $this->filesystem = $filesystem;
@@ -122,7 +122,7 @@ class ImageUploader
     {
         return $this->storeManager->getStore()
             ->getBaseUrl(
-                \Magento\Framework\UrlInterface::URL_TYPE_MEDIA
+                \Magento\Framework\UrlInterface::URL_TYPE_MEDIA,
             );
     }
 
@@ -172,15 +172,15 @@ class ImageUploader
         try {
             $this->coreFileStorageDatabase->copyFile(
                 $baseTmpImagePath,
-                $baseImagePath
+                $baseImagePath,
             );
             $this->mediaDirectory->renameFile(
                 $baseTmpImagePath,
-                $baseImagePath
+                $baseImagePath,
             );
         } catch (\Exception $e) {
             throw new \Magento\Framework\Exception\LocalizedException(
-                __('Something went wrong while saving the file(s).')
+                __('Something went wrong while saving the file(s).'),
             );
         }
 
@@ -201,7 +201,7 @@ class ImageUploader
         $result = $uploader->save($this->mediaDirectory->getAbsolutePath($baseTmpPath));
         if (!$result) {
             throw new \Magento\Framework\Exception\LocalizedException(
-                __('File can not be saved to the destination folder.')
+                __('File can not be saved to the destination folder.'),
             );
         }
 
@@ -219,7 +219,7 @@ class ImageUploader
                 $this->logger->critical((string) $e);
 
                 throw new \Magento\Framework\Exception\LocalizedException(
-                    __('Something went wrong while saving the file(s).')
+                    __('Something went wrong while saving the file(s).'),
                 );
             }
         }

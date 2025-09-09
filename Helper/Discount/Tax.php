@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2026 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -68,7 +68,7 @@ class Tax
         $hasTaxInShippingDiscount = bccomp(
             (string) $entity->getShippingTaxAmount(),
             (string) ($entity->getShippingAmount() * ($ratio - 1)),
-            2
+            2,
         ) === 0;
 
         return $hasTaxInShippingDiscount

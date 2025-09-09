@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2026 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -72,7 +72,7 @@ class File extends \Magento\Framework\App\Config\Value
         \Magento\Framework\App\Cache\TypeListInterface $cacheTypeList,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
-        array $data = []
+        array $data = [],
     ) {
         parent::__construct(
             $context,
@@ -81,7 +81,7 @@ class File extends \Magento\Framework\App\Config\Value
             $cacheTypeList,
             $resource,
             $resourceCollection,
-            $data
+            $data,
         );
         $this->requestData = $requestData;
         $this->filesystem = $filesystem;
@@ -146,14 +146,14 @@ class File extends \Magento\Framework\App\Config\Value
         if (
             $this->maxFileSize > 0 &&
             $directory->stat(
-                $directory->getRelativePath($filePath)
+                $directory->getRelativePath($filePath),
             )['size'] > $this->maxFileSize * 1024
         ) {
             throw new LocalizedException(
                 __(
                     'The file you\'re uploading exceeds the server size limit of %1 kilobytes.',
-                    $this->maxFileSize
-                )
+                    $this->maxFileSize,
+                ),
             );
         }
     }
@@ -204,7 +204,7 @@ class File extends \Magento\Framework\App\Config\Value
 
         return is_array($dirParams) && array_key_exists(
             'scope_info',
-            $dirParams
+            $dirParams,
         ) && $dirParams['scope_info'];
     }
 
@@ -221,7 +221,7 @@ class File extends \Magento\Framework\App\Config\Value
 
         if (!array_key_exists('upload_dir', $fieldConfig)) {
             throw new LocalizedException(
-                __('The base directory to upload file is not specified.')
+                __('The base directory to upload file is not specified.'),
             );
         }
 
@@ -230,7 +230,7 @@ class File extends \Magento\Framework\App\Config\Value
             if (
                 array_key_exists(
                     'scope_info',
-                    $fieldConfig['upload_dir']
+                    $fieldConfig['upload_dir'],
                 ) && $fieldConfig['upload_dir']['scope_info']
             ) {
                 $uploadDir = $this->appendScopeInfo($uploadDir);

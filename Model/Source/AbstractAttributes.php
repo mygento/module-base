@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2026 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -51,13 +51,13 @@ abstract class AbstractAttributes implements \Magento\Framework\Data\OptionSourc
      */
     public function __construct(
         \Magento\Eav\Model\Entity\Type $entityType,
-        \Magento\Catalog\Model\ResourceModel\Product\Attribute\CollectionFactory $attrColFactory
+        \Magento\Catalog\Model\ResourceModel\Product\Attribute\CollectionFactory $attrColFactory,
     ) {
         $this->entityType = $entityType;
         $this->attrColFactory = $attrColFactory;
 
         $this->entityType->loadByCode(
-            \Magento\Catalog\Api\Data\ProductAttributeInterface::ENTITY_TYPE_CODE
+            \Magento\Catalog\Api\Data\ProductAttributeInterface::ENTITY_TYPE_CODE,
         );
     }
 

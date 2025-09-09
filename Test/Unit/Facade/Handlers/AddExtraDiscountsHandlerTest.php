@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2026 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -88,7 +88,7 @@ class AddExtraDiscountsHandlerTest extends AbstractFacadeTest
             AddExtraDiscounts::class,
             [
                 'discountHelperFactory' => $discountHelperFactory,
-            ]
+            ],
         );
 
         return $this->getObjectManager()->getObject(
@@ -97,7 +97,7 @@ class AddExtraDiscountsHandlerTest extends AbstractFacadeTest
                 'discountHelper' => $discountHelperFactory->create(),
                 'recalculateResultFactory' => $this->getRecalculateResultFactory(),
                 'postHandlers' => [$addExtraDiscountsHandler],
-            ]
+            ],
         );
     }
 }

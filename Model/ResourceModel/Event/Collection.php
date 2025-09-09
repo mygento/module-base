@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2026 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -20,7 +20,7 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
     {
         $this->_init(
             \Mygento\Base\Model\Event::class,
-            \Mygento\Base\Model\ResourceModel\Event::class
+            \Mygento\Base\Model\ResourceModel\Event::class,
         );
     }
 }

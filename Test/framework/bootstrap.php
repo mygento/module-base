@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2026 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -53,9 +53,9 @@ function setCustomErrorHandler()
 
                 throw new \PHPUnit\Framework\Exception(
                     sprintf('%s: %s in %s:%s.', $errName, $errStr, $errFile, $errLine),
-                    $errNo
+                    $errNo,
                 );
             }
-        }
+        },
     );
 }

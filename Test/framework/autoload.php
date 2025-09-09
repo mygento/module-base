@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2021 Mygento (https://www.mygento.ru)
+ * @copyright 2014-2026 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -16,7 +16,7 @@ use Magento\Framework\TestFramework\Unit\Autoloader\GeneratedClassesAutoloader;
 
 $generatorIo = new Io(
     new File(),
-    TESTS_TEMP_DIR . '/' . DirectoryList::getDefaultConfig()[DirectoryList::GENERATED_CODE][DirectoryList::PATH]
+    TESTS_TEMP_DIR . '/' . DirectoryList::getDefaultConfig()[DirectoryList::GENERATED_CODE][DirectoryList::PATH],
 );
 $generatedCodeAutoloader = new GeneratedClassesAutoloader(
     [
@@ -24,6 +24,6 @@ $generatedCodeAutoloader = new GeneratedClassesAutoloader(
         new ExtensionAttributesInterfaceGenerator(),
         new FactoryGenerator(),
     ],
-    $generatorIo
+    $generatorIo,
 );
 spl_autoload_register([$generatedCodeAutoloader, 'load']);
