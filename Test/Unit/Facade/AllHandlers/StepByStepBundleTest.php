@@ -21,9 +21,9 @@ use Mygento\Base\Service\RecalculatorFacade;
 use Mygento\Base\Test\Extra\ExpectedMaker;
 use Mygento\Base\Test\Extra\TableOutput;
 use Mygento\Base\Test\Extra\TestItemSkipper;
-use Mygento\Base\Test\Unit\Facade\AbstractFacadeTest;
+use Mygento\Base\Test\Unit\Facade\AbstractTestFacade;
 
-class StepByStepBundleTest extends AbstractFacadeTest
+class StepByStepBundleTest extends AbstractTestFacade
 {
     /**
      * @dataProvider \Mygento\Base\Test\Unit\Facade\AllHandlers\StepByStepBundleDataProvider::provide

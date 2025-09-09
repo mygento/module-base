@@ -127,7 +127,7 @@ class DiscountAmountInclTaxTest extends TestCase
         ];
     }
 
-    protected function onNotSuccessfulTest(\Throwable $e): void
+    protected function onNotSuccessfulTest(\Throwable $e): never
     {
         //beautify output
         echo "\033[1;31m"; // light red

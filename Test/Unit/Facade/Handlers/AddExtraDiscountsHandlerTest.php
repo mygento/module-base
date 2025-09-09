@@ -12,9 +12,9 @@ use Mygento\Base\Api\Data\RecalculateResultItemInterface;
 use Mygento\Base\Service\PostHandlers\AddExtraDiscounts;
 use Mygento\Base\Service\RecalculatorFacade;
 use Mygento\Base\Test\Extra\ExpectedMaker;
-use Mygento\Base\Test\Unit\Facade\AbstractFacadeTest;
+use Mygento\Base\Test\Unit\Facade\AbstractTestFacade;
 
-class AddExtraDiscountsHandlerTest extends AbstractFacadeTest
+class AddExtraDiscountsHandlerTest extends AbstractTestFacade
 {
     /**
      * @dataProvider \Mygento\Base\Test\Unit\Facade\Handlers\DataProvider\ExtraDiscountsDataProvider::dataProvider
