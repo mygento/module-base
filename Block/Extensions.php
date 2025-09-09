@@ -16,7 +16,6 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Filesystem\Driver\File;
-use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\Module\Dir\Reader;
 use Magento\Framework\Module\ModuleListInterface;
 use Magento\Framework\Serialize\Serializer\Json;
@@ -34,7 +33,6 @@ class Extensions extends Fieldset
     private Reader $moduleReader;
     private Json $serializer;
     private File $filesystem;
-    private ResolverInterface $locale;
     private BlockInterface $fieldRenderer;
     private ScopeConfigInterface $scopeConfig;
 
@@ -42,7 +40,6 @@ class Extensions extends Fieldset
         ModuleListInterface $moduleList,
         Reader $moduleReader,
         File $filesystem,
-        ResolverInterface $locale,
         Json $jsonDecoder,
         LayoutFactory $layoutFactory,
         Context $context,
@@ -57,7 +54,6 @@ class Extensions extends Fieldset
         $this->moduleReader = $moduleReader;
         $this->serializer = $jsonDecoder;
         $this->filesystem = $filesystem;
-        $this->locale = $locale;
         $this->scopeConfig = $context->getScopeConfig();
     }
 
@@ -77,7 +73,7 @@ class Extensions extends Fieldset
                 . '<br/>Write us to %1',
             $email,
         );
-        $tender = __('<a href="https://mygento.com/impressum" target="_blank">Legal information</a>');
+        $tender = '<a href="https://mygento.com/impressum" target="_blank">' . __('Legal information') . '</a>';
 
         $html .= '<table class="mygento-info" cellspacing="0" cellpading="0">'
             . '<tr class="mygento-info-line">';
