@@ -2,7 +2,7 @@
 
 /**
  * @author Mygento Team
- * @copyright 2014-2025 Mygento (https://www.mygento.com)
+ * @copyright 2014-2026 Mygento (https://www.mygento.com)
  * @package Mygento_Base
  */
 
@@ -66,9 +66,9 @@ class EventRepository implements \Mygento\Base\Api\EventRepositoryInterface
 
     /**
      * @param \Mygento\Base\Api\Data\EventInterface $entity
+     * @psalm-param \Mygento\Base\Api\Data\EventInterface&\Magento\Framework\Model\AbstractModel $event
      * @throws \Magento\Framework\Exception\CouldNotSaveException
      * @return \Mygento\Base\Api\Data\EventInterface
-     * @psalm-param \Mygento\Base\Api\Data\EventInterface&\Magento\Framework\Model\AbstractModel $event
      */
     public function save(\Mygento\Base\Api\Data\EventInterface $entity)
     {
