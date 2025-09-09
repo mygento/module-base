@@ -8,40 +8,40 @@
 
 namespace Mygento\Base\Controller\Adminhtml\Event;
 
-class Index extends \Mygento\Base\Controller\Adminhtml\Event
-{
-    /** @var \Magento\Framework\View\Result\PageFactory */
-    private $resultPageFactory;
+use Magento\Backend\App\Action\Context;
+use Magento\Framework\App\Request\DataPersistorInterface;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Registry;
+use Magento\Framework\View\Result\PageFactory;
+use Mygento\Base\Api\EventRepositoryInterface;
+use Mygento\Base\Controller\Adminhtml\Event;
 
-    /**
-     * @param \Magento\Framework\View\Result\PageFactory $resultPageFactory
-     * @param \Mygento\Base\Api\EventRepositoryInterface $repository
-     * @param \Magento\Framework\Registry $coreRegistry
-     * @param \Magento\Backend\App\Action\Context $context
-     */
+class Index extends Event
+{
     public function __construct(
-        \Magento\Framework\View\Result\PageFactory $resultPageFactory,
-        \Mygento\Base\Api\EventRepositoryInterface $repository,
-        \Magento\Framework\Registry $coreRegistry,
-        \Magento\Backend\App\Action\Context $context,
+        private readonly PageFactory $resultPageFactory,
+        private readonly DataPersistorInterface $dataPersistor,
+        EventRepositoryInterface $repository,
+        Registry $coreRegistry,
+        Context $context,
     ) {
-        $this->resultPageFactory = $resultPageFactory;
         parent::__construct($repository, $coreRegistry, $context);
     }
 
     /**
      * Index action
-     *
-     * @return \Magento\Framework\Controller\ResultInterface
      */
-    public function execute()
+    public function execute(): ResultInterface
     {
         /** @var \Magento\Backend\Model\View\Result\Page $resultPage */
         $resultPage = $this->resultPageFactory->create();
-        $this->initPage($resultPage)->getConfig()->getTitle()->prepend(__('Event'));
+        $resultPage
+            ->setActiveMenu('Mygento_Base::event')
+            ->getConfig()
+            ->getTitle()->prepend(__('Event')->render());
 
-        //$dataPersistor = $this->_objectManager->get(\Magento\Framework\App\Request\DataPersistorInterface::class);
-        //$dataPersistor->clear('base_event');
+        $this->dataPersistor->clear('base_event');
+
         return $resultPage;
     }
 }

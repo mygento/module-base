@@ -21,105 +21,82 @@ interface EventInterface
 
     /**
      * Get id
-     * @return int|null
      */
-    public function getId();
+    public function getId(): ?int;
 
     /**
      * Set id
      * @param int $id
-     * @return $this
      */
-    public function setId($id);
+    public function setId($id): self;
 
     /**
      * Get instance
-     * @return string|null
      */
-    public function getInstance();
+    public function getInstance(): string;
 
     /**
      * Set instance
-     * @param string $instance
-     * @return $this
      */
-    public function setInstance($instance);
+    public function setInstance(string $instance): self;
 
     /**
      * Get channel
-     * @return string|null
      */
-    public function getChannel();
+    public function getChannel(): string;
 
     /**
      * Set channel
-     * @param string $channel
-     * @return $this
      */
-    public function setChannel($channel);
+    public function setChannel(string $channel): self;
 
     /**
      * Get level
-     * @return int|null
      */
-    public function getLevel();
+    public function getLevel(): int;
 
     /**
      * Set level
-     * @param int $level
-     * @return $this
      */
-    public function setLevel($level);
+    public function setLevel(int $level): self;
 
     /**
      * Get message
-     * @return string|null
      */
-    public function getMessage();
+    public function getMessage(): string;
 
     /**
      * Set message
-     * @param string $message
-     * @return $this
      */
-    public function setMessage($message);
+    public function setMessage(string $message): self;
 
     /**
      * Get logged at
-     * @return string|null
      */
-    public function getLoggedAt();
+    public function getLoggedAt(): string;
 
     /**
      * Set logged at
-     * @param string $loggedAt
-     * @return $this
      */
-    public function setLoggedAt($loggedAt);
+    public function setLoggedAt(string $loggedAt): self;
 
     /**
      * Get context
-     * @return string|null
      */
-    public function getContext();
+    public function getContext(): ?string;
 
     /**
      * Set context
-     * @param string $context
-     * @return $this
      */
-    public function setContext($context);
+    public function setContext(?string $context): self;
 
     /**
      * Get extra
-     * @return string|null
      */
-    public function getExtra();
+    public function getExtra(): ?string;
 
     /**
      * Set extra
-     * @param string $extra
-     * @return $this
      */
-    public function setExtra($extra);
+    public function setExtra(?string $extra): self;
 }

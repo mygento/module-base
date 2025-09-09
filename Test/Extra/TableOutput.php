@@ -47,7 +47,7 @@ class TableOutput
         $table->render();
     }
 
-    public static function dumpResult(Result $result, string $title = null)
+    public static function dumpResult(Result $result, ?string $title = null)
     {
         $output = new StreamOutput(fopen('php://stdout', 'w'));
         $table = new SymfonyTable($output);
@@ -106,7 +106,7 @@ class TableOutput
         $table->render();
     }
 
-    public static function dumpOrder(OrderInterface $order, string $title = null)
+    public static function dumpOrder(OrderInterface $order, ?string $title = null)
     {
         self::showOrderLegend();
 

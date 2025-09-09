@@ -63,6 +63,9 @@
                 <dataType>text</dataType>
                 <editor>
                     <editorType>text</editorType>
+                    <validation>
+                        <rule name="required-entry" xsi:type="boolean">true</rule>
+                    </validation>
                 </editor>
                 <label translate="true">Instance</label>
             </settings>
@@ -73,6 +76,9 @@
                 <dataType>text</dataType>
                 <editor>
                     <editorType>text</editorType>
+                    <validation>
+                        <rule name="required-entry" xsi:type="boolean">true</rule>
+                    </validation>
                 </editor>
                 <label translate="true">Channel</label>
             </settings>
@@ -83,6 +89,11 @@
                 <dataType>select</dataType>
                 <editor>
                     <editorType>select</editorType>
+                    <validation>
+                        <rule name="validate-integer" xsi:type="boolean">true</rule>
+                        <rule name="validate-zero-or-greater" xsi:type="boolean">true</rule>
+                        <rule name="required-entry" xsi:type="boolean">true</rule>
+                    </validation>
                 </editor>
                 <label translate="true">Level</label>
                 <options class="Mygento\Base\Model\Source\Loglevel"/>
@@ -94,6 +105,9 @@
                 <dataType>text</dataType>
                 <editor>
                     <editorType>text</editorType>
+                    <validation>
+                        <rule name="required-entry" xsi:type="boolean">true</rule>
+                    </validation>
                 </editor>
                 <label translate="true">Message</label>
             </settings>
@@ -104,6 +118,9 @@
                 <dataType>date</dataType>
                 <editor>
                     <editorType>date</editorType>
+                    <validation>
+                        <rule name="required-entry" xsi:type="boolean">true</rule>
+                    </validation>
                 </editor>
                 <label translate="true">Logged At</label>
             </settings>

@@ -9,48 +9,38 @@
 namespace Mygento\Base\Model\Event;
 
 use Magento\Framework\App\Request\DataPersistorInterface;
+use Magento\Ui\DataProvider\Modifier\PoolInterface;
+use Magento\Ui\DataProvider\ModifierPoolDataProvider;
+use Mygento\Base\Model\ResourceModel\Event\Collection;
 use Mygento\Base\Model\ResourceModel\Event\CollectionFactory;
 
-class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
+class DataProvider extends ModifierPoolDataProvider
 {
-    /** @var \Mygento\Base\Model\ResourceModel\Event\Collection */
+    /** @var Collection */
     protected $collection;
 
-    /** @var DataPersistorInterface */
-    protected $dataPersistor;
+    private DataPersistorInterface $dataPersistor;
+    private array $loadedData = [];
 
-    /** @var array */
-    protected $loadedData;
-
-    /**
-     * @param \Mygento\Base\Model\ResourceModel\Event\CollectionFactory $collectionFactory
-     * @param \Magento\Framework\App\Request\DataPersistorInterface $dataPersistor
-     * @param string $name
-     * @param string $primaryFieldName
-     * @param string $requestFieldName
-     * @param array $meta
-     * @param array $data
-     */
     public function __construct(
         CollectionFactory $collectionFactory,
         DataPersistorInterface $dataPersistor,
-        $name,
-        $primaryFieldName,
-        $requestFieldName,
+        string $name,
+        string $primaryFieldName,
+        string $requestFieldName,
         array $meta = [],
         array $data = [],
+        ?PoolInterface $pool = null,
     ) {
-        parent::__construct($name, $primaryFieldName, $requestFieldName, $meta, $data);
+        parent::__construct($name, $primaryFieldName, $requestFieldName, $meta, $data, $pool);
+
         $this->collection = $collectionFactory->create();
         $this->dataPersistor = $dataPersistor;
     }
 
-    /**
-     * @return array|null
-     */
-    public function getData()
+    public function getData(): array
     {
-        if (isset($this->loadedData)) {
+        if (!empty($this->loadedData)) {
             return $this->loadedData;
         }
         $items = $this->collection->getItems();

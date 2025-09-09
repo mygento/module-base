@@ -22,7 +22,7 @@
     "mygento"
   ],
   "require": {
-    "php": ">=8.0.0",
+    "php": ">=8.2.0",
     "ext-bcmath": "*",
     "magento/framework": "103.*",
     "magento/module-sales": "103.*",

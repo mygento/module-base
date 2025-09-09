@@ -9,7 +9,10 @@
 namespace Mygento\Base\Model\Mock;
 
 use Magento\Framework\DataObject;
+use Magento\Sales\Api\Data\OrderAddressInterface;
+use Magento\Sales\Api\Data\OrderExtensionInterface;
 use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Api\Data\OrderPaymentInterface;
 
 /**
  * Class OrderMock
@@ -44,7 +47,7 @@ class OrderMock extends DataObject implements OrderInterface
         return parent::getPayment();
     }
 
-    public function setBillingAddress(\Magento\Sales\Api\Data\OrderAddressInterface $address = null)
+    public function setBillingAddress(?OrderAddressInterface $address = null)
     {
         return parent::setBillingAddress($address);
     }
@@ -59,7 +62,7 @@ class OrderMock extends DataObject implements OrderInterface
         return parent::setState($state);
     }
 
-    public function setPayment(\Magento\Sales\Api\Data\OrderPaymentInterface $payment = null)
+    public function setPayment(?OrderPaymentInterface $payment = null)
     {
         return parent::setPayment($payment);
     }
@@ -99,7 +102,7 @@ class OrderMock extends DataObject implements OrderInterface
         return parent::getExtensionAttributes();
     }
 
-    public function setExtensionAttributes(\Magento\Sales\Api\Data\OrderExtensionInterface $extensionAttributes)
+    public function setExtensionAttributes(OrderExtensionInterface $extensionAttributes)
     {
         return parent::setExtensionAttributes($extensionAttributes);
     }
@@ -749,7 +752,7 @@ class OrderMock extends DataObject implements OrderInterface
         return parent::getXForwardedFor();
     }
 
-    public function setStatusHistories(array $statusHistories = null)
+    public function setStatusHistories(?array $statusHistories = null)
     {
         return parent::setStatusHistories($statusHistories);
     }

@@ -37,7 +37,7 @@ class Schedule extends \Magento\Backend\App\Action
 
     /**
      * Execute action based on request and return result
-     * @return \Magento\Framework\Controller\ResultInterface|ResponseInterface
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
      */
     public function execute()
     {

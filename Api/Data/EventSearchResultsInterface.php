@@ -8,7 +8,9 @@
 
 namespace Mygento\Base\Api\Data;
 
-interface EventSearchResultsInterface extends \Magento\Framework\Api\SearchResultsInterface
+use Magento\Framework\Api\SearchResultsInterface;
+
+interface EventSearchResultsInterface extends SearchResultsInterface
 {
     /**
      * Get list of Event

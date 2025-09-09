@@ -20,11 +20,6 @@ class Currency extends \Magento\Framework\App\Helper\AbstractHelper
      */
     private $currencyFactory;
 
-    /**
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \Magento\Directory\Model\CurrencyFactory $currencyFactory
-     * @param \Magento\Framework\App\Helper\Context $context
-     */
     public function __construct(
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Directory\Model\CurrencyFactory $currencyFactory,
