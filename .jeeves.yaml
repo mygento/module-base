@@ -30,11 +30,12 @@ Mygento:
           message:
             type: text
             nullable: false
-            comment: 'log datetime'
+            comment: 'message'
           logged_at:
             type: datetime
             nullable: false
-            comment: 'message'
+            comment: 'log datetime'
+            default: CURRENT_TIMESTAMP
           context:
             type: text
             comment: 'context'

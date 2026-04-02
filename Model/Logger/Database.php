@@ -11,6 +11,7 @@ namespace Mygento\Base\Model\Logger;
 use Magento\Framework\Serialize\SerializerInterface;
 use Monolog\Level;
 use Monolog\LogRecord;
+use Mygento\Base\Api\Data\EventInterface;
 use Mygento\Base\Api\Data\EventInterfaceFactory;
 use Mygento\Base\Api\EventRepositoryInterface;
 
@@ -34,9 +35,10 @@ class Database extends \Monolog\Handler\AbstractProcessingHandler
      */
     protected function write(LogRecord $record): void
     {
+        /** @var EventInterface $event */
         $event = $this->eventFactory->create();
-        $event->setInstance(gethostname());
-        $event->setLevel($record->level);
+        $event->setInstance(gethostname() ?? 'unknown');
+        $event->setLevel($record->level->value);
         $event->setChannel($record->channel);
         $event->setMessage($record->message);
 

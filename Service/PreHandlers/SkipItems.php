@@ -74,7 +74,7 @@ class SkipItems implements RecalculationPreHandlerInterface
 
         $itemIdsToSkip = $this->skippedItemsCollector->getItemIdsToSkip($entity);
         foreach ($entity->getItems() as $item) {
-            if (in_array((int) $item->getId(), $itemIdsToSkip, true)) {
+            if (in_array((int) $item->getItemId(), $itemIdsToSkip, true)) {
                 continue;
             }
 

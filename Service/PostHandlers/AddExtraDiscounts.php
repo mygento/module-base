@@ -52,6 +52,7 @@ class AddExtraDiscounts implements RecalculationPostHandlerInterface
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @return RecalculateResultInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function handle(
         Order $order,
@@ -92,8 +93,10 @@ class AddExtraDiscounts implements RecalculationPostHandlerInterface
             }
 
             $sourceAmountKey = $isRecalculated ? $extraAmountKey : DiscountHelperInterface::NAME_ROW_AMOUNT_TO_SPREAD;
+
+            /** @var \Magento\Sales\Api\Data\OrderItemInterface $item */
             foreach ($order->getAllVisibleItems() as $item) {
-                $recalcOriginal->getItemById($item->getId())[$extraAmountKey] = $item->getData($sourceAmountKey);
+                $recalcOriginal->getItemById($item->getItemId())[$extraAmountKey] = $item->getData($sourceAmountKey);
             }
         }
 

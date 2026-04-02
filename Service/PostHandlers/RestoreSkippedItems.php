@@ -36,7 +36,7 @@ class RestoreSkippedItems implements RecalculationPostHandlerInterface
 
     /**
      * @param OrderInterface $order
-     * @param RecalculateResultInterface|null $recalcOriginal
+     * @param RecalculateResultInterface $recalcOriginal
      * @param mixed $taxValue
      * @param mixed $taxAttributeCode
      * @param mixed $shippingTaxValue
