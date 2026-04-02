@@ -8,36 +8,21 @@
 
 namespace Mygento\Base\Model\Logger;
 
+use Magento\Framework\Serialize\SerializerInterface;
+use Monolog\Level;
+use Monolog\LogRecord;
+use Mygento\Base\Api\Data\EventInterface;
+use Mygento\Base\Api\Data\EventInterfaceFactory;
+use Mygento\Base\Api\EventRepositoryInterface;
+
 class Database extends \Monolog\Handler\AbstractProcessingHandler
 {
-    /**
-     * @var \Mygento\Base\Api\EventRepositoryInterface
-     */
-    private $eventRepository;
-
-    /**
-     * @var \Mygento\Base\Api\Data\EventInterfaceFactory
-     */
-    private $eventFactory;
-
-    /**
-     * @var \Magento\Framework\Serialize\SerializerInterface
-     */
-    private $serializer;
-
-    /**
-     * @param \Mygento\Base\Api\EventRepositoryInterface $eventRepository
-     * @param \Magento\Framework\Serialize\SerializerInterface $serializer
-     * @param \Mygento\Base\Api\Data\EventInterfaceFactory $eventFactory
-     * @param int $level
-     * @param bool $bubble
-     */
     public function __construct(
-        \Mygento\Base\Api\EventRepositoryInterface $eventRepository,
-        \Magento\Framework\Serialize\SerializerInterface $serializer,
-        \Mygento\Base\Api\Data\EventInterfaceFactory $eventFactory,
-        $level = \Monolog\Logger::DEBUG,
-        $bubble = true,
+        private EventRepositoryInterface $eventRepository,
+        private SerializerInterface $serializer,
+        private EventInterfaceFactory $eventFactory,
+        Level $level = Level::Debug,
+        bool $bubble = true,
     ) {
         parent::__construct($level, $bubble);
         $this->eventRepository = $eventRepository;
@@ -47,21 +32,19 @@ class Database extends \Monolog\Handler\AbstractProcessingHandler
 
     /**
      * Writes the record down to the log of the implementing handler
-     *
-     * @param array $record
-     * @return void
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
+        /** @var EventInterface $event */
         $event = $this->eventFactory->create();
-        $event->setInstance(gethostname());
-        $event->setLevel($record['level']);
-        $event->setChannel($record['channel']);
-        $event->setMessage($record['message']);
+        $event->setInstance(gethostname() ?? 'unknown');
+        $event->setLevel($record->level->value);
+        $event->setChannel($record->channel);
+        $event->setMessage($record->message);
 
         //serialize
-        $event->setContext($this->serialize($record['context']));
-        $event->setExtra($this->serialize($record['extra']));
+        $event->setContext($this->serialize($record->context));
+        $event->setExtra($this->serialize($record->extra));
 
         $this->eventRepository->save($event);
     }

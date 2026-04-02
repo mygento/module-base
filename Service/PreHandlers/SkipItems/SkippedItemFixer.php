@@ -53,7 +53,7 @@ class SkippedItemFixer
         $rawResult = $freshDiscountHelper->getRecalculated($orderMock, ...$recalcParams);
         $result = $this->recalculateResultFactory->create($rawResult);
 
-        return $result->getItemById($item->getId());
+        return $result->getItemById($item->getItemId());
     }
 
     /**

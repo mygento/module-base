@@ -62,7 +62,7 @@ class SkippedItemsCollector
 
         return array_map(
             static function ($item) {
-                return (int) $item->getId();
+                return (int) $item->getItemId();
             },
             $items,
         );

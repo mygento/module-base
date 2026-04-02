@@ -15,7 +15,7 @@ use Mygento\Base\Test\Extra\DiscountHelperInterfaceFactory;
 use Mygento\Base\Test\Extra\GetRecalculateResultFactory;
 use PHPUnit\Framework\TestCase;
 
-abstract class AbstractFacadeTest extends TestCase
+abstract class AbstractTestFacade extends TestCase
 {
     /**
      * @var \Magento\Framework\TestFramework\Unit\Helper\ObjectManager

@@ -13,9 +13,9 @@ use Mygento\Base\Service\PostHandlers\AddChildrenOfBundle;
 use Mygento\Base\Service\RecalculatorFacade;
 use Mygento\Base\Test\Extra\ExpectedMaker;
 use Mygento\Base\Test\Extra\TableOutput;
-use Mygento\Base\Test\Unit\Facade\AbstractFacadeTest;
+use Mygento\Base\Test\Unit\Facade\AbstractTestFacade;
 
-class AddChildrenOfBundleHandlerTest extends AbstractFacadeTest
+class AddChildrenOfBundleHandlerTest extends AbstractTestFacade
 {
     /**
      * @dataProvider \Mygento\Base\Test\Unit\Facade\Handlers\DataProvider\BundlesDataProvider::dataProviderBundles

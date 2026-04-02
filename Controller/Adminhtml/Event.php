@@ -8,55 +8,24 @@
 
 namespace Mygento\Base\Controller\Adminhtml;
 
-abstract class Event extends \Magento\Backend\App\Action
+use Magento\Backend\App\Action;
+use Magento\Framework\Registry;
+use Mygento\Base\Api\EventRepositoryInterface;
+
+abstract class Event extends Action
 {
     /**
      * Authorization level
      *
      * @see _isAllowed()
      */
-    public const ADMIN_RESOURCE = 'Mygento_Base::base_event';
+    public const ADMIN_RESOURCE = 'Mygento_Base::event';
 
-    /**
-     * Core registry
-     *
-     * @var \Magento\Framework\Registry
-     */
-    protected $coreRegistry;
-
-    /**
-     * Event repository
-     *
-     * @var \Mygento\Base\Api\EventRepositoryInterface
-     */
-    protected $repository;
-
-    /**
-     * @param \Mygento\Base\Api\EventRepositoryInterface $repository
-     * @param \Magento\Framework\Registry $coreRegistry
-     * @param \Magento\Backend\App\Action\Context $context
-     */
     public function __construct(
-        \Mygento\Base\Api\EventRepositoryInterface $repository,
-        \Magento\Framework\Registry $coreRegistry,
-        \Magento\Backend\App\Action\Context $context,
+        protected readonly EventRepositoryInterface $repository,
+        protected readonly Registry $coreRegistry,
+        Action\Context $context,
     ) {
         parent::__construct($context);
-        $this->repository = $repository;
-        $this->coreRegistry = $coreRegistry;
-    }
-
-    /**
-     * Init page
-     *
-     * @param \Magento\Backend\Model\View\Result\Page $resultPage
-     * @return \Magento\Backend\Model\View\Result\Page
-     */
-    protected function initPage($resultPage)
-    {
-        $resultPage->setActiveMenu('Mygento_Base::event');
-
-        //->addBreadcrumb(__('Event'), __('Event'));
-        return $resultPage;
     }
 }

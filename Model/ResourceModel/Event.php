@@ -8,14 +8,18 @@
 
 namespace Mygento\Base\Model\ResourceModel;
 
-class Event extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
+use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
+
+class Event extends AbstractDb
 {
+    public const TABLE_NAME = 'mygento_base_event';
+    public const TABLE_PRIMARY_KEY = 'id';
+
     /**
      * Initialize resource model
-     * @return void
      */
     protected function _construct()
     {
-        $this->_init('mygento_base_event', 'id');
+        $this->_init(self::TABLE_NAME, self::TABLE_PRIMARY_KEY);
     }
 }

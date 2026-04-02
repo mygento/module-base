@@ -8,56 +8,41 @@
 
 namespace Mygento\Base\Model;
 
-use Magento\Framework\Api\SortOrder;
-use Magento\Framework\Data\Collection;
+use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
+use Magento\Framework\Api\SearchCriteriaInterface;
+use Magento\Framework\Exception\CouldNotDeleteException;
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Mygento\Base\Api\Data\EventInterface;
+use Mygento\Base\Api\Data\EventInterfaceFactory;
+use Mygento\Base\Api\Data\EventSearchResultsInterface;
+use Mygento\Base\Api\Data\EventSearchResultsInterfaceFactory;
+use Mygento\Base\Api\EventRepositoryInterface;
+use Mygento\Base\Model\ResourceModel\Event\CollectionFactory;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class EventRepository implements \Mygento\Base\Api\EventRepositoryInterface
+class EventRepository implements EventRepositoryInterface
 {
-    /** @var \Mygento\Base\Model\ResourceModel\Event */
-    private $resource;
-
-    /** @var \Mygento\Base\Model\ResourceModel\Event\CollectionFactory */
-    private $collectionFactory;
-
-    /** @var \Mygento\Base\Api\Data\EventInterfaceFactory */
-    private $entityFactory;
-
-    /** @var \Mygento\Base\Api\Data\EventSearchResultsInterfaceFactory */
-    private $searchResultsFactory;
-
-    /**
-     * @param \Mygento\Base\Model\ResourceModel\Event $resource
-     * @param \Mygento\Base\Model\ResourceModel\Event\CollectionFactory $collectionFactory
-     * @param \Mygento\Base\Api\Data\EventInterfaceFactory $entityFactory
-     * @param \Mygento\Base\Api\Data\EventSearchResultsInterfaceFactory $searchResultsFactory
-     */
     public function __construct(
-        ResourceModel\Event $resource,
-        ResourceModel\Event\CollectionFactory $collectionFactory,
-        \Mygento\Base\Api\Data\EventInterfaceFactory $entityFactory,
-        \Mygento\Base\Api\Data\EventSearchResultsInterfaceFactory $searchResultsFactory,
-    ) {
-        $this->resource = $resource;
-        $this->collectionFactory = $collectionFactory;
-        $this->entityFactory = $entityFactory;
-        $this->searchResultsFactory = $searchResultsFactory;
-    }
+        private readonly ResourceModel\Event $resource,
+        private readonly CollectionFactory $collectionFactory,
+        private readonly EventInterfaceFactory $entityFactory,
+        private readonly EventSearchResultsInterfaceFactory $searchResultsFactory,
+        private readonly CollectionProcessorInterface $collectionProcessor,
+    ) {}
 
     /**
-     * @param int $entityId
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @return \Mygento\Base\Api\Data\EventInterface
+     * @throws NoSuchEntityException
      */
-    public function getById($entityId)
+    public function getById(int $entityId): EventInterface
     {
         $entity = $this->entityFactory->create();
         $this->resource->load($entity, $entityId);
         if (!$entity->getId()) {
-            throw new \Magento\Framework\Exception\NoSuchEntityException(
-                __('Base Event with id "%1" does not exist.', $entityId),
+            throw new NoSuchEntityException(
+                __('A Base Event with id "%1" does not exist', $entityId),
             );
         }
 
@@ -65,19 +50,16 @@ class EventRepository implements \Mygento\Base\Api\EventRepositoryInterface
     }
 
     /**
-     * @param \Mygento\Base\Api\Data\EventInterface $entity
-     * @psalm-param \Mygento\Base\Api\Data\EventInterface&\Magento\Framework\Model\AbstractModel $event
-     * @throws \Magento\Framework\Exception\CouldNotSaveException
-     * @return \Mygento\Base\Api\Data\EventInterface
+     * @throws CouldNotSaveException
      */
-    public function save(\Mygento\Base\Api\Data\EventInterface $entity)
+    public function save(EventInterface $entity): EventInterface
     {
         try {
-            /** @psalm-param \Mygento\Base\Api\Data\EventInterface&\Magento\Framework\Model\AbstractModel $event */
             $this->resource->save($entity);
         } catch (\Exception $exception) {
-            throw new \Magento\Framework\Exception\CouldNotSaveException(
-                __($exception->getMessage()),
+            throw new CouldNotSaveException(
+                __('Could not save the Base Event'),
+                $exception,
             );
         }
 
@@ -85,16 +67,14 @@ class EventRepository implements \Mygento\Base\Api\EventRepositoryInterface
     }
 
     /**
-     * @param \Mygento\Base\Api\Data\EventInterface $entity
-     * @throws \Magento\Framework\Exception\CouldNotDeleteException
-     * @return bool
+     * @throws CouldNotDeleteException
      */
-    public function delete(\Mygento\Base\Api\Data\EventInterface $entity)
+    public function delete(EventInterface $entity): bool
     {
         try {
             $this->resource->delete($entity);
         } catch (\Exception $exception) {
-            throw new \Magento\Framework\Exception\CouldNotDeleteException(
+            throw new CouldNotDeleteException(
                 __($exception->getMessage()),
             );
         }
@@ -103,53 +83,22 @@ class EventRepository implements \Mygento\Base\Api\EventRepositoryInterface
     }
 
     /**
-     * @param int $entityId
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @throws \Magento\Framework\Exception\CouldNotDeleteException
-     * @return bool
+     * @throws NoSuchEntityException
+     * @throws CouldNotDeleteException
      */
-    public function deleteById($entityId)
+    public function deleteById(int $entityId): bool
     {
         return $this->delete($this->getById($entityId));
     }
 
-    /**
-     * @param \Magento\Framework\Api\SearchCriteriaInterface $criteria
-     * @return \Mygento\Base\Api\Data\EventSearchResultsInterface
-     */
-    public function getList(\Magento\Framework\Api\SearchCriteriaInterface $criteria)
+    public function getList(SearchCriteriaInterface $criteria): EventSearchResultsInterface
     {
         /** @var \Mygento\Base\Model\ResourceModel\Event\Collection $collection */
         $collection = $this->collectionFactory->create();
-        foreach ($criteria->getFilterGroups() as $filterGroup) {
-            $fields = [];
-            $conditions = [];
-            foreach ($filterGroup->getFilters() as $filter) {
-                $condition = $filter->getConditionType() ? $filter->getConditionType() : 'eq';
-                $fields[] = $filter->getField();
-                $conditions[] = [$condition => $filter->getValue()];
-            }
-            if ($fields) {
-                $collection->addFieldToFilter($fields, $conditions);
-            }
-        }
-        $sortOrders = $criteria->getSortOrders();
-        $sortAsc = SortOrder::SORT_ASC;
-        $orderAsc = Collection::SORT_ORDER_ASC;
-        $orderDesc = Collection::SORT_ORDER_DESC;
-        if ($sortOrders) {
-            /** @var SortOrder $sortOrder */
-            foreach ($sortOrders as $sortOrder) {
-                $collection->addOrder(
-                    $sortOrder->getField(),
-                    ($sortOrder->getDirection() == $sortAsc) ? $orderAsc : $orderDesc,
-                );
-            }
-        }
-        $collection->setCurPage($criteria->getCurrentPage());
-        $collection->setPageSize($criteria->getPageSize());
 
-        /** @var \Mygento\Base\Api\Data\EventSearchResultsInterface $searchResults */
+        $this->collectionProcessor->process($criteria, $collection);
+
+        /** @var EventSearchResultsInterface $searchResults */
         $searchResults = $this->searchResultsFactory->create();
         $searchResults->setSearchCriteria($criteria);
         $searchResults->setItems($collection->getItems());

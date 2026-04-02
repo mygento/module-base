@@ -20,7 +20,7 @@ use Mygento\Base\Test\Extra\ExpectedMaker;
 use Mygento\Base\Test\Extra\TableOutput;
 use Mygento\Base\Test\Extra\TestItemSkipper;
 
-class AllHandlersTest extends AbstractFacadeTest
+class AllHandlersTest extends AbstractTestFacade
 {
     /**
      * @dataProvider \Mygento\Base\Test\Unit\Facade\AllHandlersDataProvider::dataProvider

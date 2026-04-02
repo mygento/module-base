@@ -22,15 +22,15 @@
     "mygento"
   ],
   "require": {
-    "php": ">=8.0.0",
+    "php": ">=8.2.0",
     "ext-bcmath": "*",
     "magento/framework": "103.*",
     "magento/module-sales": "103.*",
-    "monolog/monolog": "<3"
+    "monolog/monolog": "^3"
   },
   "require-dev": {
     "mygento/coding-standard": "~2.14.0",
-    "phpunit/phpunit": "~9.5.0"
+    "phpunit/phpunit": "^10.5"
   },
   "autoload": {
     "files": [

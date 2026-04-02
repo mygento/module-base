@@ -9,14 +9,17 @@
 namespace Mygento\Base\Model;
 
 use Magento\Framework\Model\AbstractModel;
+use Mygento\Base\Api\Data\EventInterface;
 
-class Event extends AbstractModel implements \Mygento\Base\Api\Data\EventInterface
+class Event extends AbstractModel implements EventInterface
 {
+    /** @inheritDoc */
+    protected $_eventPrefix = 'mygento_base_event';
+
     /**
      * Get id
-     * @return int|null
      */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->getData(self::ID);
     }
@@ -24,142 +27,120 @@ class Event extends AbstractModel implements \Mygento\Base\Api\Data\EventInterfa
     /**
      * Set id
      * @param int $id
-     * @return $this
      */
-    public function setId($id)
+    public function setId($id): self
     {
         return $this->setData(self::ID, $id);
     }
 
     /**
      * Get instance
-     * @return string|null
      */
-    public function getInstance()
+    public function getInstance(): string
     {
         return $this->getData(self::INSTANCE);
     }
 
     /**
      * Set instance
-     * @param string $instance
-     * @return $this
      */
-    public function setInstance($instance)
+    public function setInstance(string $instance): self
     {
         return $this->setData(self::INSTANCE, $instance);
     }
 
     /**
      * Get channel
-     * @return string|null
      */
-    public function getChannel()
+    public function getChannel(): string
     {
         return $this->getData(self::CHANNEL);
     }
 
     /**
      * Set channel
-     * @param string $channel
-     * @return $this
      */
-    public function setChannel($channel)
+    public function setChannel(string $channel): self
     {
         return $this->setData(self::CHANNEL, $channel);
     }
 
     /**
      * Get level
-     * @return int|null
      */
-    public function getLevel()
+    public function getLevel(): int
     {
         return $this->getData(self::LEVEL);
     }
 
     /**
      * Set level
-     * @param int $level
-     * @return $this
      */
-    public function setLevel($level)
+    public function setLevel(int $level): self
     {
         return $this->setData(self::LEVEL, $level);
     }
 
     /**
      * Get message
-     * @return string|null
      */
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->getData(self::MESSAGE);
     }
 
     /**
      * Set message
-     * @param string $message
-     * @return $this
      */
-    public function setMessage($message)
+    public function setMessage(string $message): self
     {
         return $this->setData(self::MESSAGE, $message);
     }
 
     /**
      * Get logged at
-     * @return string|null
      */
-    public function getLoggedAt()
+    public function getLoggedAt(): string
     {
         return $this->getData(self::LOGGED_AT);
     }
 
     /**
      * Set logged at
-     * @param string $loggedAt
-     * @return $this
      */
-    public function setLoggedAt($loggedAt)
+    public function setLoggedAt(string $loggedAt): self
     {
         return $this->setData(self::LOGGED_AT, $loggedAt);
     }
 
     /**
      * Get context
-     * @return string|null
      */
-    public function getContext()
+    public function getContext(): ?string
     {
         return $this->getData(self::CONTEXT);
     }
 
     /**
      * Set context
-     * @param string $context
-     * @return $this
      */
-    public function setContext($context)
+    public function setContext(?string $context): self
     {
         return $this->setData(self::CONTEXT, $context);
     }
 
     /**
      * Get extra
-     * @return string|null
      */
-    public function getExtra()
+    public function getExtra(): ?string
     {
         return $this->getData(self::EXTRA);
     }
 
     /**
      * Set extra
-     * @param string $extra
-     * @return $this
      */
-    public function setExtra($extra)
+    public function setExtra(?string $extra): self
     {
         return $this->setData(self::EXTRA, $extra);
     }
@@ -169,6 +150,6 @@ class Event extends AbstractModel implements \Mygento\Base\Api\Data\EventInterfa
      */
     protected function _construct()
     {
-        $this->_init(\Mygento\Base\Model\ResourceModel\Event::class);
+        $this->_init(ResourceModel\Event::class);
     }
 }
