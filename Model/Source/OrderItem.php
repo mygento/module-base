@@ -40,7 +40,13 @@ class OrderItem implements \Magento\Framework\Data\OptionSourceInterface
     public function toOptionArray()
     {
         if ($this->options === null) {
-            $this->options = [];
+            $this->options = [
+                [
+                    'label' => __('No usage'),
+                    'value' => 0,
+                ],
+            ];
+
             $table = $this->connection->describeTable(
                 $this->resource->getTableName('sales_order_item'),
             );
