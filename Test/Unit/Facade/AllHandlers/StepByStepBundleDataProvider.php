@@ -27,6 +27,7 @@ class StepByStepBundleDataProvider
     private static function test1(): array
     {
         $order = OrderMockBuilder::getNewOrderInstance(1293.6, 0.60, 200.0000, 0, 0);
+        $order->setEntityId(100500);
         $order->setData('gift_cards_amount', 1493);
 
         $father = OrderMockBuilder::getItem(1293.6000, 1293.6000, 0);
@@ -89,6 +90,7 @@ class StepByStepBundleDataProvider
     private static function test2(): array
     {
         $order = OrderMockBuilder::getNewOrderInstance(1293.6, 0.60, 200.0000, 0, 0);
+        $order->setEntityId(100500);
         $order->setData('gift_cards_amount', 1493);
 
         $father = OrderMockBuilder::getItem(1293.6000, 1293.6000, 0);
@@ -151,6 +153,7 @@ class StepByStepBundleDataProvider
     private static function test3(): array
     {
         $order = OrderMockBuilder::getNewOrderInstance(1293.6, 0.50, 200.0000, 0, -0.1);
+        $order->setEntityId(100500);
         $order->setData('gift_cards_amount', 1493);
 
         $father = OrderMockBuilder::getItem(1293.6000, 1293.6000, 0.1)
@@ -213,6 +216,7 @@ class StepByStepBundleDataProvider
     private static function test4(): array
     {
         $order = OrderMockBuilder::getNewOrderInstance(1293.6, 0.50, 200.0000, 0, -0.1);
+        $order->setEntityId(100500);
         $order->setData('gift_cards_amount', 1493);
 
         $father = OrderMockBuilder::getItem(1293.6000, 1293.6000, 0.1)

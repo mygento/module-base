@@ -35,7 +35,6 @@ class SkippedItemsCollector
         if (empty($this->skippers)) {
             return [];
         }
-
         if (isset($this->skippedItems[$order->getEntityId()])) {
             return $this->skippedItems[$order->getEntityId()];
         }

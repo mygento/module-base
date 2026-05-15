@@ -61,17 +61,16 @@ class SplitItemsTest extends GeneralTestCase
 
         $dHelper = new \ReflectionClass($discountHelper);
         $getProcessedItem = $dHelper->getMethod('getProcessedItem');
-        $getProcessedItem->setAccessible(true);
 
         $split = $getProcessedItem->invoke($discountHelper, $item);
 
         $this->assertEquals(count($split), count($expectedArray), 'Item was not splitted correctly!');
 
         $i = 0;
-        foreach ($split as $item) {
-            $this->assertEquals($expectedArray[$i]['price'], $item['price'], 'Price of item failed');
-            $this->assertEquals($expectedArray[$i]['quantity'], $item['quantity']);
-            $this->assertEquals($expectedArray[$i]['sum'], $item['sum'], 'Sum of item failed');
+        foreach ($split as $item1) {
+            $this->assertEquals($expectedArray[$i]['price'], $item1['price'], 'Price of item failed');
+            $this->assertEquals($expectedArray[$i]['quantity'], $item1['quantity']);
+            $this->assertEquals($expectedArray[$i]['sum'], $item1['sum'], 'Sum of item failed');
 
             $i++;
         }

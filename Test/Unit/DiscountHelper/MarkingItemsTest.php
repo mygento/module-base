@@ -71,19 +71,15 @@ class MarkingItemsTest extends SplitItemsTest
         $dHelper = new \ReflectionClass($discountHelper);
 
         $markingAttributeCodeAttr = $dHelper->getProperty('markingAttributeCode');
-        $markingAttributeCodeAttr->setAccessible(true);
         $markingAttributeCodeAttr->setValue($discountHelper, DiscountHelperInterface::NAME_MARKING);
 
         $markingAttributeCodeListAttr = $dHelper->getProperty('markingListAttributeCode');
-        $markingAttributeCodeListAttr->setAccessible(true);
         $markingAttributeCodeListAttr->setValue($discountHelper, DiscountHelperInterface::NAME_MARKING_LIST);
 
         $markingAttributeCodeRefundAttr = $dHelper->getProperty('markingRefundAttributeCode');
-        $markingAttributeCodeRefundAttr->setAccessible(true);
         $markingAttributeCodeRefundAttr->setValue($discountHelper, DiscountHelperInterface::NAME_MARKING_REFUND);
 
         $getProcessedItem = $dHelper->getMethod('getProcessedItem');
-        $getProcessedItem->setAccessible(true);
 
         $split = $getProcessedItem->invoke($discountHelper, $item);
 
@@ -114,7 +110,6 @@ class MarkingItemsTest extends SplitItemsTest
         $dHelper = new \ReflectionClass($discountHelper);
 
         $getProcessedItem = $dHelper->getMethod('markItems');
-        $getProcessedItem->setAccessible(true);
 
         $marked = $getProcessedItem->invokeArgs($discountHelper, [
             'items' => $item[0],
@@ -207,7 +202,6 @@ class MarkingItemsTest extends SplitItemsTest
         $dHelper = new \ReflectionClass($discountHelper);
 
         $getProcessedItem = $dHelper->getMethod('packItems');
-        $getProcessedItem->setAccessible(true);
 
         $packed = $getProcessedItem->invokeArgs($discountHelper, $item);
         $this->assertEquals(array_keys($expectedArray), array_keys($packed), 'Packing of item failed');

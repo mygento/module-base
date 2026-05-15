@@ -37,6 +37,7 @@ class AllHandlersDataProvider
     private static function test1(): array
     {
         $order = OrderMockBuilder::getNewOrderInstance(1293.6, 0.60, 200.0000, 0, 0);
+        $order->setEntityId(100500);
         $order->setData('gift_cards_amount', 1493);
 
         $father = OrderMockBuilder::getItem(1293.6000, 1293.6000, 0)
@@ -89,6 +90,7 @@ class AllHandlersDataProvider
     private static function test2(): array
     {
         $order = OrderMockBuilder::getNewOrderInstance(1293.6, 0.60, 200.0000, 0, 0);
+        $order->setEntityId(100500);
         $order->setData('gift_cards_amount', 1493);
 
         $father = OrderMockBuilder::getItem(1293.6000, 1293.6000, 0)
@@ -143,6 +145,7 @@ class AllHandlersDataProvider
     private static function test3(): array
     {
         $order = OrderMockBuilder::getNewOrderInstance(1293.6, 0.60, 200.0000, 0, 0);
+        $order->setEntityId(100500);
         $order->setData('gift_cards_amount', 1493);
 
         $father = OrderMockBuilder::getItem(1293.6000, 1293.6000, 0)
@@ -192,6 +195,7 @@ class AllHandlersDataProvider
     private static function test4(): array
     {
         $order = OrderMockBuilder::getNewOrderInstance(10500.32, 10261.12, 0.0000, 0, -239.2);
+        $order->setEntityId(100500);
 
         //Skipped simple
         $item1Skipped = OrderMockBuilder::getItem(2763.5500, 2763.5500, 0);
