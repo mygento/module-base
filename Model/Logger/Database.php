@@ -9,6 +9,8 @@
 namespace Mygento\Base\Model\Logger;
 
 use Magento\Framework\Serialize\SerializerInterface;
+use Monolog\Formatter\FormatterInterface;
+use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Level;
 use Monolog\LogRecord;
 use Mygento\Base\Api\Data\EventInterface;
@@ -17,6 +19,8 @@ use Mygento\Base\Api\EventRepositoryInterface;
 
 class Database extends \Monolog\Handler\AbstractProcessingHandler
 {
+    private const MAX_TRACE_FRAMES = 50;
+
     public function __construct(
         private EventRepositoryInterface $eventRepository,
         private SerializerInterface $serializer,
@@ -28,6 +32,11 @@ class Database extends \Monolog\Handler\AbstractProcessingHandler
         $this->eventRepository = $eventRepository;
         $this->serializer = $serializer;
         $this->eventFactory = $eventFactory;
+    }
+
+    protected function getDefaultFormatter(): FormatterInterface
+    {
+        return (new NormalizerFormatter())->setMaxTraceLength(self::MAX_TRACE_FRAMES);
     }
 
     /**
@@ -43,8 +52,8 @@ class Database extends \Monolog\Handler\AbstractProcessingHandler
         $event->setMessage($record->message);
 
         //serialize
-        $event->setContext($this->serialize($record->context));
-        $event->setExtra($this->serialize($record->extra));
+        $event->setContext($this->serialize($record->formatted['context']));
+        $event->setExtra($this->serialize($record->formatted['extra']));
 
         $this->eventRepository->save($event);
     }
