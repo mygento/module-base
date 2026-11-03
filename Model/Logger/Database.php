@@ -19,8 +19,6 @@ use Mygento\Base\Api\EventRepositoryInterface;
 
 class Database extends \Monolog\Handler\AbstractProcessingHandler
 {
-    private const MAX_TRACE_FRAMES = 50;
-
     public function __construct(
         private EventRepositoryInterface $eventRepository,
         private SerializerInterface $serializer,
@@ -36,7 +34,7 @@ class Database extends \Monolog\Handler\AbstractProcessingHandler
 
     protected function getDefaultFormatter(): FormatterInterface
     {
-        return (new NormalizerFormatter())->setMaxTraceLength(self::MAX_TRACE_FRAMES);
+        return new NormalizerFormatter();
     }
 
     /**
