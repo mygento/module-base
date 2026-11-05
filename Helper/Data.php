@@ -116,7 +116,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper implements Logge
     /**
      * @param string $configPath
      * @param string|null $scopeCode
-     * @return string
+     * @return array|string|null
      */
     public function getConfig($configPath, $scopeCode = null)
     {

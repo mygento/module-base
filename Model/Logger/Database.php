@@ -9,6 +9,8 @@
 namespace Mygento\Base\Model\Logger;
 
 use Magento\Framework\Serialize\SerializerInterface;
+use Monolog\Formatter\FormatterInterface;
+use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Level;
 use Monolog\LogRecord;
 use Mygento\Base\Api\Data\EventInterface;
@@ -30,6 +32,11 @@ class Database extends \Monolog\Handler\AbstractProcessingHandler
         $this->eventFactory = $eventFactory;
     }
 
+    protected function getDefaultFormatter(): FormatterInterface
+    {
+        return new NormalizerFormatter();
+    }
+
     /**
      * Writes the record down to the log of the implementing handler
      */
@@ -43,8 +50,8 @@ class Database extends \Monolog\Handler\AbstractProcessingHandler
         $event->setMessage($record->message);
 
         //serialize
-        $event->setContext($this->serialize($record->context));
-        $event->setExtra($this->serialize($record->extra));
+        $event->setContext($this->serialize($record->formatted['context']));
+        $event->setExtra($this->serialize($record->formatted['extra']));
 
         $this->eventRepository->save($event);
     }
