@@ -65,7 +65,7 @@ class Extensions extends Fieldset
         $html = $this->_getHeaderHtml($element);
 
         $site = 'https://www.mygento.com';
-        $email = 'hello@mygento.сom';
+        $email = 'hello@mygento.com';
 
         $bugs = __('Please report all bugs and feature requests to %1.', $email);
         $hiretext = __(
